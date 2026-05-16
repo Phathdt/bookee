@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "@bookee/config/tsconfig/base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "target": "ES2022",
+    "verbatimModuleSyntax": false,
+    "types": ["node"],
+    "paths": {
+      "@config/*": ["config/*"],
+      "@page-objects/*": ["page-objects/*"],
+      "@utils/*": ["utils/*"],
+      "@support/*": ["tests/support/*"]
+    }
+  },
+  "include": ["config/**/*", "page-objects/**/*", "tests/**/*", "utils/**/*"],
+  "exclude": ["node_modules", "dist", "test-results"]
+}

@@ -26,7 +26,15 @@
     },
     "typecheck": {
       "dependsOn": ["^build", "db:generate"],
-      "inputs": ["src/**", "tsconfig*.json"],
+      "inputs": [
+        "src/**",
+        "test/**",
+        "tests/**",
+        "page-objects/**",
+        "config/**",
+        "utils/**",
+        "tsconfig*.json"
+      ],
       "outputs": []
     },
     "test": {
