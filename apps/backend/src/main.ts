@@ -4,14 +4,15 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
 
 import { AppModule } from './app.module';
+import { FilteredLogger } from './modules/logger/filtered-logger';
 import { swaggerConfig } from './swagger';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
 
-  // Swap default Nest logger for pino once the container is ready, so all
-  // subsequent log lines (including Nest internals) are routed through pino.
-  app.useLogger(app.get(Logger));
+  // Swap default Nest logger for pino (via FilteredLogger which suppresses
+  // known-noisy internal contexts like LegacyRouteConverter).
+  app.useLogger(new FilteredLogger(app.get(Logger)));
 
   app.setGlobalPrefix('api/v1');
 

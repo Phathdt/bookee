@@ -16,6 +16,10 @@
     "test": "turbo run test",
     "openapi:export": "turbo run openapi:export",
     "codegen": "turbo run codegen",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:logs": "docker compose logs -f",
+    "db:reset": "docker compose down -v && docker compose up -d",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\" --ignore-path .gitignore",
     "prepare": "husky"
   },

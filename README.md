@@ -19,13 +19,33 @@ Multi-operator intercity trip booking platform — Turborepo monorepo.
 
 ```bash
 bun install            # install all workspace deps
+cp .env.example .env   # set DATABASE_URL, REDIS_URL, etc.
+bun run db:up          # start postgres + redis via docker compose
 bun run dev            # start backend (:3000), operator-cms (:5173), user-web (:5174) in parallel
+```
+
+### Common scripts
+
+```bash
 bun run build          # build all apps + packages
 bun run typecheck      # tsc --noEmit across workspace
 bun run lint           # eslint across workspace
-bun run test           # run jest/vitest across workspace
+bun run test           # run vitest across workspace
 bun run format         # prettier write
+bun run codegen        # regenerate api-client from openapi.yaml
 ```
+
+### Docker (local infra)
+
+```bash
+bun run db:up          # docker compose up -d (postgres :5432, redis :6379)
+bun run db:down        # stop containers
+bun run db:logs        # tail logs
+bun run db:reset       # drop volumes + restart (clean slate)
+```
+
+Postgres data lives in named volume `bookee_postgres-data` (survives `db:down`).
+`db:reset` wipes it.
 
 ## Workspace layout
 
