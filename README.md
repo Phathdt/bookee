@@ -64,8 +64,28 @@ apps/user-web     → packages/shared-types, packages/config
 - Adding a new package: create `packages/<name>/package.json` with `name: "@bookee/<name>"`, then re-run `bun install` at root.
 - Husky hooks install on `bun install` via `"prepare": "husky"`.
 
+## API client codegen
+
+End-to-end type safety: NestJS spec → openapi.yaml → React Query hooks + Zod schemas.
+
+```bash
+# After changing a controller or DTO in apps/backend:
+bun run openapi:export   # dumps packages/api-client/openapi.yaml
+bun run codegen          # orval regenerates packages/api-client/src/generated/**
+```
+
+FE apps import from `@bookee/api-client`:
+
+```tsx
+import { useGetHealth } from '@bookee/api-client';
+import { getHealthResponse } from '@bookee/api-client/zod';
+```
+
+See [`packages/api-client/README.md`](packages/api-client/README.md) for DTO/operationId conventions.
+
 ## Subdirectory docs
 
 - `apps/backend/README.md` — backend specifics
 - `apps/operator-cms/README.md`, `apps/user-web/README.md` — FE specifics
+- `packages/api-client/README.md` — codegen workflow + backend conventions
 - `openspec/` — change proposals and specs

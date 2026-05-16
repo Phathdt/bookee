@@ -38,6 +38,17 @@
       "cache": false,
       "inputs": ["prisma/schema.prisma"],
       "outputs": ["node_modules/.prisma/**", "node_modules/@prisma/client/**"]
+    },
+    "openapi:export": {
+      "dependsOn": ["@bookee/backend#build"],
+      "inputs": ["src/**", "scripts/**"],
+      "outputs": ["../../packages/api-client/openapi.yaml"],
+      "cache": false
+    },
+    "codegen": {
+      "dependsOn": ["openapi:export"],
+      "inputs": ["openapi.yaml", "orval.config.ts", "src/axios-instance.ts"],
+      "outputs": ["src/generated/**"]
     }
   }
 }
