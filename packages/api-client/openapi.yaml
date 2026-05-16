@@ -14,6 +14,103 @@ paths:
       summary: Liveness probe — returns ok when the API process is up
       tags:
         - health
+  /api/v1/auth/register:
+    post:
+      operationId: registerUser
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterBodyDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSessionDto'
+      summary: Create a new customer account
+      tags:
+        - auth
+  /api/v1/auth/login:
+    post:
+      operationId: loginUser
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginBodyDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSessionDto'
+      summary: Authenticate by phone/email + password
+      tags:
+        - auth
+  /api/v1/auth/refresh:
+    post:
+      operationId: refreshTokens
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshBodyDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthTokensDto'
+      summary: Exchange refresh token for new pair
+      tags:
+        - auth
+  /api/v1/users/me:
+    get:
+      operationId: getMe
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicUserDto'
+      security:
+        - bearer: []
+      summary: Return the authenticated user profile
+      tags:
+        - users
+    patch:
+      operationId: updateMe
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileBodyDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicUserDto'
+      security:
+        - bearer: []
+      summary: Update the authenticated user profile
+      tags:
+        - users
 info:
   title: Bookee API
   description: Multi-operator trip booking platform API
@@ -38,3 +135,169 @@ components:
       required:
         - status
       description: Liveness probe response — status is always "ok" when up
+    RegisterBodyDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        phone:
+          type: string
+          minLength: 8
+          maxLength: 20
+          pattern: ^[+\d\s-]+$
+        email:
+          type: string
+          maxLength: 254
+          format: email
+          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+        password:
+          type: string
+          minLength: 8
+          maxLength: 72
+      required:
+        - name
+        - phone
+        - email
+        - password
+    AuthSessionDto:
+      type: object
+      properties:
+        user:
+          type: object
+          properties:
+            id:
+              type: integer
+              minimum: -9007199254740991
+              maximum: 9007199254740991
+            name:
+              type: string
+            phone:
+              type: string
+            email:
+              type: string
+              format: email
+              pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+            role:
+              type: string
+              enum:
+                - customer
+                - operator
+                - driver
+                - admin
+            operatorId:
+              type: integer
+              minimum: -9007199254740991
+              maximum: 9007199254740991
+              nullable: true
+          required:
+            - id
+            - name
+            - phone
+            - email
+            - role
+            - operatorId
+        tokens:
+          type: object
+          properties:
+            accessToken:
+              type: string
+            refreshToken:
+              type: string
+          required:
+            - accessToken
+            - refreshToken
+      required:
+        - user
+        - tokens
+    LoginBodyDto:
+      type: object
+      properties:
+        identifier:
+          type: string
+          minLength: 1
+          maxLength: 254
+          description: phone OR email
+        password:
+          type: string
+          minLength: 8
+          maxLength: 72
+      required:
+        - identifier
+        - password
+    RefreshBodyDto:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+          minLength: 1
+      required:
+        - refreshToken
+    AuthTokensDto:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+      required:
+        - accessToken
+        - refreshToken
+    PublicUserDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+          format: email
+          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+        role:
+          type: string
+          enum:
+            - customer
+            - operator
+            - driver
+            - admin
+        operatorId:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+          nullable: true
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+        - id
+        - name
+        - phone
+        - email
+        - role
+        - operatorId
+        - createdAt
+        - updatedAt
+    UpdateProfileBodyDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        phone:
+          type: string
+          minLength: 8
+          maxLength: 20
+          pattern: ^[+\d\s-]+$
+        email:
+          type: string
+          maxLength: 254
+          format: email
+          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$

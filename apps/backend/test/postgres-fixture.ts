@@ -1,4 +1,5 @@
 import { execSync } from 'node:child_process';
+import * as path from 'node:path';
 
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql';
@@ -34,7 +35,7 @@ export async function startPostgresFixture(): Promise<PostgresFixture> {
   // command — no schema-diff prompts, just runs every migration_lock-tracked
   // file in order. Fast against a fresh container.
   execSync('bunx prisma migrate deploy', {
-    cwd: new URL('..', import.meta.url).pathname,
+    cwd: path.resolve(__dirname, '..'),
     env: { ...process.env, DATABASE_URL: connectionString },
     stdio: 'pipe',
   });

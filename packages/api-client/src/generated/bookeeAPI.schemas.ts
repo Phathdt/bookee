@@ -18,3 +18,139 @@ export const HealthResponseDtoStatus = {
 export interface HealthResponseDto {
   status: HealthResponseDtoStatus;
 }
+
+export interface RegisterBodyDto {
+  /**
+   * @minLength 1
+   * @maxLength 120
+   */
+  name: string;
+  /**
+   * @minLength 8
+   * @maxLength 20
+   * @pattern ^[+\d\s-]+$
+   */
+  phone: string;
+  /**
+   * @maxLength 254
+   * @pattern ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+   */
+  email: string;
+  /**
+   * @minLength 8
+   * @maxLength 72
+   */
+  password: string;
+}
+
+export type AuthSessionDtoUserRole =
+  (typeof AuthSessionDtoUserRole)[keyof typeof AuthSessionDtoUserRole];
+
+export const AuthSessionDtoUserRole = {
+  customer: 'customer',
+  operator: 'operator',
+  driver: 'driver',
+  admin: 'admin',
+} as const;
+
+export type AuthSessionDtoUser = {
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  id: number;
+  name: string;
+  phone: string;
+  /** @pattern ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$ */
+  email: string;
+  role: AuthSessionDtoUserRole;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  operatorId: number | null;
+};
+
+export type AuthSessionDtoTokens = {
+  accessToken: string;
+  refreshToken: string;
+};
+
+export interface AuthSessionDto {
+  user: AuthSessionDtoUser;
+  tokens: AuthSessionDtoTokens;
+}
+
+export interface LoginBodyDto {
+  /**
+   * phone OR email
+   * @minLength 1
+   * @maxLength 254
+   */
+  identifier: string;
+  /**
+   * @minLength 8
+   * @maxLength 72
+   */
+  password: string;
+}
+
+export interface RefreshBodyDto {
+  /** @minLength 1 */
+  refreshToken: string;
+}
+
+export interface AuthTokensDto {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export type PublicUserDtoRole = (typeof PublicUserDtoRole)[keyof typeof PublicUserDtoRole];
+
+export const PublicUserDtoRole = {
+  customer: 'customer',
+  operator: 'operator',
+  driver: 'driver',
+  admin: 'admin',
+} as const;
+
+export interface PublicUserDto {
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  id: number;
+  name: string;
+  phone: string;
+  /** @pattern ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$ */
+  email: string;
+  role: PublicUserDtoRole;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  operatorId: number | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UpdateProfileBodyDto {
+  /**
+   * @minLength 1
+   * @maxLength 120
+   */
+  name?: string;
+  /**
+   * @minLength 8
+   * @maxLength 20
+   * @pattern ^[+\d\s-]+$
+   */
+  phone?: string;
+  /**
+   * @maxLength 254
+   * @pattern ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+   */
+  email?: string;
+}

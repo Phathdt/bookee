@@ -9,6 +9,12 @@ export interface CreateUserInput {
   role?: UserRole;
 }
 
+export interface UpdateUserInput {
+  name?: string;
+  phone?: string;
+  email?: string;
+}
+
 /**
  * User repository port. Returns User entities — never raw DB rows.
  * Abstract class so it serves as both TS type and NestJS DI token.
@@ -19,4 +25,5 @@ export abstract class IUserRepository {
   abstract findByPhone(phone: string): Promise<User | null>;
   abstract findByPhoneOrEmail(identifier: string): Promise<User | null>;
   abstract create(input: CreateUserInput): Promise<User>;
+  abstract update(id: number, input: UpdateUserInput): Promise<User>;
 }

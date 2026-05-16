@@ -1,62 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { User } from '../../domain/entities/user.entity';
+import { makeFakeJwtSigner } from '../../../../../test/factories/jwt-signer.fake';
+import { makeFakeUserRepository } from '../../../../../test/factories/user-repository.fake';
 import { AuthConflictError, AuthUnauthorizedError } from '../../domain/errors';
 import type { IJwtSigner } from '../../domain/interfaces/jwt-signer';
-import type { CreateUserInput, IUserRepository } from '../../domain/interfaces/user.repository';
-import type { JwtPayload } from '../../domain/jwt-payload';
+import type { IUserRepository } from '../../domain/interfaces/user.repository';
 import { PasswordHash } from '../../domain/password-hash';
 
 import { AuthService } from './auth.service';
-
-// In-memory IUserRepository fake. Beats mock+spy boilerplate and gives us
-// realistic constraints (unique-by-email, unique-by-phone) without touching DB.
-function makeUsers(): IUserRepository {
-  const rows = new Map<number, User>();
-  let nextId = 1;
-  return {
-    async findById(id) {
-      return rows.get(id) ?? null;
-    },
-    async findByEmail(email) {
-      return [...rows.values()].find((r) => r.email === email) ?? null;
-    },
-    async findByPhone(phone) {
-      return [...rows.values()].find((r) => r.phone === phone) ?? null;
-    },
-    async findByPhoneOrEmail(id) {
-      return [...rows.values()].find((r) => r.phone === id || r.email === id) ?? null;
-    },
-    async create(input: CreateUserInput) {
-      const user: User = {
-        id: nextId++,
-        name: input.name,
-        phone: input.phone,
-        email: input.email,
-        passwordHash: input.passwordHash,
-        role: input.role ?? 'customer',
-        operatorId: null,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-      rows.set(user.id, user);
-      return user;
-    },
-  } satisfies IUserRepository;
-}
-
-// Trivial JWT signer fake: encodes payload as JSON; verify decodes it. No
-// crypto needed — service-level tests only care about round-trip + typ.
-function makeJwt(): IJwtSigner {
-  return {
-    async sign(payload) {
-      return Buffer.from(JSON.stringify(payload)).toString('base64');
-    },
-    async verify(token) {
-      return JSON.parse(Buffer.from(token, 'base64').toString()) as JwtPayload;
-    },
-  };
-}
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -64,8 +15,8 @@ describe('AuthService', () => {
   let jwt: IJwtSigner;
 
   beforeEach(() => {
-    users = makeUsers();
-    jwt = makeJwt();
+    users = makeFakeUserRepository();
+    jwt = makeFakeJwtSigner();
     service = new AuthService(users, jwt);
   });
 

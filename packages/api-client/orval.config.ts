@@ -13,9 +13,8 @@ export default defineConfig({
           path: './src/axios-instance.ts',
           name: 'axiosInstance',
         },
+        // Let Orval default: GET -> useQuery, POST/PATCH/DELETE -> useMutation.
         query: {
-          useQuery: true,
-          useMutation: true,
           options: {
             staleTime: 30_000,
           },

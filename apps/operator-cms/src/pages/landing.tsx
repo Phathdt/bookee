@@ -1,6 +1,7 @@
 import { useGetHealth, type HealthResponseDto } from '@bookee/api-client';
 import { Activity, RefreshCw } from 'lucide-react';
 
+import { AuthDemo } from '@/components/auth-demo';
 import { Button } from '@/components/ui/button';
 
 export function LandingPage() {
@@ -16,12 +17,11 @@ export function LandingPage() {
           </p>
         </header>
 
-        <section className="rounded-lg border bg-card p-6 shadow-sm">
+        <section className="mb-6 rounded-lg border bg-card p-6 shadow-sm">
           <div className="mb-4 flex items-center gap-2 text-sm font-medium text-muted-foreground">
             <Activity className="size-4" />
             Backend status
           </div>
-
           {isLoading && <p className="text-sm">Checking…</p>}
           {error != null && (
             <p className="text-sm text-destructive">API unreachable. Is the backend running?</p>
@@ -34,7 +34,6 @@ export function LandingPage() {
               </span>
             </p>
           )}
-
           <Button
             className="mt-4"
             size="sm"
@@ -45,6 +44,10 @@ export function LandingPage() {
             <RefreshCw className="size-4" />
             Refresh
           </Button>
+        </section>
+
+        <section className="rounded-lg border bg-card p-6 shadow-sm">
+          <AuthDemo />
         </section>
       </div>
     </main>

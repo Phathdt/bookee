@@ -1,6 +1,7 @@
 import { useGetHealth, type HealthResponseDto } from '@bookee/api-client';
 import { Bus, RefreshCw } from 'lucide-react';
 
+import { AuthDemo } from '@/components/auth-demo';
 import { Button } from '@/components/ui/button';
 
 export function LandingPage() {
@@ -19,9 +20,8 @@ export function LandingPage() {
           </p>
         </header>
 
-        <section className="rounded-lg border bg-card p-6 shadow-sm">
+        <section className="mb-6 rounded-lg border bg-card p-6 shadow-sm">
           <div className="mb-4 text-sm font-medium text-muted-foreground">Trạng thái backend</div>
-
           {isLoading && <p className="text-sm">Đang kiểm tra…</p>}
           {error != null && (
             <p className="text-sm text-destructive">
@@ -36,7 +36,6 @@ export function LandingPage() {
               </span>
             </p>
           )}
-
           <Button
             className="mt-4"
             size="sm"
@@ -47,6 +46,10 @@ export function LandingPage() {
             <RefreshCw className="size-4" />
             Tải lại
           </Button>
+        </section>
+
+        <section className="rounded-lg border bg-card p-6 shadow-sm">
+          <AuthDemo />
         </section>
       </div>
     </main>

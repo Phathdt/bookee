@@ -1,8 +1,11 @@
 import { setApiBaseUrl } from '@bookee/api-client';
 import { QueryClient } from '@tanstack/react-query';
 
-// Configure shared api-client with this app's base URL at module load.
+import { hydrateAuth } from './auth-store';
+
+// Configure shared api-client at module load.
 setApiBaseUrl(import.meta.env.VITE_API_URL);
+hydrateAuth();
 
 export const queryClient = new QueryClient({
   defaultOptions: {

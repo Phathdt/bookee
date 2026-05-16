@@ -1,6 +1,10 @@
 import type { User } from '../../domain/entities/user.entity';
 import { isUserRole } from '../../domain/enums';
-import { IUserRepository, type CreateUserInput } from '../../domain/interfaces/user.repository';
+import {
+  IUserRepository,
+  type CreateUserInput,
+  type UpdateUserInput,
+} from '../../domain/interfaces/user.repository';
 
 import type { UserModel } from '@/generated/prisma/models/User';
 import { type DatabaseService } from '@/modules/database/database.service';
@@ -54,6 +58,18 @@ export class UserRepositoryPrisma extends IUserRepository {
         email: input.email,
         passwordHash: input.passwordHash,
         role: input.role ?? 'customer',
+      },
+    });
+    return this.toEntity(row);
+  }
+
+  async update(id: number, input: UpdateUserInput): Promise<User> {
+    const row = await this.db.user.update({
+      where: { id },
+      data: {
+        ...(input.name !== undefined && { name: input.name }),
+        ...(input.phone !== undefined && { phone: input.phone }),
+        ...(input.email !== undefined && { email: input.email }),
       },
     });
     return this.toEntity(row);

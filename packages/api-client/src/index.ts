@@ -9,6 +9,8 @@
  */
 
 export * from './generated/health/health';
+export * from './generated/auth/auth';
+export * from './generated/users/users';
 export * from './generated/bookeeAPI.schemas';
 
 export { axiosInstance, AXIOS_INSTANCE, setAuthToken, setApiBaseUrl } from './axios-instance';
