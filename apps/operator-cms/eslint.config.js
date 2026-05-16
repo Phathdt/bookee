@@ -1,6 +1,9 @@
 import reactConfig from '@bookee/config/eslint/react';
 
 export default [
+  {
+    ignores: ['vitest.config.ts'],
+  },
   ...reactConfig,
   {
     files: ['**/*.{ts,tsx}'],

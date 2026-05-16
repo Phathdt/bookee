@@ -17,7 +17,6 @@
     "db:generate": "echo '[backend] db:generate placeholder — wired after Prisma init'"
   },
   "dependencies": {
-    "@bookee/shared-types": "workspace:*",
     "@nestjs/common": "^11.1.21",
     "@nestjs/core": "^11.1.21",
     "@nestjs/platform-express": "^11.1.21",

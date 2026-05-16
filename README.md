@@ -37,7 +37,7 @@ bookee/
 │   └── user-web/            # React+Vite customer site (port 5174)
 ├── packages/
 │   ├── config/              # eslint + tsconfig + prettier presets
-│   └── shared-types/        # Prisma type re-exports for FE
+│   └── api-client/          # openapi.yaml + generated React Query hooks + Zod schemas
 ├── turbo.json               # pipeline definition
 └── package.json             # root, workspaces + scripts
 ```
@@ -45,9 +45,9 @@ bookee/
 ### Workspace dependencies
 
 ```
-apps/backend          → packages/shared-types, packages/config
-apps/operator-cms → packages/shared-types, packages/config
-apps/user-web     → packages/shared-types, packages/config
+apps/backend      → packages/config
+apps/operator-cms → packages/api-client, packages/config
+apps/user-web     → packages/api-client, packages/config
 ```
 
 ## NestJS on Bun + SWC
