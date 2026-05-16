@@ -10,6 +10,8 @@ import * as zod from 'zod';
 /**
  * @summary Liveness probe — returns ok when the API process is up
  */
-export const GetHealthResponse = zod.object({
-  status: zod.enum(['ok']),
-});
+export const GetHealthResponse = zod
+  .object({
+    status: zod.enum(['ok']),
+  })
+  .describe('Liveness probe response — status is always \"ok\" when up');

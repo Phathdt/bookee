@@ -35,6 +35,6 @@ components:
           type: string
           enum:
             - ok
-          example: ok
       required:
         - status
+      description: Liveness probe response — status is always "ok" when up

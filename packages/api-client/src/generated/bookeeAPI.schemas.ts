@@ -12,6 +12,9 @@ export const HealthResponseDtoStatus = {
   ok: 'ok',
 } as const;
 
+/**
+ * Liveness probe response — status is always "ok" when up
+ */
 export interface HealthResponseDto {
   status: HealthResponseDtoStatus;
 }

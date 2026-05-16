@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
+import { cleanupOpenApiDoc, ZodValidationPipe } from 'nestjs-zod';
 
 import { AppModule } from './app.module';
 import { FilteredLogger } from './modules/logger/filtered-logger';
@@ -14,6 +15,10 @@ async function bootstrap(): Promise<void> {
   // known-noisy internal contexts like LegacyRouteConverter).
   app.useLogger(new FilteredLogger(app.get(Logger)));
 
+  // Global validation: every @Body/@Query/@Param DTO that extends createZodDto
+  // is automatically parsed/validated; failures throw 400 with Zod issue tree.
+  app.useGlobalPipes(new ZodValidationPipe());
+
   app.setGlobalPrefix('api/v1');
 
   app.enableCors({
@@ -22,8 +27,10 @@ async function bootstrap(): Promise<void> {
   });
 
   if (process.env.NODE_ENV !== 'production') {
-    const document = SwaggerModule.createDocument(app, swaggerConfig);
-    SwaggerModule.setup('docs', app, document);
+    const rawDoc = SwaggerModule.createDocument(app, swaggerConfig);
+    // cleanupOpenApiDoc rewrites Zod-generated component schemas into a form
+    // @nestjs/swagger consumers (and downstream Orval) handle correctly.
+    SwaggerModule.setup('docs', app, cleanupOpenApiDoc(rawDoc));
   }
 
   const port = Number(process.env.PORT ?? 3000);

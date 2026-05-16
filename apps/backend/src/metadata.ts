@@ -1,22 +1,17 @@
 export default async () => {
   const t = {
-    ['./modules/health/dto/health-response.dto']:
-      await import('./modules/health/dto/health-response.dto'),
+    ['./controllers/health/dto/health-response.dto']:
+      await import('./controllers/health/dto/health-response.dto'),
   };
   return {
     '@nestjs/swagger': {
-      models: [
-        [
-          import('./modules/health/dto/health-response.dto'),
-          { HealthResponseDto: { status: { required: true, type: () => String } } },
-        ],
-      ],
+      models: [[import('./controllers/health/dto/health-response.dto'), { HealthResponseDto: {} }]],
       controllers: [
         [
-          import('./modules/health/health.controller'),
+          import('./controllers/health/health.controller'),
           {
             HealthController: {
-              check: { type: t['./modules/health/dto/health-response.dto'].HealthResponseDto },
+              check: { type: t['./controllers/health/dto/health-response.dto'].HealthResponseDto },
             },
           },
         ],

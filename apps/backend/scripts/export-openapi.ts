@@ -5,6 +5,7 @@ import { dirname, resolve } from 'node:path';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
 import { dump } from 'js-yaml';
+import { cleanupOpenApiDoc } from 'nestjs-zod';
 
 import { AppModule } from '../src/app.module';
 import { swaggerConfig } from '../src/swagger';
@@ -19,7 +20,7 @@ async function exportOpenApi(): Promise<void> {
   });
   app.setGlobalPrefix('api/v1');
 
-  const document = SwaggerModule.createDocument(app, swaggerConfig);
+  const document = cleanupOpenApiDoc(SwaggerModule.createDocument(app, swaggerConfig));
   const yaml = dump(document, { lineWidth: 120, noRefs: true });
 
   await mkdir(dirname(OUTPUT_PATH), { recursive: true });
