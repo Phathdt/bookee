@@ -1,19 +1,52 @@
 import { useGetHealth, type HealthResponseDto } from '@bookee/api-client';
+import { Activity, RefreshCw } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 
 export function LandingPage() {
-  const { data, isLoading, error } = useGetHealth<HealthResponseDto>();
+  const { data, isLoading, error, refetch } = useGetHealth<HealthResponseDto>();
 
   return (
-    <main style={{ fontFamily: 'system-ui, sans-serif', padding: '2rem' }}>
-      <h1>Operator CMS</h1>
-      <p>Bookee — multi-operator trip booking platform.</p>
+    <main className="min-h-screen bg-background text-foreground">
+      <div className="mx-auto max-w-3xl px-6 py-12">
+        <header className="mb-10">
+          <h1 className="text-4xl font-bold tracking-tight">Operator CMS</h1>
+          <p className="mt-2 text-muted-foreground">
+            Bookee — multi-operator trip booking platform.
+          </p>
+        </header>
 
-      <section style={{ marginTop: '1.5rem' }}>
-        <h2 style={{ fontSize: '1rem', color: '#444' }}>Backend status</h2>
-        {isLoading && <p>Checking…</p>}
-        {error != null && <p style={{ color: 'crimson' }}>API unreachable</p>}
-        {data && <p style={{ color: 'green' }}>status: {data.status}</p>}
-      </section>
+        <section className="rounded-lg border bg-card p-6 shadow-sm">
+          <div className="mb-4 flex items-center gap-2 text-sm font-medium text-muted-foreground">
+            <Activity className="size-4" />
+            Backend status
+          </div>
+
+          {isLoading && <p className="text-sm">Checking…</p>}
+          {error != null && (
+            <p className="text-sm text-destructive">API unreachable. Is the backend running?</p>
+          )}
+          {data && (
+            <p className="text-sm">
+              <span className="font-medium">status:</span>{' '}
+              <span className="rounded bg-secondary px-2 py-0.5 text-secondary-foreground">
+                {data.status}
+              </span>
+            </p>
+          )}
+
+          <Button
+            className="mt-4"
+            size="sm"
+            variant="outline"
+            onClick={() => void refetch()}
+            disabled={isLoading}
+          >
+            <RefreshCw className="size-4" />
+            Refresh
+          </Button>
+        </section>
+      </div>
     </main>
   );
 }

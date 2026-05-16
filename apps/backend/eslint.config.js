@@ -2,7 +2,7 @@ import nestConfig from '@bookee/config/eslint/nestjs';
 
 export default [
   {
-    ignores: ['scripts/**', 'src/metadata.ts'],
+    ignores: ['scripts/**', 'src/metadata.ts', 'vitest.config.ts'],
   },
   ...nestConfig,
   {
