@@ -27,13 +27,13 @@
 
 ## 3. Auth & User Management Module
 
-- [ ] 3.1 Implement bcrypt password hashing utility
-- [ ] 3.2 Endpoint POST /auth/register (customer self-register)
-- [ ] 3.3 Endpoint POST /auth/login (phone|email + password)
-- [ ] 3.4 Endpoint POST /auth/refresh token
-- [ ] 3.5 JWT strategy + AuthGuard với role + operatorId claim
-- [ ] 3.6 RoleGuard decorator (@Roles) cho từng endpoint
-- [ ] 3.7 Rate limit guard cho login (5 fail / 15min lock)
+- [x] 3.1 Implement bcrypt password hashing utility
+- [x] 3.2 Endpoint POST /auth/register (customer self-register)
+- [x] 3.3 Endpoint POST /auth/login (phone|email + password)
+- [x] 3.4 Endpoint POST /auth/refresh token
+- [x] 3.5 JWT strategy + AuthGuard với role + operatorId claim
+- [x] 3.6 RoleGuard decorator (@Roles) cho từng endpoint
+- [x] 3.7 Rate limit guard cho login (5 fail / 15min lock)
 - [ ] 3.8 Endpoint GET/PATCH /users/me
 - [ ] 3.9 Unit test auth flow + role enforcement
 
