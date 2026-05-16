@@ -8,7 +8,6 @@ export default defineConfig({
       target: './src/generated',
       client: 'react-query',
       httpClient: 'axios',
-      prettier: true,
       override: {
         mutator: {
           path: './src/axios-instance.ts',
@@ -31,7 +30,6 @@ export default defineConfig({
       target: './src/generated',
       client: 'zod',
       fileExtension: '.zod.ts',
-      prettier: true,
     },
   },
 });
