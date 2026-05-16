@@ -2,6 +2,7 @@ import { useGetHealth, type HealthResponseDto } from '@bookee/api-client';
 import { Activity, RefreshCw } from 'lucide-react';
 
 import { AuthDemo } from '@/components/auth-demo';
+import { OperatorsList } from '@/components/operators-list';
 import { Button } from '@/components/ui/button';
 
 export function LandingPage() {
@@ -46,8 +47,12 @@ export function LandingPage() {
           </Button>
         </section>
 
-        <section className="rounded-lg border bg-card p-6 shadow-sm">
+        <section className="mb-6 rounded-lg border bg-card p-6 shadow-sm">
           <AuthDemo />
+        </section>
+
+        <section className="rounded-lg border bg-card p-6 shadow-sm">
+          <OperatorsList />
         </section>
       </div>
     </main>

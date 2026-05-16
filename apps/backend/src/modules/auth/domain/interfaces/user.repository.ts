@@ -13,6 +13,8 @@ export interface UpdateUserInput {
   name?: string;
   phone?: string;
   email?: string;
+  role?: UserRole;
+  operatorId?: number | null;
 }
 
 /**

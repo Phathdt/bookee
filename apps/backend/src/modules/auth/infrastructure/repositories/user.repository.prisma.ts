@@ -70,6 +70,8 @@ export class UserRepositoryPrisma extends IUserRepository {
         ...(input.name !== undefined && { name: input.name }),
         ...(input.phone !== undefined && { phone: input.phone }),
         ...(input.email !== undefined && { email: input.email }),
+        ...(input.role !== undefined && { role: input.role }),
+        ...(input.operatorId !== undefined && { operatorId: input.operatorId }),
       },
     });
     return this.toEntity(row);

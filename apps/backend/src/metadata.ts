@@ -3,6 +3,8 @@ export default async () => {
     ['./controllers/auth/dto/auth.dto']: await import('./controllers/auth/dto/auth.dto'),
     ['./controllers/health/dto/health-response.dto']:
       await import('./controllers/health/dto/health-response.dto'),
+    ['./controllers/operators/dto/operators.dto']:
+      await import('./controllers/operators/dto/operators.dto'),
     ['./controllers/users/dto/users.dto']: await import('./controllers/users/dto/users.dto'),
   };
   return {
@@ -20,6 +22,17 @@ export default async () => {
           },
         ],
         [import('./controllers/health/dto/health-response.dto'), { HealthResponseDto: {} }],
+        [
+          import('./controllers/operators/dto/operators.dto'),
+          {
+            OperatorDto: {},
+            CreateOperatorBodyDto: {},
+            UpdateOperatorBodyDto: {},
+            SetOperatorStatusBodyDto: {},
+            AssignStaffBodyDto: {},
+            PublicStaffUserDto: {},
+          },
+        ],
         [
           import('./controllers/users/dto/users.dto'),
           { UpdateProfileBodyDto: {}, PublicUserDto: {} },
@@ -41,6 +54,23 @@ export default async () => {
           {
             HealthController: {
               check: { type: t['./controllers/health/dto/health-response.dto'].HealthResponseDto },
+            },
+          },
+        ],
+        [
+          import('./controllers/operators/operators.controller'),
+          {
+            OperatorsController: {
+              listActive: { type: [t['./controllers/operators/dto/operators.dto'].OperatorDto] },
+              listAll: { type: [t['./controllers/operators/dto/operators.dto'].OperatorDto] },
+              getOne: { type: t['./controllers/operators/dto/operators.dto'].OperatorDto },
+              create: { type: t['./controllers/operators/dto/operators.dto'].OperatorDto },
+              update: { type: t['./controllers/operators/dto/operators.dto'].OperatorDto },
+              setStatus: { type: t['./controllers/operators/dto/operators.dto'].OperatorDto },
+              delete: {},
+              assignStaff: {
+                type: t['./controllers/operators/dto/operators.dto'].PublicStaffUserDto,
+              },
             },
           },
         ],

@@ -111,6 +111,176 @@ paths:
       summary: Update the authenticated user profile
       tags:
         - users
+  /api/v1/operators:
+    get:
+      operationId: listOperators
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OperatorDto'
+      summary: List active operators (public)
+      tags:
+        - operators
+    post:
+      operationId: createOperator
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOperatorBodyDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperatorDto'
+      security:
+        - bearer: []
+      summary: Create a new operator (admin only)
+      tags:
+        - operators
+  /api/v1/operators/all:
+    get:
+      operationId: listAllOperators
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OperatorDto'
+      security:
+        - bearer: []
+      summary: List every operator (admin only)
+      tags:
+        - operators
+  /api/v1/operators/{id}:
+    get:
+      operationId: getOperator
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperatorDto'
+      summary: Get a single operator by id
+      tags:
+        - operators
+    patch:
+      operationId: updateOperator
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOperatorBodyDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperatorDto'
+      security:
+        - bearer: []
+      summary: Update operator metadata (admin only)
+      tags:
+        - operators
+    delete:
+      operationId: deleteOperator
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '204':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete operator (admin only)
+      tags:
+        - operators
+  /api/v1/operators/{id}/status:
+    patch:
+      operationId: setOperatorStatus
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetOperatorStatusBodyDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperatorDto'
+      security:
+        - bearer: []
+      summary: Activate / suspend an operator (admin only)
+      tags:
+        - operators
+  /api/v1/operators/{id}/staff:
+    post:
+      operationId: assignOperatorStaff
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignStaffBodyDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicStaffUserDto'
+      security:
+        - bearer: []
+      summary: Assign a user (role operator|driver) to an operator
+      tags:
+        - operators
 info:
   title: Bookee API
   description: Multi-operator trip booking platform API
@@ -301,3 +471,131 @@ components:
           maxLength: 254
           format: email
           pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+    OperatorDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        name:
+          type: string
+        hotline:
+          type: string
+        logo:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum:
+            - pending
+            - active
+            - suspended
+      required:
+        - id
+        - name
+        - hotline
+        - logo
+        - status
+    CreateOperatorBodyDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        hotline:
+          type: string
+          minLength: 8
+          maxLength: 20
+          pattern: ^[+\d\s-]+$
+        logo:
+          type: string
+          maxLength: 500
+          format: uri
+      required:
+        - name
+        - hotline
+    UpdateOperatorBodyDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        hotline:
+          type: string
+          minLength: 8
+          maxLength: 20
+        logo:
+          type: string
+          maxLength: 500
+          format: uri
+          nullable: true
+    SetOperatorStatusBodyDto:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - pending
+            - active
+            - suspended
+      required:
+        - status
+    AssignStaffBodyDto:
+      type: object
+      properties:
+        userId:
+          type: integer
+          exclusiveMinimum: true
+          maximum: 9007199254740991
+          minimum: 0
+        role:
+          type: string
+          enum:
+            - operator
+            - driver
+      required:
+        - userId
+        - role
+    PublicStaffUserDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+          format: email
+          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+        role:
+          type: string
+          enum:
+            - customer
+            - operator
+            - driver
+            - admin
+        operatorId:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+          nullable: true
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+        - id
+        - name
+        - phone
+        - email
+        - role
+        - operatorId
+        - createdAt
+        - updatedAt

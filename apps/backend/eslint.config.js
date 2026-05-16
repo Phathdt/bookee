@@ -20,4 +20,14 @@ export default [
       },
     },
   },
+  {
+    // DTO classes are referenced at runtime via NestJS @Body decorator
+    // metadata (emitDecoratorMetadata). The consistent-type-imports rule
+    // mistakenly treats them as type-only, breaking validation. Disable
+    // the rule inside controller files so DTO imports stay runtime.
+    files: ['src/controllers/**/*.ts'],
+    rules: {
+      '@typescript-eslint/consistent-type-imports': 'off',
+    },
+  },
 ];

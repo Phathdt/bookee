@@ -154,3 +154,119 @@ export interface UpdateProfileBodyDto {
    */
   email?: string;
 }
+
+export type OperatorDtoStatus = (typeof OperatorDtoStatus)[keyof typeof OperatorDtoStatus];
+
+export const OperatorDtoStatus = {
+  pending: 'pending',
+  active: 'active',
+  suspended: 'suspended',
+} as const;
+
+export interface OperatorDto {
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  id: number;
+  name: string;
+  hotline: string;
+  /** @nullable */
+  logo: string | null;
+  status: OperatorDtoStatus;
+}
+
+export interface CreateOperatorBodyDto {
+  /**
+   * @minLength 1
+   * @maxLength 120
+   */
+  name: string;
+  /**
+   * @minLength 8
+   * @maxLength 20
+   * @pattern ^[+\d\s-]+$
+   */
+  hotline: string;
+  /** @maxLength 500 */
+  logo?: string;
+}
+
+export interface UpdateOperatorBodyDto {
+  /**
+   * @minLength 1
+   * @maxLength 120
+   */
+  name?: string;
+  /**
+   * @minLength 8
+   * @maxLength 20
+   */
+  hotline?: string;
+  /**
+   * @maxLength 500
+   * @nullable
+   */
+  logo?: string | null;
+}
+
+export type SetOperatorStatusBodyDtoStatus =
+  (typeof SetOperatorStatusBodyDtoStatus)[keyof typeof SetOperatorStatusBodyDtoStatus];
+
+export const SetOperatorStatusBodyDtoStatus = {
+  pending: 'pending',
+  active: 'active',
+  suspended: 'suspended',
+} as const;
+
+export interface SetOperatorStatusBodyDto {
+  status: SetOperatorStatusBodyDtoStatus;
+}
+
+export type AssignStaffBodyDtoRole =
+  (typeof AssignStaffBodyDtoRole)[keyof typeof AssignStaffBodyDtoRole];
+
+export const AssignStaffBodyDtoRole = {
+  operator: 'operator',
+  driver: 'driver',
+} as const;
+
+export interface AssignStaffBodyDto {
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
+  userId: number;
+  role: AssignStaffBodyDtoRole;
+}
+
+export type PublicStaffUserDtoRole =
+  (typeof PublicStaffUserDtoRole)[keyof typeof PublicStaffUserDtoRole];
+
+export const PublicStaffUserDtoRole = {
+  customer: 'customer',
+  operator: 'operator',
+  driver: 'driver',
+  admin: 'admin',
+} as const;
+
+export interface PublicStaffUserDto {
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  id: number;
+  name: string;
+  phone: string;
+  /** @pattern ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$ */
+  email: string;
+  role: PublicStaffUserDtoRole;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  operatorId: number | null;
+  createdAt: string;
+  updatedAt: string;
+}
