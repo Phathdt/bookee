@@ -1,11 +1,211 @@
+// Bookee — multi-operator intercity bus booking platform.
+//
+// Conventions:
+// - IDs: Int autoincrement (BIGINT-friendly for scale). FK columns are also Int.
+// - DB columns: snake_case via @map; TS fields stay camelCase (Prisma client idiom).
+// - Soft relations only: no @relation / FK constraints. Cross-table linkage is
+//   plain ID columns; joins and integrity are handled in the service layer.
+// - Enums: stored as String in DB. Allowed values live in each module's
+//   domain/enums.ts and are validated by Zod DTOs.
+
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider     = "postgresql"
+  relationMode = "prisma"
 }
 
-// Models will be added as we implement features.
-// See openspec/changes/multi-operator-trip-booking-app/ for the planned schema.
+// ---- Core users + operators ----------------------------------------------
+
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String
+  phone        String   @unique
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         String   @default("customer")
+  operatorId   Int?     @map("operator_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt       @map("updated_at")
+
+  @@index([operatorId])
+  @@map("users")
+}
+
+model BusCompany {
+  id      Int     @id @default(autoincrement())
+  name    String  @unique
+  hotline String
+  logo    String?
+  status  String  @default("pending")
+
+  @@map("bus_companies")
+}
+
+// ---- Geography + tuyến ---------------------------------------------------
+
+model Station {
+  id      Int    @id @default(autoincrement())
+  name    String
+  address String
+  lat     Float
+  lng     Float
+  city    String
+
+  @@index([city])
+  @@index([name])
+  @@map("stations")
+}
+
+model Route {
+  id              Int   @id @default(autoincrement())
+  companyId       Int   @map("company_id")
+  fromStationId   Int   @map("from_station_id")
+  toStationId     Int   @map("to_station_id")
+  distanceKm      Float @map("distance_km")
+  durationMinutes Int   @map("duration_minutes")
+
+  @@index([companyId])
+  @@index([fromStationId, toStationId])
+  @@map("routes")
+}
+
+// ---- Vehicles + ghế ------------------------------------------------------
+
+model SeatLayout {
+  id   Int    @id @default(autoincrement())
+  name String
+  rows Int
+  cols Int
+
+  @@map("seat_layouts")
+}
+
+model Seat {
+  id       Int    @id @default(autoincrement())
+  layoutId Int    @map("layout_id")
+  code     String
+  floor    Int    @default(1)
+  row      Int
+  col      Int
+
+  @@unique([layoutId, code])
+  @@unique([layoutId, floor, row, col])
+  @@map("seats")
+}
+
+model Vehicle {
+  id           Int    @id @default(autoincrement())
+  companyId    Int    @map("company_id")
+  plateNumber  String @unique @map("plate_number")
+  type         String
+  seatLayoutId Int    @map("seat_layout_id")
+  totalSeats   Int    @map("total_seats")
+
+  @@index([companyId])
+  @@index([type])
+  @@map("vehicles")
+}
+
+// ---- Trips (instance của Route) ------------------------------------------
+
+model Trip {
+  id            Int      @id @default(autoincrement())
+  routeId       Int      @map("route_id")
+  vehicleId     Int      @map("vehicle_id")
+  departureTime DateTime @map("departure_time")
+  arrivalTime   DateTime @map("arrival_time")
+  basePrice     Int      @map("base_price")
+  status        String   @default("scheduled")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt       @map("updated_at")
+
+  @@index([vehicleId, departureTime])
+  @@index([departureTime, status])
+  @@map("trips")
+}
+
+// ---- Booking flow --------------------------------------------------------
+
+model Booking {
+  id          Int      @id @default(autoincrement())
+  bookingCode String   @unique @map("booking_code")
+  userId      Int?     @map("user_id")
+  tripId      Int      @map("trip_id")
+  totalAmount Int      @map("total_amount")
+  status      String   @default("pending")
+  couponId    Int?     @map("coupon_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt       @map("updated_at")
+
+  @@index([userId])
+  @@index([tripId])
+  @@index([status])
+  @@map("bookings")
+}
+
+model BookingSeat {
+  id        Int @id @default(autoincrement())
+  bookingId Int @map("booking_id")
+  seatId    Int @map("seat_id")
+  price     Int
+
+  @@index([bookingId])
+  @@map("booking_seats")
+}
+
+model Passenger {
+  id              Int    @id @default(autoincrement())
+  bookingId       Int    @map("booking_id")
+  fullName        String @map("full_name")
+  phone           String
+  idCardEncrypted String @map("id_card_encrypted")
+
+  @@index([bookingId])
+  @@map("passengers")
+}
+
+// ---- Payment + coupon + ticket ------------------------------------------
+
+model Payment {
+  id            Int      @id @default(autoincrement())
+  bookingId     Int      @map("booking_id")
+  provider      String
+  amount        Int
+  status        String   @default("pending")
+  transactionId String?  @unique @map("transaction_id")
+  rawPayload    Json?    @map("raw_payload")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt       @map("updated_at")
+
+  @@index([bookingId])
+  @@map("payments")
+}
+
+model Coupon {
+  id           Int      @id @default(autoincrement())
+  code         String   @unique
+  discountType String   @map("discount_type")
+  value        Int
+  maxValue     Int?     @map("max_value")
+  usageLimit   Int?     @map("usage_limit")
+  usedCount    Int      @default(0) @map("used_count")
+  expiredAt    DateTime @map("expired_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("coupons")
+}
+
+model Ticket {
+  id            Int       @id @default(autoincrement())
+  bookingSeatId Int       @unique @map("booking_seat_id")
+  qrCode        String    @map("qr_code") @db.Text
+  status        String    @default("valid")
+  checkInAt     DateTime? @map("check_in_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  @@map("tickets")
+}

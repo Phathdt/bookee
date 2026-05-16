@@ -1,29 +1,29 @@
 ## 1. Project Setup & Infrastructure
 
-- [ ] 1.1 Khởi tạo monorepo (NestJS backend + Next.js customer + React operator portal)
-- [ ] 1.2 Cấu hình TypeScript strict mode, ESLint, Prettier, Husky pre-commit
-- [ ] 1.3 Setup PostgreSQL + Redis qua Docker Compose cho local dev
-- [ ] 1.4 Cấu hình TypeORM (hoặc Prisma) với migration tooling
-- [ ] 1.5 Khởi tạo CI pipeline (lint, test, build) trên GitHub Actions
-- [ ] 1.6 Thiết lập biến môi trường (.env.example) cho DB, Redis, JWT secret, payment provider keys
+- [x] 1.1 Khởi tạo monorepo (NestJS backend + Next.js customer + React operator portal)
+- [x] 1.2 Cấu hình TypeScript strict mode, ESLint, Prettier, Husky pre-commit
+- [x] 1.3 Setup PostgreSQL + Redis qua Docker Compose cho local dev
+- [x] 1.4 Cấu hình TypeORM (hoặc Prisma) với migration tooling
+- [x] 1.5 Khởi tạo CI pipeline (lint, test, build) trên GitHub Actions
+- [x] 1.6 Thiết lập biến môi trường (.env.example) cho DB, Redis, JWT secret, payment provider keys
 
 ## 2. Database Schema & Migrations
 
-- [ ] 2.1 Migration: bảng `users` (id, name, phone, email, password_hash, role, operator_id nullable, created_at)
-- [ ] 2.2 Migration: bảng `bus_companies` (id, name, hotline, logo, status)
-- [ ] 2.3 Migration: bảng `stations` (id, name, address, lat, lng, city) + index theo city
-- [ ] 2.4 Migration: bảng `routes` (id, company_id, from_station_id, to_station_id, distance_km, duration_minutes)
-- [ ] 2.5 Migration: bảng `seat_layouts` (id, name, rows, cols)
-- [ ] 2.6 Migration: bảng `seats` (id, layout_id, code, floor, row, col) + unique (layout_id, code)
-- [ ] 2.7 Migration: bảng `vehicles` (id, company_id, plate_number unique, type, seat_layout_id, total_seats)
-- [ ] 2.8 Migration: bảng `trips` (id, route_id, vehicle_id, departure_time, arrival_time, base_price, status) + index search
-- [ ] 2.9 Migration: bảng `bookings` (id, user_id, trip_id, total_amount, status, booking_code unique, coupon_id nullable, created_at)
-- [ ] 2.10 Migration: bảng `booking_seats` (id, booking_id, seat_id, price) + unique (trip_id, seat_id) khi paid
-- [ ] 2.11 Migration: bảng `passengers` (id, booking_id, full_name, phone, id_card_encrypted)
-- [ ] 2.12 Migration: bảng `payments` (id, booking_id, provider, amount, status, transaction_id unique)
-- [ ] 2.13 Migration: bảng `coupons` (id, code unique upper, discount_type, value, max_value nullable, usage_limit, used_count, expired_at)
-- [ ] 2.14 Migration: bảng `tickets` (id, booking_seat_id unique, qr_code, status, check_in_at nullable)
-- [ ] 2.15 Seed data: stations chính (Mien Dong, Mien Tay, Da Lat, Can Tho…), 2-3 seat layout mẫu, admin user
+- [x] 2.1 Migration: bảng `users` (id, name, phone, email, password_hash, role, operator_id nullable, created_at)
+- [x] 2.2 Migration: bảng `bus_companies` (id, name, hotline, logo, status)
+- [x] 2.3 Migration: bảng `stations` (id, name, address, lat, lng, city) + index theo city
+- [x] 2.4 Migration: bảng `routes` (id, company_id, from_station_id, to_station_id, distance_km, duration_minutes)
+- [x] 2.5 Migration: bảng `seat_layouts` (id, name, rows, cols)
+- [x] 2.6 Migration: bảng `seats` (id, layout_id, code, floor, row, col) + unique (layout_id, code)
+- [x] 2.7 Migration: bảng `vehicles` (id, company_id, plate_number unique, type, seat_layout_id, total_seats)
+- [x] 2.8 Migration: bảng `trips` (id, route_id, vehicle_id, departure_time, arrival_time, base_price, status) + index search
+- [x] 2.9 Migration: bảng `bookings` (id, user_id, trip_id, total_amount, status, booking_code unique, coupon_id nullable, created_at)
+- [x] 2.10 Migration: bảng `booking_seats` (id, booking_id, seat_id, price) + unique (trip_id, seat_id) khi paid
+- [x] 2.11 Migration: bảng `passengers` (id, booking_id, full_name, phone, id_card_encrypted)
+- [x] 2.12 Migration: bảng `payments` (id, booking_id, provider, amount, status, transaction_id unique)
+- [x] 2.13 Migration: bảng `coupons` (id, code unique upper, discount_type, value, max_value nullable, usage_limit, used_count, expired_at)
+- [x] 2.14 Migration: bảng `tickets` (id, booking_seat_id unique, qr_code, status, check_in_at nullable)
+- [x] 2.15 Seed data: stations chính (Mien Dong, Mien Tay, Da Lat, Can Tho…), 2-3 seat layout mẫu, admin user
 
 ## 3. Auth & User Management Module
 
