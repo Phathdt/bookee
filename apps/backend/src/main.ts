@@ -1,12 +1,17 @@
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
+import { Logger } from 'nestjs-pino';
 
 import { AppModule } from './app.module';
 import { swaggerConfig } from './swagger';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+
+  // Swap default Nest logger for pino once the container is ready, so all
+  // subsequent log lines (including Nest internals) are routed through pino.
+  app.useLogger(app.get(Logger));
 
   app.setGlobalPrefix('api/v1');
 
@@ -23,11 +28,11 @@ async function bootstrap(): Promise<void> {
   const port = Number(process.env.PORT ?? 3000);
   await app.listen(port);
 
-  // eslint-disable-next-line no-console
-  console.log(`[backend] listening on http://localhost:${port}`);
+  app.get(Logger).log(`[backend] listening on http://localhost:${port}`);
 }
 
 bootstrap().catch((err) => {
+  // Pre-container failure — pino isn't available yet, fall back to console.
   console.error('[backend] failed to bootstrap', err);
   process.exit(1);
 });
