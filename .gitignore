@@ -50,7 +50,8 @@ Thumbs.db
 *.tsbuildinfo
 
 # Prisma
-apps/api/prisma/migrations/dev/
+apps/backend/prisma/migrations/dev/
+apps/backend/src/generated/
 
 # Bun
 bun.lockb
