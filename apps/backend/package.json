@@ -50,6 +50,7 @@
     "@nestjs/testing": "^11.1.21",
     "@swc/cli": "^0.8.1",
     "@swc/core": "^1.15.33",
+    "@testcontainers/postgresql": "^11.14.0",
     "@types/bcryptjs": "^3.0.0",
     "@types/express": "^5.0.6",
     "@types/js-yaml": "^4.0.9",

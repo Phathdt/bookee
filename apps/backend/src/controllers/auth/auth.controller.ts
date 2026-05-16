@@ -1,11 +1,4 @@
-import {
-  Body,
-  ConflictException,
-  Controller,
-  Inject,
-  Post,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 
@@ -16,8 +9,8 @@ import {
   type RefreshBodyDto,
   type RegisterBodyDto,
 } from './dto/auth.dto';
+import { mapAuthDomainError } from './map-domain-error';
 
-import { AuthService } from '@/modules/auth/application/services/auth.service';
 import { IAuthService } from '@/modules/auth/domain/interfaces/auth.service';
 
 @ApiTags('auth')
@@ -32,7 +25,7 @@ export class AuthController {
     try {
       return await this.auth.register(body);
     } catch (err) {
-      throw this.mapDomainError(err);
+      throw mapAuthDomainError(err);
     }
   }
 
@@ -46,7 +39,7 @@ export class AuthController {
     try {
       return await this.auth.login(body);
     } catch (err) {
-      throw this.mapDomainError(err);
+      throw mapAuthDomainError(err);
     }
   }
 
@@ -57,14 +50,7 @@ export class AuthController {
     try {
       return await this.auth.refresh(body.refreshToken);
     } catch (err) {
-      throw this.mapDomainError(err);
+      throw mapAuthDomainError(err);
     }
-  }
-
-  /** Map application-layer domain errors to HTTP exceptions. */
-  private mapDomainError(err: unknown): Error {
-    if (err instanceof AuthService.ConflictError) return new ConflictException(err.message);
-    if (err instanceof AuthService.UnauthorizedError) return new UnauthorizedException(err.message);
-    return err as Error;
   }
 }

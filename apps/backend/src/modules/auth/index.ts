@@ -17,8 +17,9 @@ export type {
 export { IUserRepository } from './domain/interfaces/user.repository';
 export type { CreateUserInput } from './domain/interfaces/user.repository';
 
-// Application service class (for accessing static error types)
+// Application service class + domain errors
 export { AuthService } from './application/services/auth.service';
+export { AuthConflictError, AuthUnauthorizedError } from './domain/errors';
 
 // HTTP-layer helpers
 export { JwtAuthGuard } from './infrastructure/guards/jwt-auth.guard';

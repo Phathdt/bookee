@@ -1,4 +1,5 @@
 import { toPublicUser, type User } from '../../domain/entities/user.entity';
+import { AuthConflictError, AuthUnauthorizedError } from '../../domain/errors';
 import type {
   AuthSession,
   AuthTokens,
@@ -23,10 +24,10 @@ export class AuthService implements IAuthService {
 
   async register(input: RegisterInput): Promise<AuthSession> {
     if (await this.users.findByEmail(input.email)) {
-      throw new AuthService.ConflictError('email already registered');
+      throw new AuthConflictError('email already registered');
     }
     if (await this.users.findByPhone(input.phone)) {
-      throw new AuthService.ConflictError('phone already registered');
+      throw new AuthConflictError('phone already registered');
     }
 
     const passwordHash = await PasswordHash.fromPlain(input.password);
@@ -43,11 +44,11 @@ export class AuthService implements IAuthService {
 
   async login(input: LoginInput): Promise<AuthSession> {
     const user = await this.users.findByPhoneOrEmail(input.identifier);
-    if (!user) throw new AuthService.UnauthorizedError('Invalid credentials');
+    if (!user) throw new AuthUnauthorizedError('Invalid credentials');
 
     const stored = PasswordHash.fromStored(user.passwordHash);
     if (!(await stored.matches(input.password))) {
-      throw new AuthService.UnauthorizedError('Invalid credentials');
+      throw new AuthUnauthorizedError('Invalid credentials');
     }
 
     return this.buildSession(user);
@@ -58,25 +59,17 @@ export class AuthService implements IAuthService {
     try {
       payload = await this.jwt.verify(refreshToken);
     } catch {
-      throw new AuthService.UnauthorizedError('Invalid refresh token');
+      throw new AuthUnauthorizedError('Invalid refresh token');
     }
     if (payload.typ !== 'refresh') {
-      throw new AuthService.UnauthorizedError('Token is not a refresh token');
+      throw new AuthUnauthorizedError('Token is not a refresh token');
     }
 
     const user = await this.users.findById(payload.sub);
-    if (!user) throw new AuthService.UnauthorizedError('User no longer exists');
+    if (!user) throw new AuthUnauthorizedError('User no longer exists');
 
     return this.signTokens(user);
   }
-
-  // Domain-level errors — infrastructure layer maps these to HTTP exceptions.
-  static readonly ConflictError = class extends Error {
-    readonly kind = 'conflict' as const;
-  };
-  static readonly UnauthorizedError = class extends Error {
-    readonly kind = 'unauthorized' as const;
-  };
 
   private async buildSession(user: User): Promise<AuthSession> {
     const tokens = await this.signTokens(user);
