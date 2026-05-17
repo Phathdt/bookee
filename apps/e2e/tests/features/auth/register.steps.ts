@@ -1,7 +1,7 @@
 import { Given, Then, When } from '@cucumber/cucumber';
 import { faker } from '@faker-js/faker';
 import { LandingPage } from '@page-objects/landing.page';
-import type { BrowserWorld } from '@support/world';
+import { BrowserWorld } from '@support/world';
 import { logger } from '@utils/logger';
 
 const DUPE_EMAIL = 'admin@bookee.local'; // seeded admin — always present after `prisma db seed`

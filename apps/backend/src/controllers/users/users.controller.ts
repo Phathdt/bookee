@@ -1,11 +1,11 @@
 import { Body, Controller, Get, Inject, Patch, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { PublicUserDto, type UpdateProfileBodyDto } from './dto/users.dto';
+import { PublicUserDto, UpdateProfileBodyDto } from './dto/users.dto';
 import { mapUsersDomainError } from './map-domain-error';
 
-import type { PublicUser } from '@/modules/auth/domain/entities/user.entity';
-import type { JwtPayload } from '@/modules/auth/domain/jwt-payload';
+import { PublicUser } from '@/modules/auth/domain/entities/user.entity';
+import { JwtPayload } from '@/modules/auth/domain/jwt-payload';
 import { CurrentUser } from '@/modules/auth/infrastructure/decorators/current-user.decorator';
 import { JwtAuthGuard } from '@/modules/auth/infrastructure/guards/jwt-auth.guard';
 import { IUsersService } from '@/modules/users/domain/interfaces/users.service';

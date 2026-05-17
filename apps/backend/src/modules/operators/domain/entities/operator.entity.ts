@@ -1,4 +1,4 @@
-import type { OperatorStatus } from '../enums';
+import { OperatorStatus } from '../enums';
 
 /**
  * Operator (bus company) domain entity. Plain interface — canonical shape

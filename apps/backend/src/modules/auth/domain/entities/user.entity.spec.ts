@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { toPublicUser, type User } from './user.entity';
+import { toPublicUser, User } from './user.entity';
 
 describe('User entity helpers', () => {
   const sample: User = {

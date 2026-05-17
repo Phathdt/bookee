@@ -1,13 +1,13 @@
-import type { User } from '../../domain/entities/user.entity';
+import { User } from '../../domain/entities/user.entity';
 import { isUserRole } from '../../domain/enums';
 import {
   IUserRepository,
-  type CreateUserInput,
-  type UpdateUserInput,
+  CreateUserInput,
+  UpdateUserInput,
 } from '../../domain/interfaces/user.repository';
 
-import type { UserModel } from '@/generated/prisma/models/User';
-import { type DatabaseService } from '@/modules/database/database.service';
+import { UserModel } from '@/generated/prisma/models/User';
+import { DatabaseService } from '@/modules/database/database.service';
 
 /**
  * Prisma adapter for IUserRepository.

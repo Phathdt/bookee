@@ -1,1 +1,7 @@
+# 1. Lint + format only the files staged for this commit
 bunx lint-staged
+
+# 2. Run the backend test suite — catches type/runtime regressions before
+#    they hit main. Skips heavy testcontainer integration when SKIP_INTEGRATION=1
+#    is exported (e.g. for trivial doc-only commits).
+bun run --filter @bookee/backend test

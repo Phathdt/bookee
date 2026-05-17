@@ -2,10 +2,10 @@ import { execSync } from 'node:child_process';
 import * as path from 'node:path';
 
 import { PrismaPg } from '@prisma/adapter-pg';
-import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql';
+import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
 
 import { PrismaClient } from '@/generated/prisma/client';
-import { type DatabaseService } from '@/modules/database/database.service';
+import { DatabaseService } from '@/modules/database/database.service';
 
 /**
  * Boot a disposable Postgres container, run prisma migrate deploy against

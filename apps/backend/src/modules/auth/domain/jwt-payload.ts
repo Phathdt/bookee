@@ -1,4 +1,4 @@
-import type { UserRole } from './enums';
+import { UserRole } from './enums';
 
 /**
  * Stable shape of the access/refresh token payload. Reduce changes to this

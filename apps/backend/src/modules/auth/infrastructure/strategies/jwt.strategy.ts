@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { isUserRole } from '../../domain/enums';
-import type { JwtPayload } from '../../domain/jwt-payload';
+import { JwtPayload } from '../../domain/jwt-payload';
 
 /**
  * Validates Bearer access tokens. Rejects refresh tokens (they only travel

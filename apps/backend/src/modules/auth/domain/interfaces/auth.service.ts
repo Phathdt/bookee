@@ -1,4 +1,4 @@
-import type { PublicUser } from '../entities/user.entity';
+import { PublicUser } from '../entities/user.entity';
 
 export interface RegisterInput {
   name: string;

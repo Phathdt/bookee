@@ -1,7 +1,7 @@
-import type { Operator } from '../entities/operator.entity';
-import type { OperatorStatus } from '../enums';
+import { Operator } from '../entities/operator.entity';
+import { OperatorStatus } from '../enums';
 
-import type { PublicUser } from '@/modules/auth/domain/entities/user.entity';
+import { PublicUser } from '@/modules/auth/domain/entities/user.entity';
 
 export interface CreateOperatorInput {
   name: string;

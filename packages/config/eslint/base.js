@@ -30,9 +30,14 @@ export default [
         'warn',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ],
+      // Flip the default: enforce value imports, never auto-convert to
+      // `import type`. NestJS reflection (decorator metadata, Reflector DI)
+      // needs runtime imports; the default direction silently breaks DI.
+      // FE apps lose marginal tree-shaking but bundlers handle dead-code
+      // removal regardless.
       '@typescript-eslint/consistent-type-imports': [
         'warn',
-        { prefer: 'type-imports', fixStyle: 'inline-type-imports' },
+        { prefer: 'no-type-imports', fixStyle: 'separate-type-imports' },
       ],
       '@typescript-eslint/no-explicit-any': 'warn',
       'import/order': [

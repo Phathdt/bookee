@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
-import type { IncomingMessage } from 'node:http';
+import { IncomingMessage } from 'node:http';
 
-import type { Options } from 'pino-http';
+import { Options } from 'pino-http';
 
 type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
 type LogFormat = 'text' | 'json';

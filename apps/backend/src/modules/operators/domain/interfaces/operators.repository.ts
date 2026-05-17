@@ -1,5 +1,5 @@
-import type { Operator } from '../entities/operator.entity';
-import type { OperatorStatus } from '../enums';
+import { Operator } from '../entities/operator.entity';
+import { OperatorStatus } from '../enums';
 
 export interface CreateOperatorInput {
   name: string;

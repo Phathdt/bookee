@@ -14,19 +14,19 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import {
-  type AssignStaffBodyDto,
-  type CreateOperatorBodyDto,
+  AssignStaffBodyDto,
+  CreateOperatorBodyDto,
   OperatorDto,
   PublicStaffUserDto,
-  type SetOperatorStatusBodyDto,
-  type UpdateOperatorBodyDto,
+  SetOperatorStatusBodyDto,
+  UpdateOperatorBodyDto,
 } from './dto/operators.dto';
 import { mapOperatorsDomainError } from './map-domain-error';
 
 import { Roles } from '@/modules/auth/infrastructure/decorators/roles.decorator';
 import { JwtAuthGuard } from '@/modules/auth/infrastructure/guards/jwt-auth.guard';
 import { RolesGuard } from '@/modules/auth/infrastructure/guards/roles.guard';
-import type { Operator } from '@/modules/operators/domain/entities/operator.entity';
+import { Operator } from '@/modules/operators/domain/entities/operator.entity';
 import { IOperatorsService } from '@/modules/operators/domain/interfaces/operators.service';
 
 function toOperatorDto(op: Operator): OperatorDto {

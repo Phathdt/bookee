@@ -1,5 +1,5 @@
-import type { User } from '@/modules/auth/domain/entities/user.entity';
-import type {
+import { User } from '@/modules/auth/domain/entities/user.entity';
+import {
   CreateUserInput,
   IUserRepository,
   UpdateUserInput,

@@ -1,14 +1,14 @@
-import { toPublicUser, type User } from '../../domain/entities/user.entity';
+import { toPublicUser, User } from '../../domain/entities/user.entity';
 import { AuthConflictError, AuthUnauthorizedError } from '../../domain/errors';
-import type {
+import {
   AuthSession,
   AuthTokens,
   IAuthService,
   LoginInput,
   RegisterInput,
 } from '../../domain/interfaces/auth.service';
-import type { IJwtSigner } from '../../domain/interfaces/jwt-signer';
-import type { IUserRepository } from '../../domain/interfaces/user.repository';
+import { IJwtSigner } from '../../domain/interfaces/jwt-signer';
+import { IUserRepository } from '../../domain/interfaces/user.repository';
 import { PasswordHash } from '../../domain/password-hash';
 
 const ACCESS_TOKEN_TTL = '1d';

@@ -5,9 +5,9 @@ import { Throttle } from '@nestjs/throttler';
 import {
   AuthSessionDto,
   AuthTokensDto,
-  type LoginBodyDto,
-  type RefreshBodyDto,
-  type RegisterBodyDto,
+  LoginBodyDto,
+  RefreshBodyDto,
+  RegisterBodyDto,
 } from './dto/auth.dto';
 import { mapAuthDomainError } from './map-domain-error';
 

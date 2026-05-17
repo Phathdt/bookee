@@ -1,9 +1,9 @@
-import { ForbiddenException, type ExecutionContext } from '@nestjs/common';
-import { type Reflector } from '@nestjs/core';
+import { ForbiddenException, ExecutionContext } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { describe, expect, it, vi } from 'vitest';
 
-import type { UserRole } from '../../domain/enums';
-import type { JwtPayload } from '../../domain/jwt-payload';
+import { UserRole } from '../../domain/enums';
+import { JwtPayload } from '../../domain/jwt-payload';
 
 import { RolesGuard } from './roles.guard';
 

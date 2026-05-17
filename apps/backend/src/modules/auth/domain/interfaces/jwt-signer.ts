@@ -1,4 +1,4 @@
-import type { JwtPayload } from '../jwt-payload';
+import { JwtPayload } from '../jwt-payload';
 
 export interface JwtSignOptions {
   expiresIn: string; // e.g. '1d', '7d'

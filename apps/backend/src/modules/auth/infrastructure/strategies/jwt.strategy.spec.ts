@@ -1,7 +1,7 @@
 import { UnauthorizedException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 
-import type { JwtPayload } from '../../domain/jwt-payload';
+import { JwtPayload } from '../../domain/jwt-payload';
 
 import { JwtStrategy } from './jwt.strategy';
 

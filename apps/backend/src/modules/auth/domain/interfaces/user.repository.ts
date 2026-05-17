@@ -1,5 +1,5 @@
-import type { User } from '../entities/user.entity';
-import type { UserRole } from '../enums';
+import { User } from '../entities/user.entity';
+import { UserRole } from '../enums';
 
 export interface CreateUserInput {
   name: string;

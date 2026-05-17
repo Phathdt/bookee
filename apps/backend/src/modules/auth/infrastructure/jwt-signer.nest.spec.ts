@@ -1,7 +1,7 @@
 import { JwtService } from '@nestjs/jwt';
 import { describe, expect, it } from 'vitest';
 
-import type { JwtPayload } from '../domain/jwt-payload';
+import { JwtPayload } from '../domain/jwt-payload';
 
 import { JwtSignerNest } from './jwt-signer.nest';
 

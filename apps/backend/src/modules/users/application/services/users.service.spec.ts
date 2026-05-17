@@ -5,8 +5,8 @@ import { UserConflictError, UserNotFoundError } from '../../domain/errors';
 
 import { UsersService } from './users.service';
 
-import type { User } from '@/modules/auth/domain/entities/user.entity';
-import type { IUserRepository } from '@/modules/auth/domain/interfaces/user.repository';
+import { User } from '@/modules/auth/domain/entities/user.entity';
+import { IUserRepository } from '@/modules/auth/domain/interfaces/user.repository';
 
 describe('UsersService', () => {
   let users: IUserRepository;

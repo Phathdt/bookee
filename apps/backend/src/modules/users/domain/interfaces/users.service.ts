@@ -1,4 +1,4 @@
-import type { PublicUser } from '@/modules/auth/domain/entities/user.entity';
+import { PublicUser } from '@/modules/auth/domain/entities/user.entity';
 
 export interface UpdateProfileInput {
   name?: string;

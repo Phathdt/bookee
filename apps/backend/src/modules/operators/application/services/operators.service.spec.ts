@@ -7,11 +7,11 @@ import {
   OperatorNotActiveError,
   OperatorNotFoundError,
 } from '../../domain/errors';
-import type { IOperatorsRepository } from '../../domain/interfaces/operators.repository';
+import { IOperatorsRepository } from '../../domain/interfaces/operators.repository';
 
 import { OperatorsService } from './operators.service';
 
-import type { IUserRepository } from '@/modules/auth/domain/interfaces/user.repository';
+import { IUserRepository } from '@/modules/auth/domain/interfaces/user.repository';
 import { UserNotFoundError } from '@/modules/users/domain/errors';
 
 describe('OperatorsService', () => {

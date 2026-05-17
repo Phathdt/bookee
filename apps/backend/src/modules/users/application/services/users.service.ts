@@ -1,8 +1,8 @@
 import { UserConflictError, UserNotFoundError } from '../../domain/errors';
-import type { IUsersService, UpdateProfileInput } from '../../domain/interfaces/users.service';
+import { IUsersService, UpdateProfileInput } from '../../domain/interfaces/users.service';
 
-import { toPublicUser, type PublicUser } from '@/modules/auth/domain/entities/user.entity';
-import type { IUserRepository } from '@/modules/auth/domain/interfaces/user.repository';
+import { toPublicUser, PublicUser } from '@/modules/auth/domain/entities/user.entity';
+import { IUserRepository } from '@/modules/auth/domain/interfaces/user.repository';
 
 // Framework-agnostic. Nest DI wires this via useFactory in users.module.ts.
 export class UsersService implements IUsersService {

@@ -1,12 +1,7 @@
-import {
-  type CanActivate,
-  type ExecutionContext,
-  ForbiddenException,
-  Injectable,
-} from '@nestjs/common';
-import { type Reflector } from '@nestjs/core';
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 
-import type { JwtPayload } from '../../domain/jwt-payload';
+import { JwtPayload } from '../../domain/jwt-payload';
 import { Roles } from '../decorators/roles.decorator';
 
 /**

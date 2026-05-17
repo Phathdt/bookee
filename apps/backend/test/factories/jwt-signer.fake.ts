@@ -1,5 +1,5 @@
-import type { IJwtSigner } from '@/modules/auth/domain/interfaces/jwt-signer';
-import type { JwtPayload } from '@/modules/auth/domain/jwt-payload';
+import { IJwtSigner } from '@/modules/auth/domain/interfaces/jwt-signer';
+import { JwtPayload } from '@/modules/auth/domain/jwt-payload';
 
 /**
  * Trivial JWT signer for unit tests: encodes the payload as base64 JSON.

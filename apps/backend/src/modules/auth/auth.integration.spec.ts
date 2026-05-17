@@ -1,7 +1,7 @@
 import { JwtService } from '@nestjs/jwt';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
-import { startPostgresFixture, type PostgresFixture } from '../../../test/postgres-fixture';
+import { startPostgresFixture, PostgresFixture } from '../../../test/postgres-fixture';
 
 import { AuthService } from './application/services/auth.service';
 import { AuthConflictError, AuthUnauthorizedError } from './domain/errors';

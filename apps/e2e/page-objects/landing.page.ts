@@ -1,6 +1,6 @@
 import { TimeoutValue } from '@config/test.config';
 import { getAppUrl, URLS } from '@config/urls.config';
-import { expect, type Page } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 
 /**
  * Bookee user-web landing page. Hosts the inline AuthDemo (register/login

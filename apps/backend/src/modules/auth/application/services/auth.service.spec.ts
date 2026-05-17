@@ -3,8 +3,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { makeFakeJwtSigner } from '../../../../../test/factories/jwt-signer.fake';
 import { makeFakeUserRepository } from '../../../../../test/factories/user-repository.fake';
 import { AuthConflictError, AuthUnauthorizedError } from '../../domain/errors';
-import type { IJwtSigner } from '../../domain/interfaces/jwt-signer';
-import type { IUserRepository } from '../../domain/interfaces/user.repository';
+import { IJwtSigner } from '../../domain/interfaces/jwt-signer';
+import { IUserRepository } from '../../domain/interfaces/user.repository';
 import { PasswordHash } from '../../domain/password-hash';
 
 import { AuthService } from './auth.service';

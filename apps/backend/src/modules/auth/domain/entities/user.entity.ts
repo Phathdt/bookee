@@ -1,4 +1,4 @@
-import type { UserRole } from '../enums';
+import { UserRole } from '../enums';
 
 /**
  * User domain entity. Plain interface — the canonical shape exchanged

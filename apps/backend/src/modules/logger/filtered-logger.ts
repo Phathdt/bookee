@@ -1,5 +1,5 @@
-import { Injectable, type LoggerService } from '@nestjs/common';
-import { type Logger as PinoLogger } from 'nestjs-pino';
+import { Injectable, LoggerService } from '@nestjs/common';
+import { Logger as PinoLogger } from 'nestjs-pino';
 
 /**
  * Decorator over nestjs-pino's Logger that suppresses known-noisy internal

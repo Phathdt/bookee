@@ -1,6 +1,6 @@
 import { Given, Then, When } from '@cucumber/cucumber';
 import { LandingPage } from '@page-objects/landing.page';
-import type { BrowserWorld } from '@support/world';
+import { BrowserWorld } from '@support/world';
 import { logger } from '@utils/logger';
 
 // Shared steps "I navigate to the landing page", "I open the register form",

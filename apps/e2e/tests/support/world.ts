@@ -1,6 +1,6 @@
 import { TimeoutValue } from '@config/test.config';
 import { setDefaultTimeout, setWorldConstructor, World } from '@cucumber/cucumber';
-import type { Browser, BrowserContext, Page } from '@playwright/test';
+import { Browser, BrowserContext, Page } from '@playwright/test';
 
 setDefaultTimeout(TimeoutValue.TEST_WORKFLOW);
 

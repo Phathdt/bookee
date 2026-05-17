@@ -1,7 +1,7 @@
-import type { JwtService } from '@nestjs/jwt';
+import { JwtService } from '@nestjs/jwt';
 
-import { IJwtSigner, type JwtSignOptions } from '../domain/interfaces/jwt-signer';
-import type { JwtPayload } from '../domain/jwt-payload';
+import { IJwtSigner, JwtSignOptions } from '../domain/interfaces/jwt-signer';
+import { JwtPayload } from '../domain/jwt-payload';
 
 /**
  * @nestjs/jwt-backed implementation of IJwtSigner. Plain class — wired via

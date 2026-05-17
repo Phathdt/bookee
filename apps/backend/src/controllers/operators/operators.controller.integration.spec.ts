@@ -1,10 +1,10 @@
-import { type INestApplication } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
-import { startPostgresFixture, type PostgresFixture } from '../../../test/postgres-fixture';
+import { startPostgresFixture, PostgresFixture } from '../../../test/postgres-fixture';
 import { AppModule } from '../../app.module';
 import { DatabaseService } from '../../modules/database/database.service';
 

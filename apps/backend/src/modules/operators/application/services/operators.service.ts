@@ -1,20 +1,20 @@
-import type { Operator } from '../../domain/entities/operator.entity';
-import type { OperatorStatus } from '../../domain/enums';
+import { Operator } from '../../domain/entities/operator.entity';
+import { OperatorStatus } from '../../domain/enums';
 import {
   OperatorConflictError,
   OperatorNotActiveError,
   OperatorNotFoundError,
 } from '../../domain/errors';
-import type { IOperatorsRepository } from '../../domain/interfaces/operators.repository';
-import type {
+import { IOperatorsRepository } from '../../domain/interfaces/operators.repository';
+import {
   AssignStaffInput,
   CreateOperatorInput,
   IOperatorsService,
   UpdateOperatorInput,
 } from '../../domain/interfaces/operators.service';
 
-import { toPublicUser, type PublicUser } from '@/modules/auth/domain/entities/user.entity';
-import type { IUserRepository } from '@/modules/auth/domain/interfaces/user.repository';
+import { toPublicUser, PublicUser } from '@/modules/auth/domain/entities/user.entity';
+import { IUserRepository } from '@/modules/auth/domain/interfaces/user.repository';
 import { UserNotFoundError } from '@/modules/users/domain/errors';
 
 // Framework-agnostic — wired via useFactory in operators.module.ts.

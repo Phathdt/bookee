@@ -27,6 +27,15 @@ export default [
       'react/prop-types': 'off',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
+      // Flip the rule BACK for FE: the React tsconfig preset enables
+      // `verbatimModuleSyntax: true`, which makes tsc itself require
+      // `import type` for type-only references. Mirror that here so
+      // ESLint and tsc agree. (Backend keeps `no-type-imports` for
+      // NestJS decorator-metadata reasons.)
+      '@typescript-eslint/consistent-type-imports': [
+        'warn',
+        { prefer: 'type-imports', fixStyle: 'inline-type-imports' },
+      ],
     },
   },
 ];

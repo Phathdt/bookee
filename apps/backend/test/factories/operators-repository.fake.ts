@@ -1,9 +1,9 @@
-import type { Operator } from '@/modules/operators/domain/entities/operator.entity';
-import type { OperatorStatus } from '@/modules/operators/domain/enums';
+import { Operator } from '@/modules/operators/domain/entities/operator.entity';
+import { OperatorStatus } from '@/modules/operators/domain/enums';
 import {
-  type IOperatorsRepository,
-  type CreateOperatorInput,
-  type UpdateOperatorInput,
+  IOperatorsRepository,
+  CreateOperatorInput,
+  UpdateOperatorInput,
 } from '@/modules/operators/domain/interfaces/operators.repository';
 
 /** In-memory IOperatorsRepository for unit tests. */

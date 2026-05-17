@@ -2,7 +2,7 @@ import { After, Before } from '@cucumber/cucumber';
 import { closeBrowserResources, createBrowserContextPage } from '@utils/browser-factory';
 import { logger } from '@utils/logger';
 
-import type { BrowserWorld } from './world';
+import { BrowserWorld } from './world';
 
 Before(async function (this: BrowserWorld) {
   const bundle = await createBrowserContextPage();

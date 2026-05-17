@@ -1,6 +1,6 @@
-import { createParamDecorator, type ExecutionContext } from '@nestjs/common';
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
-import type { JwtPayload } from '../../domain/jwt-payload';
+import { JwtPayload } from '../../domain/jwt-payload';
 
 /**
  * Pulls the validated JWT payload off the request, populated by JwtStrategy.

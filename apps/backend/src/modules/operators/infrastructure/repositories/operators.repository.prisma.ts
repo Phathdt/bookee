@@ -1,13 +1,13 @@
-import type { Operator } from '../../domain/entities/operator.entity';
-import { isOperatorStatus, type OperatorStatus } from '../../domain/enums';
+import { Operator } from '../../domain/entities/operator.entity';
+import { isOperatorStatus, OperatorStatus } from '../../domain/enums';
 import {
   IOperatorsRepository,
-  type CreateOperatorInput,
-  type UpdateOperatorInput,
+  CreateOperatorInput,
+  UpdateOperatorInput,
 } from '../../domain/interfaces/operators.repository';
 
-import type { BusCompanyModel } from '@/generated/prisma/models/BusCompany';
-import { type DatabaseService } from '@/modules/database/database.service';
+import { BusCompanyModel } from '@/generated/prisma/models/BusCompany';
+import { DatabaseService } from '@/modules/database/database.service';
 
 export class OperatorsRepositoryPrisma extends IOperatorsRepository {
   constructor(private readonly db: DatabaseService) {
