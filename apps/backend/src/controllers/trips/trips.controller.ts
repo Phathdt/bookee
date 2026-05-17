@@ -20,6 +20,10 @@ import {
   TripDto,
   TripSearchQueryDto,
 } from './dto/trips.dto';
+import {
+  TripSearchQueryDto as TripPublicSearchQueryDto,
+  TripSearchPageDto,
+} from './dto/trip-search.dto';
 import { mapTripsDomainError } from './map-domain-error';
 
 import type { JwtPayload } from '@/modules/auth/domain/jwt-payload';
@@ -27,6 +31,7 @@ import { CurrentUser } from '@/modules/auth/infrastructure/decorators/current-us
 import { Roles } from '@/modules/auth/infrastructure/decorators/roles.decorator';
 import { JwtAuthGuard } from '@/modules/auth/infrastructure/guards/jwt-auth.guard';
 import { RolesGuard } from '@/modules/auth/infrastructure/guards/roles.guard';
+import { TripSearchResult } from '@/modules/trips/domain/entities/trip-search-result.entity';
 import { ActorContext, ITripsService } from '@/modules/trips/domain/interfaces/trips.service';
 
 function toActor(user: JwtPayload): ActorContext {
@@ -53,6 +58,28 @@ function toTripDto(trip: {
   };
 }
 
+function toSearchResultDto(r: TripSearchResult): TripSearchPageDto['items'][number] {
+  return {
+    trip: {
+      id: r.trip.id,
+      departureTime: r.trip.departureTime.toISOString(),
+      arrivalTime: r.trip.arrivalTime.toISOString(),
+      basePrice: r.trip.basePrice,
+      status: r.trip.status,
+    },
+    route: {
+      id: r.route.id,
+      distanceKm: r.route.distanceKm,
+      durationMinutes: r.route.durationMinutes,
+      fromStation: r.route.fromStation,
+      toStation: r.route.toStation,
+      company: r.route.company,
+    },
+    vehicle: r.vehicle,
+    availableSeats: r.availableSeats,
+  };
+}
+
 @ApiTags('trips')
 @Controller('trips')
 export class TripsController {
@@ -73,6 +100,35 @@ export class TripsController {
       to: query.to ? new Date(query.to) : undefined,
     });
     return trips.map(toTripDto);
+  }
+
+  @Get('search')
+  @ApiOperation({
+    operationId: 'searchTrips',
+    summary: 'Search trips by city, date and optional filters (public, cursor-paginated)',
+  })
+  @ApiResponse({ status: 200, type: TripSearchPageDto })
+  async search(@Query() query: TripPublicSearchQueryDto): Promise<TripSearchPageDto> {
+    try {
+      const page = await this.trips.search({
+        from: query.from,
+        to: query.to,
+        date: query.date,
+        operatorIds: query.operatorId,
+        vehicleType: query.vehicleType,
+        priceMin: query.priceMin,
+        priceMax: query.priceMax,
+        sort: query.sort,
+        limit: query.limit,
+        cursor: query.cursor,
+      });
+      return {
+        items: page.items.map(toSearchResultDto),
+        nextCursor: page.nextCursor,
+      };
+    } catch (err) {
+      throw mapTripsDomainError(err);
+    }
   }
 
   @Get(':id')

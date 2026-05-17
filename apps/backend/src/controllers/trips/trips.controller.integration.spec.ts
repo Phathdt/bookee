@@ -531,4 +531,226 @@ describe('TripsController (HTTP integration)', () => {
     });
     expect(r3.status).toBe(409);
   });
+
+  // ---- GET /trips/search ---------------------------------------------------
+
+  type SearchResultItem = {
+    trip: {
+      id: number;
+      departureTime: string;
+      arrivalTime: string;
+      basePrice: number;
+      status: string;
+    };
+    route: {
+      id: number;
+      distanceKm: number;
+      durationMinutes: number;
+      fromStation: { id: number; name: string; city: string; address: string };
+      toStation: { id: number; name: string; city: string; address: string };
+      company: { id: number; name: string };
+    };
+    vehicle: { id: number; plateNumber: string; type: string; totalSeats: number };
+    availableSeats: number;
+  };
+  type SearchPage = { items: SearchResultItem[]; nextCursor: string | null };
+
+  async function createSearchableTrip(
+    overrides: {
+      routeId?: number;
+      vehicleId?: number;
+      departureTime?: string;
+      arrivalTime?: string;
+      basePrice?: number;
+    } = {},
+  ) {
+    return http('POST', '/trips', {
+      token: adminToken,
+      body: {
+        routeId: overrides.routeId ?? routeId,
+        vehicleId: overrides.vehicleId ?? vehicleId,
+        departureTime: overrides.departureTime ?? '2030-08-20T08:00:00.000Z',
+        arrivalTime: overrides.arrivalTime ?? '2030-08-21T04:00:00.000Z',
+        basePrice: overrides.basePrice ?? 300_000,
+      },
+    });
+  }
+
+  it('GET /trips/search returns matching trip with denormalized route/station/company', async () => {
+    await createSearchableTrip();
+    const res = await http('GET', '/trips/search?from=HCM&to=HN&date=2030-08-20');
+    expect(res.status).toBe(200);
+    const page = res.body as SearchPage;
+    expect(page.items.length).toBe(1);
+    const item = page.items[0]!;
+    expect(item.route.fromStation.city).toBe('HCM');
+    expect(item.route.toStation.city).toBe('HN');
+    expect(item.route.company.name).toBe('Op1');
+    expect(item.vehicle.plateNumber).toBe('51A-00001');
+    expect(typeof item.availableSeats).toBe('number');
+  });
+
+  it('GET /trips/search returns empty when no trips on that date', async () => {
+    await createSearchableTrip();
+    const res = await http('GET', '/trips/search?from=HCM&to=HN&date=2030-08-21');
+    expect(res.status).toBe(200);
+    const page = res.body as SearchPage;
+    expect(page.items).toHaveLength(0);
+    expect(page.nextCursor).toBeNull();
+  });
+
+  it('GET /trips/search filters by operatorId', async () => {
+    // op1 trip (routeId belongs to op1)
+    await createSearchableTrip();
+    // op2 trip (route2Id belongs to op2, city DN→HP — won't match HCM→HN search anyway)
+    // Create an op2 route HCM→HN to test operatorId filter properly
+    const fromHcm = await fx.prisma.station.findFirst({ where: { city: 'HCM' } });
+    const toHn = await fx.prisma.station.findFirst({ where: { city: 'HN' } });
+    const op2Route = await fx.prisma.route.create({
+      data: {
+        companyId: op2Id,
+        fromStationId: fromHcm!.id,
+        toStationId: toHn!.id,
+        distanceKm: 1700,
+        durationMinutes: 900,
+      },
+    });
+    await http('POST', '/trips', {
+      token: adminToken,
+      body: {
+        routeId: op2Route.id,
+        vehicleId: vehicle2Id,
+        departureTime: '2030-08-20T10:00:00.000Z',
+        arrivalTime: '2030-08-21T04:00:00.000Z',
+        basePrice: 200_000,
+      },
+    });
+
+    // Filter to op1 only
+    const res = await http(
+      'GET',
+      `/trips/search?from=HCM&to=HN&date=2030-08-20&operatorId=${op1Id}`,
+    );
+    expect(res.status).toBe(200);
+    const page = res.body as SearchPage;
+    expect(page.items.length).toBe(1);
+    expect(page.items[0]!.route.company.id).toBe(op1Id);
+
+    // Filter to both operators
+    const res2 = await http(
+      'GET',
+      `/trips/search?from=HCM&to=HN&date=2030-08-20&operatorId=${op1Id}&operatorId=${op2Id}`,
+    );
+    expect((res2.body as SearchPage).items.length).toBe(2);
+  });
+
+  it('GET /trips/search filters by priceMin and priceMax', async () => {
+    // Use vehicle1 for the cheap trip and vehicle2+route2 for the expensive trip
+    // so there is no vehicle scheduling conflict between them.
+    await createSearchableTrip({ basePrice: 100_000 });
+
+    // Create an op2-owned HCM→HN route so we can use vehicle2 (op2 vehicle)
+    const fromHcm2 = await fx.prisma.station.findFirst({ where: { city: 'HCM' } });
+    const toHn2 = await fx.prisma.station.findFirst({ where: { city: 'HN' } });
+    const op2RouteForPrice = await fx.prisma.route.create({
+      data: {
+        companyId: op2Id,
+        fromStationId: fromHcm2!.id,
+        toStationId: toHn2!.id,
+        distanceKm: 1700,
+        durationMinutes: 900,
+      },
+    });
+    await http('POST', '/trips', {
+      token: adminToken,
+      body: {
+        routeId: op2RouteForPrice.id,
+        vehicleId: vehicle2Id,
+        departureTime: '2030-08-20T08:00:00.000Z',
+        arrivalTime: '2030-08-21T05:00:00.000Z',
+        basePrice: 500_000,
+      },
+    });
+
+    const cheap = await http('GET', '/trips/search?from=HCM&to=HN&date=2030-08-20&priceMax=200000');
+    expect(cheap.status).toBe(200);
+    expect((cheap.body as SearchPage).items.length).toBe(1);
+    expect((cheap.body as SearchPage).items[0]!.trip.basePrice).toBe(100_000);
+
+    const expensive = await http(
+      'GET',
+      '/trips/search?from=HCM&to=HN&date=2030-08-20&priceMin=400000',
+    );
+    expect(expensive.status).toBe(200);
+    expect((expensive.body as SearchPage).items.length).toBe(1);
+    expect((expensive.body as SearchPage).items[0]!.trip.basePrice).toBe(500_000);
+  });
+
+  it('GET /trips/search cursor pagination: follows nextCursor across pages', async () => {
+    // Create 3 non-overlapping trips on the same vehicle on 2030-08-20.
+    // Each trip is 1 hour long with a 1-hour gap to avoid vehicle conflict.
+    await createSearchableTrip({
+      departureTime: '2030-08-20T06:00:00.000Z',
+      arrivalTime: '2030-08-20T07:00:00.000Z',
+    });
+    await createSearchableTrip({
+      departureTime: '2030-08-20T08:00:00.000Z',
+      arrivalTime: '2030-08-20T09:00:00.000Z',
+    });
+    await createSearchableTrip({
+      departureTime: '2030-08-20T10:00:00.000Z',
+      arrivalTime: '2030-08-20T11:00:00.000Z',
+    });
+
+    const page1 = await http('GET', '/trips/search?from=HCM&to=HN&date=2030-08-20&limit=2');
+    expect(page1.status).toBe(200);
+    const p1 = page1.body as SearchPage;
+    expect(p1.items.length).toBe(2);
+    expect(p1.nextCursor).not.toBeNull();
+
+    const page2 = await http(
+      'GET',
+      `/trips/search?from=HCM&to=HN&date=2030-08-20&limit=2&cursor=${p1.nextCursor!}`,
+    );
+    expect(page2.status).toBe(200);
+    const p2 = page2.body as SearchPage;
+    expect(p2.items.length).toBe(1);
+    expect(p2.nextCursor).toBeNull();
+
+    // No duplicate IDs across pages
+    const ids1 = p1.items.map((i) => i.trip.id);
+    const ids2 = p2.items.map((i) => i.trip.id);
+    expect(ids1.every((id) => !ids2.includes(id))).toBe(true);
+  });
+
+  it('GET /trips/search returns 400 when required param from is missing', async () => {
+    const res = await http('GET', '/trips/search?to=HN&date=2030-08-20');
+    expect([400, 422]).toContain(res.status);
+  });
+
+  it('GET /trips/search returns 400 when required param to is missing', async () => {
+    const res = await http('GET', '/trips/search?from=HCM&date=2030-08-20');
+    expect([400, 422]).toContain(res.status);
+  });
+
+  it('GET /trips/search returns 400 when required param date is missing', async () => {
+    const res = await http('GET', '/trips/search?from=HCM&to=HN');
+    expect([400, 422]).toContain(res.status);
+  });
+
+  it('GET /trips/search returns 400 when date format is invalid', async () => {
+    const res = await http('GET', '/trips/search?from=HCM&to=HN&date=20300820');
+    expect([400, 422]).toContain(res.status);
+  });
+
+  it('GET /trips/search availableSeats equals vehicle.totalSeats (Section 9 TODO)', async () => {
+    await createSearchableTrip();
+    const res = await http('GET', '/trips/search?from=HCM&to=HN&date=2030-08-20');
+    expect(res.status).toBe(200);
+    const page = res.body as SearchPage;
+    expect(page.items.length).toBe(1);
+    // vehicle was created with totalSeats=40
+    expect(page.items[0]!.availableSeats).toBe(40);
+    expect(page.items[0]!.vehicle.totalSeats).toBe(40);
+  });
 });

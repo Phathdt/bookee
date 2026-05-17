@@ -554,6 +554,104 @@ export interface TripDto {
   status: TripDtoStatus;
 }
 
+export type TripSearchPageDtoItemsItemTrip = {
+  /**
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
+  id: number;
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
+  departureTime: string;
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
+  arrivalTime: string;
+  /**
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
+  basePrice: number;
+  status: string;
+};
+
+export type TripSearchPageDtoItemsItemRouteFromStation = {
+  /**
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
+  id: number;
+  name: string;
+  city: string;
+  address: string;
+};
+
+export type TripSearchPageDtoItemsItemRouteToStation = {
+  /**
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
+  id: number;
+  name: string;
+  city: string;
+  address: string;
+};
+
+export type TripSearchPageDtoItemsItemRouteCompany = {
+  /**
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
+  id: number;
+  name: string;
+};
+
+export type TripSearchPageDtoItemsItemRoute = {
+  /**
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
+  id: number;
+  distanceKm: number;
+  /**
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
+  durationMinutes: number;
+  fromStation: TripSearchPageDtoItemsItemRouteFromStation;
+  toStation: TripSearchPageDtoItemsItemRouteToStation;
+  company: TripSearchPageDtoItemsItemRouteCompany;
+};
+
+export type TripSearchPageDtoItemsItemVehicle = {
+  /**
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
+  id: number;
+  plateNumber: string;
+  type: string;
+  /**
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
+  totalSeats: number;
+};
+
+export type TripSearchPageDtoItemsItem = {
+  trip: TripSearchPageDtoItemsItemTrip;
+  route: TripSearchPageDtoItemsItemRoute;
+  vehicle: TripSearchPageDtoItemsItemVehicle;
+  /**
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
+  availableSeats: number;
+};
+
+export interface TripSearchPageDto {
+  items: TripSearchPageDtoItemsItem[];
+  /** @nullable */
+  nextCursor: string | null;
+}
+
 export interface CreateTripBodyDto {
   /**
      * @maximum 9007199254740991
@@ -765,6 +863,54 @@ export const ListTripsStatus = {
   in_progress: 'in_progress',
   completed: 'completed',
   cancelled: 'cancelled',
+} as const;
+
+export type SearchTripsParams = {
+/**
+ * @minLength 1
+ * @maxLength 120
+ */
+from: string;
+/**
+ * @minLength 1
+ * @maxLength 120
+ */
+to: string;
+/**
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+date: string;
+operatorId?: number[];
+/**
+ * @minLength 1
+ */
+vehicleType?: string;
+/**
+ * @minimum 0
+ * @maximum 9007199254740991
+ */
+priceMin?: number;
+/**
+ * @minimum 0
+ * @maximum 9007199254740991
+ */
+priceMax?: number;
+sort?: SearchTripsSort;
+/**
+ * @minimum 1
+ * @maximum 50
+ */
+limit?: number;
+cursor?: string;
+};
+
+export type SearchTripsSort = typeof SearchTripsSort[keyof typeof SearchTripsSort];
+
+
+export const SearchTripsSort = {
+  departureTime: 'departureTime',
+  price: 'price',
+  duration: 'duration',
 } as const;
 
 export type ListVehiclesParams = {

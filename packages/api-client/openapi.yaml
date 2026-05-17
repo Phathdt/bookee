@@ -700,6 +700,93 @@ paths:
       summary: Create a trip (admin or operator-scoped)
       tags:
         - trips
+  /api/v1/trips/search:
+    get:
+      operationId: searchTrips
+      parameters:
+        - name: from
+          required: true
+          in: query
+          schema:
+            minLength: 1
+            maxLength: 120
+            type: string
+        - name: to
+          required: true
+          in: query
+          schema:
+            minLength: 1
+            maxLength: 120
+            type: string
+        - name: date
+          required: true
+          in: query
+          schema:
+            pattern: ^\d{4}-\d{2}-\d{2}$
+            type: string
+        - name: operatorId
+          required: false
+          in: query
+          schema:
+            type: array
+            items:
+              type: integer
+              exclusiveMinimum: true
+              maximum: 9007199254740991
+              minimum: 0
+        - name: vehicleType
+          required: false
+          in: query
+          schema:
+            minLength: 1
+            type: string
+        - name: priceMin
+          required: false
+          in: query
+          schema:
+            minimum: 0
+            maximum: 9007199254740991
+            type: integer
+        - name: priceMax
+          required: false
+          in: query
+          schema:
+            minimum: 0
+            maximum: 9007199254740991
+            type: integer
+        - name: sort
+          required: false
+          in: query
+          schema:
+            default: departureTime
+            type: string
+            enum:
+              - departureTime
+              - price
+              - duration
+        - name: limit
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 50
+            default: 20
+            type: integer
+        - name: cursor
+          required: false
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripSearchPageDto'
+      summary: Search trips by city, date and optional filters (public, cursor-paginated)
+      tags:
+        - trips
   /api/v1/trips/{id}:
     get:
       operationId: getTrip
@@ -1520,6 +1607,146 @@ components:
         - arrivalTime
         - basePrice
         - status
+    TripSearchPageDto:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              trip:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  departureTime:
+                    type: string
+                    format: date-time
+                    pattern: >-
+                      ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
+                  arrivalTime:
+                    type: string
+                    format: date-time
+                    pattern: >-
+                      ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
+                  basePrice:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  status:
+                    type: string
+                required:
+                  - id
+                  - departureTime
+                  - arrivalTime
+                  - basePrice
+                  - status
+              route:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  distanceKm:
+                    type: number
+                  durationMinutes:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  fromStation:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                      name:
+                        type: string
+                      city:
+                        type: string
+                      address:
+                        type: string
+                    required:
+                      - id
+                      - name
+                      - city
+                      - address
+                  toStation:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                      name:
+                        type: string
+                      city:
+                        type: string
+                      address:
+                        type: string
+                    required:
+                      - id
+                      - name
+                      - city
+                      - address
+                  company:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                      name:
+                        type: string
+                    required:
+                      - id
+                      - name
+                required:
+                  - id
+                  - distanceKm
+                  - durationMinutes
+                  - fromStation
+                  - toStation
+                  - company
+              vehicle:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  plateNumber:
+                    type: string
+                  type:
+                    type: string
+                  totalSeats:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                required:
+                  - id
+                  - plateNumber
+                  - type
+                  - totalSeats
+              availableSeats:
+                type: integer
+                minimum: -9007199254740991
+                maximum: 9007199254740991
+            required:
+              - trip
+              - route
+              - vehicle
+              - availableSeats
+        nextCursor:
+          type: string
+          nullable: true
+      required:
+        - items
+        - nextCursor
     CreateTripBodyDto:
       type: object
       properties:

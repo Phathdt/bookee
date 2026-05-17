@@ -1,3 +1,4 @@
+import { TripSearchPage } from '../../domain/entities/trip-search-result.entity';
 import { Trip } from '../../domain/entities/trip.entity';
 import { TripStatus } from '../../domain/enums';
 import {
@@ -11,6 +12,7 @@ import {
   ActorContext,
   BulkCreateTripsInput,
   ITripsService,
+  TripSearchInput,
 } from '../../domain/interfaces/trips.service';
 import {
   CreateTripInput,
@@ -176,5 +178,65 @@ export class TripsService implements ITripsService {
     }
 
     return this.trips.updateStatus(id, status);
+  }
+
+  async search(input: TripSearchInput): Promise<TripSearchPage> {
+    if (!input.from || !input.to || !input.date) {
+      throw new TripValidationError('from, to, and date are required');
+    }
+
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(input.date)) {
+      throw new TripValidationError('date must be YYYY-MM-DD');
+    }
+
+    const dateUtcStart = new Date(`${input.date}T00:00:00.000Z`);
+    const dateUtcEnd = new Date(`${input.date}T23:59:59.999Z`);
+
+    if (isNaN(dateUtcStart.getTime())) {
+      throw new TripValidationError('date is not a valid calendar date');
+    }
+
+    const sort = input.sort ?? 'departureTime';
+    const limit = Math.min(input.limit ?? 20, 50);
+
+    // Decode the incoming opaque cursor into structured form.
+    let parsedCursor: { departureTime: Date; id: number } | null = null;
+    if (input.cursor) {
+      try {
+        const raw = Buffer.from(input.cursor, 'base64url').toString('utf8');
+        const parsed = JSON.parse(raw) as unknown;
+        if (
+          typeof parsed !== 'object' ||
+          parsed === null ||
+          !('d' in parsed) ||
+          !('i' in parsed) ||
+          typeof (parsed as { d: unknown }).d !== 'string' ||
+          typeof (parsed as { i: unknown }).i !== 'number'
+        ) {
+          throw new TripValidationError('cursor is malformed');
+        }
+        const obj = parsed as { d: string; i: number };
+        const dt = new Date(obj.d);
+        if (isNaN(dt.getTime())) throw new TripValidationError('cursor departureTime is invalid');
+        parsedCursor = { departureTime: dt, id: obj.i };
+      } catch (err) {
+        if (err instanceof TripValidationError) throw err;
+        throw new TripValidationError('cursor is malformed');
+      }
+    }
+
+    return this.trips.search({
+      from: input.from,
+      to: input.to,
+      dateUtcStart,
+      dateUtcEnd,
+      operatorIds: input.operatorIds,
+      vehicleType: input.vehicleType,
+      priceMin: input.priceMin,
+      priceMax: input.priceMax,
+      sort,
+      limit,
+      cursor: parsedCursor,
+    });
   }
 }

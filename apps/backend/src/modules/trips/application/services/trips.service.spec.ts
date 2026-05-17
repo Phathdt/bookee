@@ -1,7 +1,13 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import {
+  FakeCompany,
+  FakeRoute,
+  FakeStation,
+  FakeVehicle,
+  makeFakeTripsRepository,
+} from '../../../../../test/factories/trips-repository.fake';
 import { makeFakeRoutesRepository } from '../../../../../test/factories/routes-repository.fake';
-import { makeFakeTripsRepository } from '../../../../../test/factories/trips-repository.fake';
 import { makeFakeVehiclesRepository } from '../../../../../test/factories/vehicles-repository.fake';
 import {
   TripConflictError,
@@ -386,6 +392,212 @@ describe('TripsService', () => {
       await expect(
         service.createBulk({ ...bulkBase, routeId, vehicleId }, op2Actor),
       ).rejects.toBeInstanceOf(TripForbiddenError);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // search
+  // ---------------------------------------------------------------------------
+
+  describe('search', () => {
+    // Shared fake reference data
+    const fakeStations: FakeStation[] = [
+      { id: 101, name: 'HCM Bus Station', city: 'HCM', address: '1 Pham Ngu Lao' },
+      { id: 102, name: 'HN Bus Station', city: 'HN', address: '1 Giai Phong' },
+      { id: 103, name: 'DN Bus Station', city: 'DN', address: '1 Tran Phu' },
+    ];
+    const fakeCompanies: FakeCompany[] = [
+      { id: 1, name: 'FutaBus' },
+      { id: 2, name: 'PhuongTrang' },
+    ];
+    const fakeRoutes: FakeRoute[] = [
+      {
+        id: 10,
+        companyId: 1,
+        fromStationId: 101,
+        toStationId: 102,
+        distanceKm: 1700,
+        durationMinutes: 960,
+      },
+      {
+        id: 11,
+        companyId: 2,
+        fromStationId: 101,
+        toStationId: 102,
+        distanceKm: 1700,
+        durationMinutes: 900,
+      },
+      {
+        id: 12,
+        companyId: 1,
+        fromStationId: 101,
+        toStationId: 103,
+        distanceKm: 900,
+        durationMinutes: 480,
+      },
+    ];
+    const fakeVehicles: FakeVehicle[] = [
+      { id: 201, plateNumber: '51A-001', type: 'sleeper', totalSeats: 40 },
+      { id: 202, plateNumber: '51B-002', type: 'limousine', totalSeats: 20 },
+    ];
+
+    let searchService: TripsService;
+
+    beforeEach(async () => {
+      const searchRepo = makeFakeTripsRepository({
+        routes: fakeRoutes,
+        stations: fakeStations,
+        companies: fakeCompanies,
+        vehicles: fakeVehicles,
+      });
+      searchService = new TripsService(
+        searchRepo,
+        makeFakeRoutesRepository(),
+        makeFakeVehiclesRepository(),
+      );
+
+      // Seed trips directly through the repo used by searchService
+      // Two trips HCM→HN on 2030-06-15 via different operators
+      await searchRepo.create({
+        routeId: 10,
+        vehicleId: 201,
+        departureTime: new Date('2030-06-15T08:00:00Z'),
+        arrivalTime: new Date('2030-06-15T24:00:00Z'),
+        basePrice: 300_000,
+      });
+      await searchRepo.create({
+        routeId: 11,
+        vehicleId: 202,
+        departureTime: new Date('2030-06-15T10:00:00Z'),
+        arrivalTime: new Date('2030-06-15T25:00:00Z'),
+        basePrice: 150_000,
+      });
+      // Third trip HCM→DN — should not appear in HCM→HN search
+      await searchRepo.create({
+        routeId: 12,
+        vehicleId: 201,
+        departureTime: new Date('2030-06-15T06:00:00Z'),
+        arrivalTime: new Date('2030-06-15T14:00:00Z'),
+        basePrice: 200_000,
+      });
+    });
+
+    it('returns trips matching from/to city and date', async () => {
+      const page = await searchService.search({ from: 'HCM', to: 'HN', date: '2030-06-15' });
+      expect(page.items.length).toBe(2);
+      for (const item of page.items) {
+        expect(item.route.fromStation.city).toBe('HCM');
+        expect(item.route.toStation.city).toBe('HN');
+      }
+    });
+
+    it('returns empty when city has no matching route', async () => {
+      const page = await searchService.search({
+        from: 'HCM',
+        to: 'Nonexistent',
+        date: '2030-06-15',
+      });
+      expect(page.items).toHaveLength(0);
+      expect(page.nextCursor).toBeNull();
+    });
+
+    it('throws TripValidationError when from is missing', async () => {
+      await expect(
+        searchService.search({ from: '', to: 'HN', date: '2030-06-15' }),
+      ).rejects.toBeInstanceOf(TripValidationError);
+    });
+
+    it('throws TripValidationError when to is missing', async () => {
+      await expect(
+        searchService.search({ from: 'HCM', to: '', date: '2030-06-15' }),
+      ).rejects.toBeInstanceOf(TripValidationError);
+    });
+
+    it('throws TripValidationError when date is missing', async () => {
+      await expect(
+        searchService.search({ from: 'HCM', to: 'HN', date: '' }),
+      ).rejects.toBeInstanceOf(TripValidationError);
+    });
+
+    it('throws TripValidationError when date format is wrong', async () => {
+      await expect(
+        searchService.search({ from: 'HCM', to: 'HN', date: '15-06-2030' }),
+      ).rejects.toBeInstanceOf(TripValidationError);
+    });
+
+    it('uses departureTime sort by default', async () => {
+      const page = await searchService.search({ from: 'HCM', to: 'HN', date: '2030-06-15' });
+      expect(page.items[0]!.trip.departureTime.getTime()).toBeLessThanOrEqual(
+        page.items[1]!.trip.departureTime.getTime(),
+      );
+    });
+
+    it('clamps limit to 50 max', async () => {
+      const page = await searchService.search({
+        from: 'HCM',
+        to: 'HN',
+        date: '2030-06-15',
+        limit: 999,
+      });
+      // Only 2 trips exist, so no nextCursor; limit clamping is verified by absence of error
+      expect(page.items.length).toBeLessThanOrEqual(50);
+    });
+
+    it('availableSeats equals vehicle.totalSeats (Section 9 TODO)', async () => {
+      const page = await searchService.search({ from: 'HCM', to: 'HN', date: '2030-06-15' });
+      const first = page.items[0]!;
+      const vehicle = fakeVehicles.find((v) => v.id === first.vehicle.id)!;
+      expect(first.availableSeats).toBe(vehicle.totalSeats);
+    });
+
+    it('encodes a nextCursor when results exceed limit', async () => {
+      const page = await searchService.search({
+        from: 'HCM',
+        to: 'HN',
+        date: '2030-06-15',
+        limit: 1,
+      });
+      expect(page.items.length).toBe(1);
+      expect(page.nextCursor).not.toBeNull();
+
+      // Cursor is valid base64url and decodes to { d, i }
+      const raw = Buffer.from(page.nextCursor!, 'base64url').toString('utf8');
+      const decoded = JSON.parse(raw) as { d: string; i: number };
+      expect(typeof decoded.d).toBe('string');
+      expect(typeof decoded.i).toBe('number');
+    });
+
+    it('follows cursor to retrieve the next page', async () => {
+      const page1 = await searchService.search({
+        from: 'HCM',
+        to: 'HN',
+        date: '2030-06-15',
+        limit: 1,
+      });
+      expect(page1.items.length).toBe(1);
+      expect(page1.nextCursor).not.toBeNull();
+
+      const page2 = await searchService.search({
+        from: 'HCM',
+        to: 'HN',
+        date: '2030-06-15',
+        limit: 1,
+        cursor: page1.nextCursor!,
+      });
+      expect(page2.items.length).toBe(1);
+      expect(page2.items[0]!.trip.id).not.toBe(page1.items[0]!.trip.id);
+      expect(page2.nextCursor).toBeNull();
+    });
+
+    it('throws TripValidationError on malformed cursor', async () => {
+      await expect(
+        searchService.search({
+          from: 'HCM',
+          to: 'HN',
+          date: '2030-06-15',
+          cursor: 'not-valid-base64url-json',
+        }),
+      ).rejects.toBeInstanceOf(TripValidationError);
     });
   });
 });

@@ -13,6 +13,8 @@ export default async () => {
       await import('./controllers/stations/dto/stations.dto'),
     ['./controllers/users/dto/users.dto']: await import('./controllers/users/dto/users.dto'),
     ['./controllers/trips/dto/trips.dto']: await import('./controllers/trips/dto/trips.dto'),
+    ['./controllers/trips/dto/trip-search.dto']:
+      await import('./controllers/trips/dto/trip-search.dto'),
     ['./controllers/vehicles/dto/vehicles.dto']:
       await import('./controllers/vehicles/dto/vehicles.dto'),
   };
@@ -77,6 +79,10 @@ export default async () => {
             SetTripStatusBodyDto: {},
             TripSearchQueryDto: {},
           },
+        ],
+        [
+          import('./controllers/trips/dto/trip-search.dto'),
+          { TripSearchPageDto: {}, TripSearchQueryDto: {} },
         ],
         [
           import('./controllers/vehicles/dto/vehicles.dto'),
@@ -174,6 +180,7 @@ export default async () => {
           {
             TripsController: {
               list: { type: [t['./controllers/trips/dto/trips.dto'].TripDto] },
+              search: { type: t['./controllers/trips/dto/trip-search.dto'].TripSearchPageDto },
               getOne: { type: t['./controllers/trips/dto/trips.dto'].TripDto },
               create: { type: t['./controllers/trips/dto/trips.dto'].TripDto },
               createBulk: { type: [t['./controllers/trips/dto/trips.dto'].TripDto] },

@@ -28,8 +28,10 @@ import type {
   BulkCreateTripsBodyDto,
   CreateTripBodyDto,
   ListTripsParams,
+  SearchTripsParams,
   SetTripStatusBodyDto,
-  TripDto
+  TripDto,
+  TripSearchPageDto
 } from '../bookeeAPI.schemas';
 
 import { axiosInstance } from '../../axios-instance';
@@ -195,6 +197,99 @@ export const useCreateTrip = <TError = ErrorType<unknown>,
       return useMutation(getCreateTripMutationOptions(options), queryClient);
     }
     /**
+ * @summary Search trips by city, date and optional filters (public, cursor-paginated)
+ */
+export const searchTrips = (
+    params: SearchTripsParams,
+ signal?: AbortSignal
+) => {
+
+
+      return axiosInstance<TripSearchPageDto>(
+      {url: `/api/v1/trips/search`, method: 'GET',
+        params, signal
+    },
+      );
+    }
+
+
+
+
+export const getSearchTripsQueryKey = (params?: SearchTripsParams,) => {
+    return [
+    `/api/v1/trips/search`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getSearchTripsQueryOptions = <TData = Awaited<ReturnType<typeof searchTrips>>, TError = ErrorType<unknown>>(params: SearchTripsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof searchTrips>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getSearchTripsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof searchTrips>>> = ({ signal }) => searchTrips(params, signal);
+
+
+
+
+
+   return  { queryKey, queryFn,   staleTime: 30000,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof searchTrips>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type SearchTripsQueryResult = NonNullable<Awaited<ReturnType<typeof searchTrips>>>
+export type SearchTripsQueryError = ErrorType<unknown>
+
+
+export function useSearchTrips<TData = Awaited<ReturnType<typeof searchTrips>>, TError = ErrorType<unknown>>(
+ params: SearchTripsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof searchTrips>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof searchTrips>>,
+          TError,
+          Awaited<ReturnType<typeof searchTrips>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSearchTrips<TData = Awaited<ReturnType<typeof searchTrips>>, TError = ErrorType<unknown>>(
+ params: SearchTripsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof searchTrips>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof searchTrips>>,
+          TError,
+          Awaited<ReturnType<typeof searchTrips>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSearchTrips<TData = Awaited<ReturnType<typeof searchTrips>>, TError = ErrorType<unknown>>(
+ params: SearchTripsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof searchTrips>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Search trips by city, date and optional filters (public, cursor-paginated)
+ */
+
+export function useSearchTrips<TData = Awaited<ReturnType<typeof searchTrips>>, TError = ErrorType<unknown>>(
+ params: SearchTripsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof searchTrips>>, TError, TData>>, }
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getSearchTripsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+/**
  * @summary Get a single trip (public)
  */
 export const getTrip = (

@@ -85,6 +85,118 @@ export const CreateTripBody = zod.object({
 })
 
 /**
+ * @summary Search trips by city, date and optional filters (public, cursor-paginated)
+ */
+export const searchTripsQueryFromMax = 120;
+
+export const searchTripsQueryToMax = 120;
+
+export const searchTripsQueryDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const searchTripsQueryOperatorIdItemExclusiveMin = 0;
+export const searchTripsQueryOperatorIdItemMax = 9007199254740991;
+
+
+export const searchTripsQueryPriceMinMin = 0;
+export const searchTripsQueryPriceMinMax = 9007199254740991;
+
+export const searchTripsQueryPriceMaxMin = 0;
+export const searchTripsQueryPriceMaxMax = 9007199254740991;
+
+export const searchTripsQuerySortDefault = `departureTime`;
+export const searchTripsQueryLimitDefault = 20;
+export const searchTripsQueryLimitMax = 50;
+
+
+
+export const SearchTripsQueryParams = zod.object({
+  "from": zod.string().min(1).max(searchTripsQueryFromMax),
+  "to": zod.string().min(1).max(searchTripsQueryToMax),
+  "date": zod.string().regex(searchTripsQueryDateRegExp),
+  "operatorId": zod.array(zod.number().gt(searchTripsQueryOperatorIdItemExclusiveMin).max(searchTripsQueryOperatorIdItemMax)).optional(),
+  "vehicleType": zod.string().min(1).optional(),
+  "priceMin": zod.number().min(searchTripsQueryPriceMinMin).max(searchTripsQueryPriceMinMax).optional(),
+  "priceMax": zod.number().min(searchTripsQueryPriceMaxMin).max(searchTripsQueryPriceMaxMax).optional(),
+  "sort": zod.enum(['departureTime', 'price', 'duration']).default(searchTripsQuerySortDefault),
+  "limit": zod.number().min(1).max(searchTripsQueryLimitMax).default(searchTripsQueryLimitDefault),
+  "cursor": zod.string().optional()
+})
+
+export const searchTripsResponseItemsItemTripIdMin = -9007199254740991;
+export const searchTripsResponseItemsItemTripIdMax = 9007199254740991;
+
+export const searchTripsResponseItemsItemTripDepartureTimeRegExp = new RegExp('^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$');
+export const searchTripsResponseItemsItemTripArrivalTimeRegExp = new RegExp('^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$');
+export const searchTripsResponseItemsItemTripBasePriceMin = -9007199254740991;
+export const searchTripsResponseItemsItemTripBasePriceMax = 9007199254740991;
+
+export const searchTripsResponseItemsItemRouteIdMin = -9007199254740991;
+export const searchTripsResponseItemsItemRouteIdMax = 9007199254740991;
+
+export const searchTripsResponseItemsItemRouteDurationMinutesMin = -9007199254740991;
+export const searchTripsResponseItemsItemRouteDurationMinutesMax = 9007199254740991;
+
+export const searchTripsResponseItemsItemRouteFromStationIdMin = -9007199254740991;
+export const searchTripsResponseItemsItemRouteFromStationIdMax = 9007199254740991;
+
+export const searchTripsResponseItemsItemRouteToStationIdMin = -9007199254740991;
+export const searchTripsResponseItemsItemRouteToStationIdMax = 9007199254740991;
+
+export const searchTripsResponseItemsItemRouteCompanyIdMin = -9007199254740991;
+export const searchTripsResponseItemsItemRouteCompanyIdMax = 9007199254740991;
+
+export const searchTripsResponseItemsItemVehicleIdMin = -9007199254740991;
+export const searchTripsResponseItemsItemVehicleIdMax = 9007199254740991;
+
+export const searchTripsResponseItemsItemVehicleTotalSeatsMin = -9007199254740991;
+export const searchTripsResponseItemsItemVehicleTotalSeatsMax = 9007199254740991;
+
+export const searchTripsResponseItemsItemAvailableSeatsMin = -9007199254740991;
+export const searchTripsResponseItemsItemAvailableSeatsMax = 9007199254740991;
+
+
+
+export const SearchTripsResponse = zod.object({
+  "items": zod.array(zod.object({
+  "trip": zod.object({
+  "id": zod.number().min(searchTripsResponseItemsItemTripIdMin).max(searchTripsResponseItemsItemTripIdMax),
+  "departureTime": zod.iso.datetime({"offset":true}).regex(searchTripsResponseItemsItemTripDepartureTimeRegExp),
+  "arrivalTime": zod.iso.datetime({"offset":true}).regex(searchTripsResponseItemsItemTripArrivalTimeRegExp),
+  "basePrice": zod.number().min(searchTripsResponseItemsItemTripBasePriceMin).max(searchTripsResponseItemsItemTripBasePriceMax),
+  "status": zod.string()
+}),
+  "route": zod.object({
+  "id": zod.number().min(searchTripsResponseItemsItemRouteIdMin).max(searchTripsResponseItemsItemRouteIdMax),
+  "distanceKm": zod.number(),
+  "durationMinutes": zod.number().min(searchTripsResponseItemsItemRouteDurationMinutesMin).max(searchTripsResponseItemsItemRouteDurationMinutesMax),
+  "fromStation": zod.object({
+  "id": zod.number().min(searchTripsResponseItemsItemRouteFromStationIdMin).max(searchTripsResponseItemsItemRouteFromStationIdMax),
+  "name": zod.string(),
+  "city": zod.string(),
+  "address": zod.string()
+}),
+  "toStation": zod.object({
+  "id": zod.number().min(searchTripsResponseItemsItemRouteToStationIdMin).max(searchTripsResponseItemsItemRouteToStationIdMax),
+  "name": zod.string(),
+  "city": zod.string(),
+  "address": zod.string()
+}),
+  "company": zod.object({
+  "id": zod.number().min(searchTripsResponseItemsItemRouteCompanyIdMin).max(searchTripsResponseItemsItemRouteCompanyIdMax),
+  "name": zod.string()
+})
+}),
+  "vehicle": zod.object({
+  "id": zod.number().min(searchTripsResponseItemsItemVehicleIdMin).max(searchTripsResponseItemsItemVehicleIdMax),
+  "plateNumber": zod.string(),
+  "type": zod.string(),
+  "totalSeats": zod.number().min(searchTripsResponseItemsItemVehicleTotalSeatsMin).max(searchTripsResponseItemsItemVehicleTotalSeatsMax)
+}),
+  "availableSeats": zod.number().min(searchTripsResponseItemsItemAvailableSeatsMin).max(searchTripsResponseItemsItemAvailableSeatsMax)
+})),
+  "nextCursor": zod.string().nullable()
+})
+
+/**
  * @summary Get a single trip (public)
  */
 export const GetTripParams = zod.object({
