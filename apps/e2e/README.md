@@ -1,6 +1,7 @@
 # @bookee/e2e
 
-End-to-end tests for the Bookee user-facing FE — Cucumber + Playwright.
+End-to-end tests for the Bookee platform — Cucumber + Playwright.
+Covers both the **user-web** (port 5174) and the **operator-CMS** (port 5173).
 
 ## Stack
 
@@ -8,59 +9,121 @@ End-to-end tests for the Bookee user-facing FE — Cucumber + Playwright.
 - `@playwright/test` v1.59 — browser automation
 - `ts-node` + `tsconfig-paths` — TS feature file execution
 - `pino` — structured test logs
+- `@faker-js/faker` — hermetic per-scenario test data
 
 ## Layout
 
 ```
 apps/e2e/
-├── .cucumber.cjs                  # runner config (parallel, ts-node hook)
-├── .env / .env.example            # env vars (APP_URL, HEADLESS, TRACE)
+├── .cucumber.cjs                        # runner config (parallel, ts-node hook)
+├── .env / .env.example                  # env vars (APP_USER_URL, APP_OPERATOR_URL, …)
 ├── config/
-│   ├── test.config.ts             # presets (local/ci), timeouts, browser
-│   └── urls.config.ts             # APP/API URLs + routes
-├── page-objects/                  # Page Object pattern — *.page.ts
+│   ├── test.config.ts                   # presets (local/ci), timeouts, browser
+│   └── urls.config.ts                   # multi-app URLs + route constants
+├── page-objects/
+│   ├── landing.page.ts                  # user-web AuthDemo page object
+│   └── operator/
+│       ├── operator-login.page.ts       # /login
+│       ├── operator-shell.page.ts       # sidebar nav + topbar
+│       ├── stations.page.ts             # /stations CRUD
+│       ├── routes.page.ts               # /routes CRUD
+│       ├── seat-layouts.page.ts         # /seat-layouts
+│       ├── vehicles.page.ts             # /vehicles CRUD
+│       └── trips.page.ts               # /trips CRUD + status transitions
 ├── utils/
-│   ├── browser-factory.ts         # createBrowserContextPage / close
-│   └── logger.ts                  # pino logger
+│   ├── browser-factory.ts               # createBrowserContextPage / close
+│   └── logger.ts                        # pino logger
 └── tests/
-    ├── features/<feat>/*.feature  # Gherkin scenarios
-    ├── features/<feat>/*.steps.ts # step definitions (colocated)
+    ├── features/
+    │   ├── auth/                        # user-web register + login
+    │   └── operator/                    # operator-CMS scenarios
+    │       ├── operator-shared.steps.ts # shared "I am logged in as operator admin"
+    │       ├── login.{feature,steps.ts}
+    │       ├── stations-crud.{feature,steps.ts}
+    │       ├── routes-crud.{feature,steps.ts}
+    │       ├── seat-layouts-crud.{feature,steps.ts}
+    │       ├── vehicles-crud.{feature,steps.ts}
+    │       └── trips-crud.{feature,steps.ts}
     └── support/
-        ├── world.ts               # BrowserWorld
-        └── browser-hooks.ts       # Before/After scenarios
+        ├── world.ts                     # BrowserWorld
+        └── browser-hooks.ts            # Before/After scenarios
 ```
 
-## Prerequisites
+## Required services
 
-1. Backend running:
-   ```bash
-   bun run db:up
-   cd apps/backend && bun run dev
-   ```
-2. user-web running:
-   ```bash
-   cd apps/user-web && bun run dev
-   ```
-3. Browsers installed:
-   ```bash
-   bun run --filter @bookee/e2e install:browsers
-   ```
+All services must be running **before** executing e2e tests.
+
+```bash
+# 1. Database + Redis
+bun run db:up
+
+# 2. Backend API (port 3000)
+bun run --filter @bookee/backend start:dev
+
+# 3. user-web (port 5174)
+bun run --filter @bookee/user-web dev
+
+# 4. operator-CMS (port 5173)
+bun run --filter @bookee/operator-cms dev
+```
+
+## Seed data
+
+Seed the database once after `db:up`:
+
+```bash
+bun run --filter @bookee/backend db:seed
+```
+
+This creates:
+
+| Resource     | Details                                                                                |
+| ------------ | -------------------------------------------------------------------------------------- |
+| Admin user   | phone `0900000000`, password `admin`, email `admin@bookee.local`                       |
+| Stations     | Bến xe Miền Đông Mới, Bến xe Miền Tây, Bến xe Đà Lạt, Bến xe Cần Thơ, Bến xe Nha Trang |
+| Seat layouts | Giường nằm 34 chỗ, Limousine 22 chỗ                                                    |
+| Operators    | Phương Trang (id=1), Thành Bưởi (id=2), Sao Việt (id=3)                                |
+| Routes       | 6 seeded routes                                                                        |
+| Vehicles     | 6 seeded vehicles                                                                      |
 
 ## Run
 
 ```bash
-bun run --filter @bookee/e2e test           # parallel, headless
-bun run --filter @bookee/e2e test:headed    # see the browser
-bun run --filter @bookee/e2e test:smoke     # @smoke tag only
-bun run --filter @bookee/e2e test:auth      # @auth tag only
+# All tests (parallel, headless)
+bun run --filter @bookee/e2e e2e
+
+# Smoke only (@smoke)
+bun run --filter @bookee/e2e e2e:smoke
+
+# Auth scenarios only (@auth) — user-web
+bun run --filter @bookee/e2e e2e:auth
+
+# All operator-CMS scenarios
+bun run --filter @bookee/e2e e2e:operator
+
+# See the browser (headed mode)
+bun run --filter @bookee/e2e e2e:headed
 ```
 
 Run a single feature file:
 
 ```bash
 cd apps/e2e
-bunx cucumber-js --config .cucumber.cjs tests/features/auth/login.feature
+bunx cucumber-js --config .cucumber.cjs tests/features/operator/login.feature
 ```
+
+## Tags
+
+| Tag                      | Scope                                      |
+| ------------------------ | ------------------------------------------ |
+| `@smoke`                 | Critical happy-paths (login for both apps) |
+| `@auth`                  | user-web register + login                  |
+| `@operator-auth`         | Operator CMS login scenarios               |
+| `@operator-stations`     | Stations CRUD                              |
+| `@operator-routes`       | Routes CRUD                                |
+| `@operator-seat-layouts` | Seat layout list + dialog                  |
+| `@operator-vehicles`     | Vehicles CRUD                              |
+| `@operator-trips`        | Trips CRUD + status transitions            |
 
 ## Tracing
 
@@ -74,10 +137,12 @@ bunx playwright show-trace test-results/traces/<file>.zip
 ## Conventions
 
 - One `.feature` + `.steps.ts` pair per scenario group.
-- Shared / cross-feature steps belong to the file that introduces them — keep
-  steps DRY but don't extract a generic "common.steps.ts" until duplication
-  becomes painful.
-- Tag scenarios: `@smoke`, `@auth`, `@priority_high|medium|low`.
-- Data should be hermetic per scenario (faker emails / phones) when possible.
-  Shared seeded fixtures (admin@bookee.local) are used only when scenarios
-  need to assert against a known duplicate.
+- Shared step `Given I am logged in as operator admin` lives in
+  `tests/features/operator/operator-shared.steps.ts` and is reused by all
+  operator features via the Background block.
+- Each scenario creates its own data with faker-prefixed identifiers
+  (`E2E <random>`). Cleanup happens within the same scenario so seeded data
+  stays pristine.
+- Prefer role-based locators (`getByRole`, `getByLabel`) over CSS selectors.
+- Use `TimeoutValue.ACTION` for element waits; `TimeoutValue.NAVIGATION` for
+  `page.goto` / `waitForURL`.
