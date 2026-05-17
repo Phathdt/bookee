@@ -14,8 +14,8 @@
   "scripts": {
     "build": "orval --config ./orval.config.ts",
     "codegen": "orval --config ./orval.config.ts",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {

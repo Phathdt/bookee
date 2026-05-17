@@ -21,12 +21,12 @@
       "persistent": true
     },
     "lint": {
-      "inputs": ["src/**", "eslint.config.*", "package.json"],
+      "inputs": ["src/**", ".oxlintrc.json", "package.json"],
       "outputs": []
     },
     "lint:fix": {
       "cache": false,
-      "inputs": ["src/**", "eslint.config.*", "package.json"],
+      "inputs": ["src/**", ".oxlintrc.json", "package.json"],
       "outputs": []
     },
     "typecheck": {

@@ -1,0 +1,14 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "extends": ["../../.oxlintrc.json"],
+  "env": {
+    "node": true,
+    "browser": false
+  },
+  "rules": {
+    "typescript/no-explicit-any": "off",
+    "typescript/no-extraneous-class": "off",
+    "typescript/no-empty-interface": "off",
+    "typescript/consistent-type-imports": "off"
+  }
+}

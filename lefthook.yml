@@ -1,8 +1,8 @@
 pre-commit:
   jobs:
-    - name: eslint
+    - name: oxlint
       glob: "*.{ts,tsx,js,jsx}"
-      run: bunx eslint --fix {staged_files}
+      run: bunx oxlint --fix {staged_files}
       stage_fixed: true
     - name: prettier
       glob: "*.{ts,tsx,js,jsx,json,md}"

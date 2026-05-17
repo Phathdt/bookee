@@ -1,0 +1,56 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "import", "react", "jsx-a11y"],
+  "categories": {
+    "correctness": "warn",
+    "suspicious": "warn"
+  },
+  "env": {
+    "node": true,
+    "browser": true,
+    "es2022": true
+  },
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/.turbo/**",
+    "**/coverage/**",
+    "**/generated/**",
+    "**/*.generated.ts",
+    "apps/backend/scripts/**",
+    "apps/backend/src/metadata.ts",
+    "apps/backend/prisma.config.ts",
+    "apps/backend/prisma/seed.ts",
+    "apps/backend/vitest.config.ts",
+    "apps/backend/vitest.unit.config.ts",
+    "apps/backend/vitest.integration.config.ts",
+    "apps/backend/vitest.shared.ts",
+    "apps/operator-cms/vitest.config.ts",
+    "apps/user-web/vitest.config.ts",
+    "packages/api-client/openapi.yaml"
+  ],
+  "rules": {
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
+    "typescript/no-explicit-any": "warn",
+    "typescript/consistent-type-imports": [
+      "warn",
+      { "prefer": "no-type-imports", "fixStyle": "separate-type-imports" }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["**/*.{tsx,jsx}"],
+      "rules": {
+        "react/react-in-jsx-scope": "off",
+        "react/rules-of-hooks": "error",
+        "react/exhaustive-deps": "warn",
+        "typescript/consistent-type-imports": [
+          "warn",
+          { "prefer": "type-imports", "fixStyle": "inline-type-imports" }
+        ]
+      }
+    }
+  ]
+}
