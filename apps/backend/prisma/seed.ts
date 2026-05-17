@@ -130,12 +130,101 @@ async function seedSeatLayouts(): Promise<void> {
   }
 }
 
+const OPERATORS = [
+  { name: 'Phương Trang', hotline: '19006067', status: 'active' as const },
+  { name: 'Thành Bưởi', hotline: '19006079', status: 'active' as const },
+  { name: 'Sao Việt', hotline: '19006888', status: 'active' as const },
+];
+
+/**
+ * Routes seeded as pairs of [fromStationName, toStationName]. distanceKm +
+ * durationMinutes are rough estimates — good enough for fixtures.
+ */
+const ROUTES: { from: string; to: string; distanceKm: number; durationMinutes: number }[] = [
+  { from: 'Bến xe Miền Đông Mới', to: 'Bến xe Đà Lạt', distanceKm: 308, durationMinutes: 480 },
+  { from: 'Bến xe Đà Lạt', to: 'Bến xe Miền Đông Mới', distanceKm: 308, durationMinutes: 480 },
+  { from: 'Bến xe Miền Tây', to: 'Bến xe Cần Thơ', distanceKm: 165, durationMinutes: 240 },
+  { from: 'Bến xe Cần Thơ', to: 'Bến xe Miền Tây', distanceKm: 165, durationMinutes: 240 },
+  { from: 'Bến xe Miền Đông Mới', to: 'Bến xe Nha Trang', distanceKm: 440, durationMinutes: 600 },
+  { from: 'Bến xe Nha Trang', to: 'Bến xe Đà Lạt', distanceKm: 135, durationMinutes: 210 },
+];
+
+async function seedOperators(): Promise<void> {
+  for (const op of OPERATORS) {
+    const exists = await prisma.busCompany.findFirst({ where: { name: op.name } });
+    if (!exists) await prisma.busCompany.create({ data: op });
+  }
+}
+
+async function seedRoutes(): Promise<void> {
+  const operators = await prisma.busCompany.findMany({ orderBy: { id: 'asc' } });
+  if (operators.length === 0) return;
+
+  for (const r of ROUTES) {
+    const from = await prisma.station.findFirst({ where: { name: r.from } });
+    const to = await prisma.station.findFirst({ where: { name: r.to } });
+    if (!from || !to) continue;
+
+    // Round-robin: each route assigned to a different operator.
+    const operator = operators[ROUTES.indexOf(r) % operators.length];
+    if (!operator) continue;
+
+    const exists = await prisma.route.findFirst({
+      where: { companyId: operator.id, fromStationId: from.id, toStationId: to.id },
+    });
+    if (!exists) {
+      await prisma.route.create({
+        data: {
+          companyId: operator.id,
+          fromStationId: from.id,
+          toStationId: to.id,
+          distanceKm: r.distanceKm,
+          durationMinutes: r.durationMinutes,
+        },
+      });
+    }
+  }
+}
+
+async function seedVehicles(): Promise<void> {
+  const operators = await prisma.busCompany.findMany({ orderBy: { id: 'asc' } });
+  const sleeper = await prisma.seatLayout.findFirst({ where: { name: 'Giường nằm 34 chỗ' } });
+  const limousine = await prisma.seatLayout.findFirst({ where: { name: 'Limousine 22 chỗ' } });
+  if (!sleeper || !limousine || operators.length === 0) return;
+
+  const layouts = [
+    { layout: sleeper, totalSeats: 34, prefix: 'SLP' },
+    { layout: limousine, totalSeats: 22, prefix: 'LMS' },
+  ];
+
+  for (const op of operators) {
+    for (const cfg of layouts) {
+      const plate = `${cfg.prefix}-${op.id}-001`;
+      const exists = await prisma.vehicle.findFirst({ where: { plateNumber: plate } });
+      if (!exists) {
+        await prisma.vehicle.create({
+          data: {
+            companyId: op.id,
+            plateNumber: plate,
+            type: cfg.prefix === 'SLP' ? 'sleeper' : 'limousine',
+            seatLayoutId: cfg.layout.id,
+            totalSeats: cfg.totalSeats,
+          },
+        });
+      }
+    }
+  }
+}
+
 async function main(): Promise<void> {
   await seedAdmin();
   await seedStations();
   await seedSeatLayouts();
+  await seedOperators();
+  await seedRoutes();
+  await seedVehicles();
   // eslint-disable-next-line no-console
-  console.log('[seed] done — admin user, 5 stations, 2 seat layouts');
+  console.log('[seed] done — admin, 5 stations, 2 seat layouts, 3 operators, 6 routes, 6 vehicles');
 }
 
 main()

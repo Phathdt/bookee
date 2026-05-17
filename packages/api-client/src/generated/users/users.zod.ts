@@ -7,32 +7,29 @@
  */
 import * as zod from 'zod';
 
+
 /**
  * @summary Return the authenticated user profile
  */
 export const getMeResponseIdMin = -9007199254740991;
 export const getMeResponseIdMax = 9007199254740991;
 
-export const getMeResponseEmailRegExp = new RegExp(
-  "^(?!\\.)(?!.\*\\.\\.)([A-Za-z0-9_'+\\-\\.]\*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]\*\\.)+[A-Za-z]{2,}$",
-);
+export const getMeResponseEmailRegExp = new RegExp('^(?!\\.)(?!.\*\\.\\.)([A-Za-z0-9_\'+\\-\\.]\*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]\*\\.)+[A-Za-z]{2,}$');
 export const getMeResponseOperatorIdMin = -9007199254740991;
 export const getMeResponseOperatorIdMax = 9007199254740991;
 
+
+
 export const GetMeResponse = zod.object({
-  id: zod.number().min(getMeResponseIdMin).max(getMeResponseIdMax),
-  name: zod.string(),
-  phone: zod.string(),
-  email: zod.email().regex(getMeResponseEmailRegExp),
-  role: zod.enum(['customer', 'operator', 'driver', 'admin']),
-  operatorId: zod
-    .number()
-    .min(getMeResponseOperatorIdMin)
-    .max(getMeResponseOperatorIdMax)
-    .nullable(),
-  createdAt: zod.string(),
-  updatedAt: zod.string(),
-});
+  "id": zod.number().min(getMeResponseIdMin).max(getMeResponseIdMax),
+  "name": zod.string(),
+  "phone": zod.string(),
+  "email": zod.email().regex(getMeResponseEmailRegExp),
+  "role": zod.enum(['customer', 'operator', 'driver', 'admin']),
+  "operatorId": zod.number().min(getMeResponseOperatorIdMin).max(getMeResponseOperatorIdMax).nullable(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
 
 /**
  * @summary Update the authenticated user profile
@@ -42,44 +39,37 @@ export const updateMeBodyNameMax = 120;
 export const updateMeBodyPhoneMin = 8;
 export const updateMeBodyPhoneMax = 20;
 
+
 export const updateMeBodyPhoneRegExp = new RegExp('^[+\\d\\s-]+$');
 export const updateMeBodyEmailMax = 254;
 
-export const updateMeBodyEmailRegExp = new RegExp(
-  "^(?!\\.)(?!.\*\\.\\.)([A-Za-z0-9_'+\\-\\.]\*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]\*\\.)+[A-Za-z]{2,}$",
-);
+
+export const updateMeBodyEmailRegExp = new RegExp('^(?!\\.)(?!.\*\\.\\.)([A-Za-z0-9_\'+\\-\\.]\*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]\*\\.)+[A-Za-z]{2,}$');
+
 
 export const UpdateMeBody = zod.object({
-  name: zod.string().min(1).max(updateMeBodyNameMax).optional(),
-  phone: zod
-    .string()
-    .min(updateMeBodyPhoneMin)
-    .max(updateMeBodyPhoneMax)
-    .regex(updateMeBodyPhoneRegExp)
-    .optional(),
-  email: zod.email().max(updateMeBodyEmailMax).regex(updateMeBodyEmailRegExp).optional(),
-});
+  "name": zod.string().min(1).max(updateMeBodyNameMax).optional(),
+  "phone": zod.string().min(updateMeBodyPhoneMin).max(updateMeBodyPhoneMax).regex(updateMeBodyPhoneRegExp).optional(),
+  "email": zod.email().max(updateMeBodyEmailMax).regex(updateMeBodyEmailRegExp).optional()
+})
 
 export const updateMeResponseIdMin = -9007199254740991;
 export const updateMeResponseIdMax = 9007199254740991;
 
-export const updateMeResponseEmailRegExp = new RegExp(
-  "^(?!\\.)(?!.\*\\.\\.)([A-Za-z0-9_'+\\-\\.]\*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]\*\\.)+[A-Za-z]{2,}$",
-);
+export const updateMeResponseEmailRegExp = new RegExp('^(?!\\.)(?!.\*\\.\\.)([A-Za-z0-9_\'+\\-\\.]\*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]\*\\.)+[A-Za-z]{2,}$');
 export const updateMeResponseOperatorIdMin = -9007199254740991;
 export const updateMeResponseOperatorIdMax = 9007199254740991;
 
+
+
 export const UpdateMeResponse = zod.object({
-  id: zod.number().min(updateMeResponseIdMin).max(updateMeResponseIdMax),
-  name: zod.string(),
-  phone: zod.string(),
-  email: zod.email().regex(updateMeResponseEmailRegExp),
-  role: zod.enum(['customer', 'operator', 'driver', 'admin']),
-  operatorId: zod
-    .number()
-    .min(updateMeResponseOperatorIdMin)
-    .max(updateMeResponseOperatorIdMax)
-    .nullable(),
-  createdAt: zod.string(),
-  updatedAt: zod.string(),
-});
+  "id": zod.number().min(updateMeResponseIdMin).max(updateMeResponseIdMax),
+  "name": zod.string(),
+  "phone": zod.string(),
+  "email": zod.email().regex(updateMeResponseEmailRegExp),
+  "role": zod.enum(['customer', 'operator', 'driver', 'admin']),
+  "operatorId": zod.number().min(updateMeResponseOperatorIdMin).max(updateMeResponseOperatorIdMax).nullable(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+

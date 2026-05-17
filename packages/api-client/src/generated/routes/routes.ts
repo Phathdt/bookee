@@ -5,7 +5,10 @@
  * Multi-operator trip booking platform API
  * OpenAPI spec version: 0.1.0
  */
-import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -18,446 +21,392 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
+  UseQueryResult
 } from '@tanstack/react-query';
 
 import type {
   CreateRouteBodyDto,
   ListRoutesParams,
   RouteDto,
-  UpdateRouteBodyDto,
+  UpdateRouteBodyDto
 } from '../bookeeAPI.schemas';
 
 import { axiosInstance } from '../../axios-instance';
-import type { ErrorType, BodyType } from '../../axios-instance';
+import type { ErrorType , BodyType } from '../../axios-instance';
+
+
+
 
 /**
  * @summary Search routes (public)
  */
-export const listRoutes = (params?: ListRoutesParams, signal?: AbortSignal) => {
-  return axiosInstance<RouteDto[]>({ url: `/api/v1/routes`, method: 'GET', params, signal });
-};
-
-export const getListRoutesQueryKey = (params?: ListRoutesParams) => {
-  return [`/api/v1/routes`, ...(params ? [params] : [])] as const;
-};
-
-export const getListRoutesQueryOptions = <
-  TData = Awaited<ReturnType<typeof listRoutes>>,
-  TError = ErrorType<unknown>,
->(
-  params?: ListRoutesParams,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listRoutes>>, TError, TData>>;
-  },
+export const listRoutes = (
+    params?: ListRoutesParams,
+ signal?: AbortSignal
 ) => {
-  const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getListRoutesQueryKey(params);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof listRoutes>>> = ({ signal }) =>
-    listRoutes(params, signal);
+      return axiosInstance<RouteDto[]>(
+      {url: `/api/v1/routes`, method: 'GET',
+        params, signal
+    },
+      );
+    }
 
-  return { queryKey, queryFn, staleTime: 30000, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof listRoutes>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
 
-export type ListRoutesQueryResult = NonNullable<Awaited<ReturnType<typeof listRoutes>>>;
-export type ListRoutesQueryError = ErrorType<unknown>;
 
-export function useListRoutes<
-  TData = Awaited<ReturnType<typeof listRoutes>>,
-  TError = ErrorType<unknown>,
->(
-  params: undefined | ListRoutesParams,
-  options: {
-    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof listRoutes>>, TError, TData>> &
-      Pick<
+
+export const getListRoutesQueryKey = (params?: ListRoutesParams,) => {
+    return [
+    `/api/v1/routes`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListRoutesQueryOptions = <TData = Awaited<ReturnType<typeof listRoutes>>, TError = ErrorType<unknown>>(params?: ListRoutesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listRoutes>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListRoutesQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listRoutes>>> = ({ signal }) => listRoutes(params, signal);
+
+
+
+
+
+   return  { queryKey, queryFn,   staleTime: 30000,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listRoutes>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ListRoutesQueryResult = NonNullable<Awaited<ReturnType<typeof listRoutes>>>
+export type ListRoutesQueryError = ErrorType<unknown>
+
+
+export function useListRoutes<TData = Awaited<ReturnType<typeof listRoutes>>, TError = ErrorType<unknown>>(
+ params: undefined |  ListRoutesParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listRoutes>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof listRoutes>>,
           TError,
           Awaited<ReturnType<typeof listRoutes>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useListRoutes<
-  TData = Awaited<ReturnType<typeof listRoutes>>,
-  TError = ErrorType<unknown>,
->(
-  params?: ListRoutesParams,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listRoutes>>, TError, TData>> &
-      Pick<
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListRoutes<TData = Awaited<ReturnType<typeof listRoutes>>, TError = ErrorType<unknown>>(
+ params?: ListRoutesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listRoutes>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof listRoutes>>,
           TError,
           Awaited<ReturnType<typeof listRoutes>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useListRoutes<
-  TData = Awaited<ReturnType<typeof listRoutes>>,
-  TError = ErrorType<unknown>,
->(
-  params?: ListRoutesParams,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listRoutes>>, TError, TData>>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListRoutes<TData = Awaited<ReturnType<typeof listRoutes>>, TError = ErrorType<unknown>>(
+ params?: ListRoutesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listRoutes>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Search routes (public)
  */
 
-export function useListRoutes<
-  TData = Awaited<ReturnType<typeof listRoutes>>,
-  TError = ErrorType<unknown>,
->(
-  params?: ListRoutesParams,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listRoutes>>, TError, TData>>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getListRoutesQueryOptions(params, options);
+export function useListRoutes<TData = Awaited<ReturnType<typeof listRoutes>>, TError = ErrorType<unknown>>(
+ params?: ListRoutesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listRoutes>>, TError, TData>>, }
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
+  const queryOptions = getListRoutesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+
+
+
+
 
 /**
  * @summary Create a route (admin or operator-scoped)
  */
 export const createRoute = (
-  createRouteBodyDto: BodyType<CreateRouteBodyDto>,
-  signal?: AbortSignal,
+    createRouteBodyDto: BodyType<CreateRouteBodyDto>,
+ signal?: AbortSignal
 ) => {
-  return axiosInstance<RouteDto>({
-    url: `/api/v1/routes`,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    data: createRouteBodyDto,
-    signal,
-  });
-};
 
-export const getCreateRouteMutationOptions = <
-  TError = ErrorType<unknown>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof createRoute>>,
-    TError,
-    { data: BodyType<CreateRouteBodyDto> },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof createRoute>>,
-  TError,
-  { data: BodyType<CreateRouteBodyDto> },
-  TContext
-> => {
-  const mutationKey = ['createRoute'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof createRoute>>,
-    { data: BodyType<CreateRouteBodyDto> }
-  > = (props) => {
-    const { data } = props ?? {};
+      return axiosInstance<RouteDto>(
+      {url: `/api/v1/routes`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createRouteBodyDto, signal
+    },
+      );
+    }
 
-    return createRoute(data);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type CreateRouteMutationResult = NonNullable<Awaited<ReturnType<typeof createRoute>>>;
-export type CreateRouteMutationBody = BodyType<CreateRouteBodyDto>;
-export type CreateRouteMutationError = ErrorType<unknown>;
+export const getCreateRouteMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createRoute>>, TError,{data: BodyType<CreateRouteBodyDto>}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof createRoute>>, TError,{data: BodyType<CreateRouteBodyDto>}, TContext> => {
 
-/**
+const mutationKey = ['createRoute'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createRoute>>, {data: BodyType<CreateRouteBodyDto>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createRoute(data,)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateRouteMutationResult = NonNullable<Awaited<ReturnType<typeof createRoute>>>
+    export type CreateRouteMutationBody = BodyType<CreateRouteBodyDto>
+    export type CreateRouteMutationError = ErrorType<unknown>
+
+    /**
  * @summary Create a route (admin or operator-scoped)
  */
-export const useCreateRoute = <TError = ErrorType<unknown>, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof createRoute>>,
-      TError,
-      { data: BodyType<CreateRouteBodyDto> },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof createRoute>>,
-  TError,
-  { data: BodyType<CreateRouteBodyDto> },
-  TContext
-> => {
-  return useMutation(getCreateRouteMutationOptions(options), queryClient);
-};
-/**
+export const useCreateRoute = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createRoute>>, TError,{data: BodyType<CreateRouteBodyDto>}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createRoute>>,
+        TError,
+        {data: BodyType<CreateRouteBodyDto>},
+        TContext
+      > => {
+      return useMutation(getCreateRouteMutationOptions(options), queryClient);
+    }
+    /**
  * @summary Get a single route
  */
-export const getRoute = (id: number, signal?: AbortSignal) => {
-  return axiosInstance<RouteDto>({ url: `/api/v1/routes/${id}`, method: 'GET', signal });
-};
-
-export const getGetRouteQueryKey = (id: number) => {
-  return [`/api/v1/routes/${id}`] as const;
-};
-
-export const getGetRouteQueryOptions = <
-  TData = Awaited<ReturnType<typeof getRoute>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRoute>>, TError, TData>>;
-  },
+export const getRoute = (
+    id: number,
+ signal?: AbortSignal
 ) => {
-  const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetRouteQueryKey(id);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getRoute>>> = ({ signal }) =>
-    getRoute(id, signal);
+      return axiosInstance<RouteDto>(
+      {url: `/api/v1/routes/${id}`, method: 'GET', signal
+    },
+      );
+    }
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: id !== null && id !== undefined,
-    staleTime: 30000,
-    ...queryOptions,
-  } as UseQueryOptions<Awaited<ReturnType<typeof getRoute>>, TError, TData> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
-};
 
-export type GetRouteQueryResult = NonNullable<Awaited<ReturnType<typeof getRoute>>>;
-export type GetRouteQueryError = ErrorType<unknown>;
 
-export function useGetRoute<
-  TData = Awaited<ReturnType<typeof getRoute>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options: {
-    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRoute>>, TError, TData>> &
-      Pick<
+
+export const getGetRouteQueryKey = (id: number,) => {
+    return [
+    `/api/v1/routes/${id}`
+    ] as const;
+    }
+
+
+export const getGetRouteQueryOptions = <TData = Awaited<ReturnType<typeof getRoute>>, TError = ErrorType<unknown>>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRoute>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetRouteQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getRoute>>> = ({ signal }) => getRoute(id, signal);
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined,  staleTime: 30000,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getRoute>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetRouteQueryResult = NonNullable<Awaited<ReturnType<typeof getRoute>>>
+export type GetRouteQueryError = ErrorType<unknown>
+
+
+export function useGetRoute<TData = Awaited<ReturnType<typeof getRoute>>, TError = ErrorType<unknown>>(
+ id: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRoute>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getRoute>>,
           TError,
           Awaited<ReturnType<typeof getRoute>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetRoute<
-  TData = Awaited<ReturnType<typeof getRoute>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRoute>>, TError, TData>> &
-      Pick<
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetRoute<TData = Awaited<ReturnType<typeof getRoute>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRoute>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getRoute>>,
           TError,
           Awaited<ReturnType<typeof getRoute>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetRoute<
-  TData = Awaited<ReturnType<typeof getRoute>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRoute>>, TError, TData>>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetRoute<TData = Awaited<ReturnType<typeof getRoute>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRoute>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get a single route
  */
 
-export function useGetRoute<
-  TData = Awaited<ReturnType<typeof getRoute>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRoute>>, TError, TData>>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getGetRouteQueryOptions(id, options);
+export function useGetRoute<TData = Awaited<ReturnType<typeof getRoute>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRoute>>, TError, TData>>, }
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
+  const queryOptions = getGetRouteQueryOptions(id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+
+
+
+
 
 /**
  * @summary Update a route (admin or owning operator)
  */
 export const updateRoute = (
-  id: number,
-  updateRouteBodyDto: BodyType<UpdateRouteBodyDto>,
-  signal?: AbortSignal,
+    id: number,
+    updateRouteBodyDto: BodyType<UpdateRouteBodyDto>,
+ signal?: AbortSignal
 ) => {
-  return axiosInstance<RouteDto>({
-    url: `/api/v1/routes/${id}`,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    data: updateRouteBodyDto,
-    signal,
-  });
-};
 
-export const getUpdateRouteMutationOptions = <
-  TError = ErrorType<unknown>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof updateRoute>>,
-    TError,
-    { id: number; data: BodyType<UpdateRouteBodyDto> },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof updateRoute>>,
-  TError,
-  { id: number; data: BodyType<UpdateRouteBodyDto> },
-  TContext
-> => {
-  const mutationKey = ['updateRoute'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof updateRoute>>,
-    { id: number; data: BodyType<UpdateRouteBodyDto> }
-  > = (props) => {
-    const { id, data } = props ?? {};
+      return axiosInstance<RouteDto>(
+      {url: `/api/v1/routes/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateRouteBodyDto, signal
+    },
+      );
+    }
 
-    return updateRoute(id, data);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type UpdateRouteMutationResult = NonNullable<Awaited<ReturnType<typeof updateRoute>>>;
-export type UpdateRouteMutationBody = BodyType<UpdateRouteBodyDto>;
-export type UpdateRouteMutationError = ErrorType<unknown>;
+export const getUpdateRouteMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateRoute>>, TError,{id: number;data: BodyType<UpdateRouteBodyDto>}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof updateRoute>>, TError,{id: number;data: BodyType<UpdateRouteBodyDto>}, TContext> => {
 
-/**
+const mutationKey = ['updateRoute'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateRoute>>, {id: number;data: BodyType<UpdateRouteBodyDto>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateRoute(id,data,)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateRouteMutationResult = NonNullable<Awaited<ReturnType<typeof updateRoute>>>
+    export type UpdateRouteMutationBody = BodyType<UpdateRouteBodyDto>
+    export type UpdateRouteMutationError = ErrorType<unknown>
+
+    /**
  * @summary Update a route (admin or owning operator)
  */
-export const useUpdateRoute = <TError = ErrorType<unknown>, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof updateRoute>>,
-      TError,
-      { id: number; data: BodyType<UpdateRouteBodyDto> },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof updateRoute>>,
-  TError,
-  { id: number; data: BodyType<UpdateRouteBodyDto> },
-  TContext
-> => {
-  return useMutation(getUpdateRouteMutationOptions(options), queryClient);
-};
-/**
+export const useUpdateRoute = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateRoute>>, TError,{id: number;data: BodyType<UpdateRouteBodyDto>}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof updateRoute>>,
+        TError,
+        {id: number;data: BodyType<UpdateRouteBodyDto>},
+        TContext
+      > => {
+      return useMutation(getUpdateRouteMutationOptions(options), queryClient);
+    }
+    /**
  * @summary Delete a route (admin or owning operator)
  */
-export const deleteRoute = (id: number, signal?: AbortSignal) => {
-  return axiosInstance<void>({ url: `/api/v1/routes/${id}`, method: 'DELETE', signal });
-};
+export const deleteRoute = (
+    id: number,
+ signal?: AbortSignal
+) => {
 
-export const getDeleteRouteMutationOptions = <
-  TError = ErrorType<unknown>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof deleteRoute>>,
-    TError,
-    { id: number },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof deleteRoute>>,
-  TError,
-  { id: number },
-  TContext
-> => {
-  const mutationKey = ['deleteRoute'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
 
-  const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteRoute>>, { id: number }> = (
-    props,
-  ) => {
-    const { id } = props ?? {};
+      return axiosInstance<void>(
+      {url: `/api/v1/routes/${id}`, method: 'DELETE', signal
+    },
+      );
+    }
 
-    return deleteRoute(id);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type DeleteRouteMutationResult = NonNullable<Awaited<ReturnType<typeof deleteRoute>>>;
+export const getDeleteRouteMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteRoute>>, TError,{id: number}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof deleteRoute>>, TError,{id: number}, TContext> => {
 
-export type DeleteRouteMutationError = ErrorType<unknown>;
+const mutationKey = ['deleteRoute'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
 
-/**
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteRoute>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteRoute(id,)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteRouteMutationResult = NonNullable<Awaited<ReturnType<typeof deleteRoute>>>
+
+    export type DeleteRouteMutationError = ErrorType<unknown>
+
+    /**
  * @summary Delete a route (admin or owning operator)
  */
-export const useDeleteRoute = <TError = ErrorType<unknown>, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof deleteRoute>>,
-      TError,
-      { id: number },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<Awaited<ReturnType<typeof deleteRoute>>, TError, { id: number }, TContext> => {
-  return useMutation(getDeleteRouteMutationOptions(options), queryClient);
-};
+export const useDeleteRoute = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteRoute>>, TError,{id: number}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteRoute>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getDeleteRouteMutationOptions(options), queryClient);
+    }

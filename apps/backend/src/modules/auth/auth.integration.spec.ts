@@ -25,7 +25,7 @@ describe('auth integration (real Postgres via testcontainers)', () => {
   });
 
   beforeEach(async () => {
-    await fx.prisma.user.deleteMany({});
+    await fx.resetDatabase();
   });
 
   // ---- AuthService end-to-end ---------------------------------------------

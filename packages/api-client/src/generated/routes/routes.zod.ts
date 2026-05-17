@@ -7,6 +7,7 @@
  */
 import * as zod from 'zod';
 
+
 /**
  * @summary Search routes (public)
  */
@@ -19,23 +20,13 @@ export const listRoutesQueryFromStationIdMax = 9007199254740991;
 export const listRoutesQueryToStationIdExclusiveMin = 0;
 export const listRoutesQueryToStationIdMax = 9007199254740991;
 
+
+
 export const ListRoutesQueryParams = zod.object({
-  companyId: zod
-    .number()
-    .gt(listRoutesQueryCompanyIdExclusiveMin)
-    .max(listRoutesQueryCompanyIdMax)
-    .optional(),
-  fromStationId: zod
-    .number()
-    .gt(listRoutesQueryFromStationIdExclusiveMin)
-    .max(listRoutesQueryFromStationIdMax)
-    .optional(),
-  toStationId: zod
-    .number()
-    .gt(listRoutesQueryToStationIdExclusiveMin)
-    .max(listRoutesQueryToStationIdMax)
-    .optional(),
-});
+  "companyId": zod.number().gt(listRoutesQueryCompanyIdExclusiveMin).max(listRoutesQueryCompanyIdMax).optional(),
+  "fromStationId": zod.number().gt(listRoutesQueryFromStationIdExclusiveMin).max(listRoutesQueryFromStationIdMax).optional(),
+  "toStationId": zod.number().gt(listRoutesQueryToStationIdExclusiveMin).max(listRoutesQueryToStationIdMax).optional()
+})
 
 export const listRoutesResponseIdMin = -9007199254740991;
 export const listRoutesResponseIdMax = 9007199254740991;
@@ -52,24 +43,17 @@ export const listRoutesResponseToStationIdMax = 9007199254740991;
 export const listRoutesResponseDurationMinutesMin = -9007199254740991;
 export const listRoutesResponseDurationMinutesMax = 9007199254740991;
 
+
+
 export const ListRoutesResponseItem = zod.object({
-  id: zod.number().min(listRoutesResponseIdMin).max(listRoutesResponseIdMax),
-  companyId: zod.number().min(listRoutesResponseCompanyIdMin).max(listRoutesResponseCompanyIdMax),
-  fromStationId: zod
-    .number()
-    .min(listRoutesResponseFromStationIdMin)
-    .max(listRoutesResponseFromStationIdMax),
-  toStationId: zod
-    .number()
-    .min(listRoutesResponseToStationIdMin)
-    .max(listRoutesResponseToStationIdMax),
-  distanceKm: zod.number(),
-  durationMinutes: zod
-    .number()
-    .min(listRoutesResponseDurationMinutesMin)
-    .max(listRoutesResponseDurationMinutesMax),
-});
-export const ListRoutesResponse = zod.array(ListRoutesResponseItem);
+  "id": zod.number().min(listRoutesResponseIdMin).max(listRoutesResponseIdMax),
+  "companyId": zod.number().min(listRoutesResponseCompanyIdMin).max(listRoutesResponseCompanyIdMax),
+  "fromStationId": zod.number().min(listRoutesResponseFromStationIdMin).max(listRoutesResponseFromStationIdMax),
+  "toStationId": zod.number().min(listRoutesResponseToStationIdMin).max(listRoutesResponseToStationIdMax),
+  "distanceKm": zod.number(),
+  "durationMinutes": zod.number().min(listRoutesResponseDurationMinutesMin).max(listRoutesResponseDurationMinutesMax)
+})
+export const ListRoutesResponse = zod.array(ListRoutesResponseItem)
 
 /**
  * @summary Create a route (admin or operator-scoped)
@@ -88,29 +72,22 @@ export const createRouteBodyDistanceKmExclusiveMin = 0;
 export const createRouteBodyDurationMinutesExclusiveMin = 0;
 export const createRouteBodyDurationMinutesMax = 9007199254740991;
 
+
+
 export const CreateRouteBody = zod.object({
-  companyId: zod.number().gt(createRouteBodyCompanyIdExclusiveMin).max(createRouteBodyCompanyIdMax),
-  fromStationId: zod
-    .number()
-    .gt(createRouteBodyFromStationIdExclusiveMin)
-    .max(createRouteBodyFromStationIdMax),
-  toStationId: zod
-    .number()
-    .gt(createRouteBodyToStationIdExclusiveMin)
-    .max(createRouteBodyToStationIdMax),
-  distanceKm: zod.number().gt(createRouteBodyDistanceKmExclusiveMin),
-  durationMinutes: zod
-    .number()
-    .gt(createRouteBodyDurationMinutesExclusiveMin)
-    .max(createRouteBodyDurationMinutesMax),
-});
+  "companyId": zod.number().gt(createRouteBodyCompanyIdExclusiveMin).max(createRouteBodyCompanyIdMax),
+  "fromStationId": zod.number().gt(createRouteBodyFromStationIdExclusiveMin).max(createRouteBodyFromStationIdMax),
+  "toStationId": zod.number().gt(createRouteBodyToStationIdExclusiveMin).max(createRouteBodyToStationIdMax),
+  "distanceKm": zod.number().gt(createRouteBodyDistanceKmExclusiveMin),
+  "durationMinutes": zod.number().gt(createRouteBodyDurationMinutesExclusiveMin).max(createRouteBodyDurationMinutesMax)
+})
 
 /**
  * @summary Get a single route
  */
 export const GetRouteParams = zod.object({
-  id: zod.number(),
-});
+  "id": zod.number()
+})
 
 export const getRouteResponseIdMin = -9007199254740991;
 export const getRouteResponseIdMax = 9007199254740991;
@@ -127,41 +104,35 @@ export const getRouteResponseToStationIdMax = 9007199254740991;
 export const getRouteResponseDurationMinutesMin = -9007199254740991;
 export const getRouteResponseDurationMinutesMax = 9007199254740991;
 
+
+
 export const GetRouteResponse = zod.object({
-  id: zod.number().min(getRouteResponseIdMin).max(getRouteResponseIdMax),
-  companyId: zod.number().min(getRouteResponseCompanyIdMin).max(getRouteResponseCompanyIdMax),
-  fromStationId: zod
-    .number()
-    .min(getRouteResponseFromStationIdMin)
-    .max(getRouteResponseFromStationIdMax),
-  toStationId: zod.number().min(getRouteResponseToStationIdMin).max(getRouteResponseToStationIdMax),
-  distanceKm: zod.number(),
-  durationMinutes: zod
-    .number()
-    .min(getRouteResponseDurationMinutesMin)
-    .max(getRouteResponseDurationMinutesMax),
-});
+  "id": zod.number().min(getRouteResponseIdMin).max(getRouteResponseIdMax),
+  "companyId": zod.number().min(getRouteResponseCompanyIdMin).max(getRouteResponseCompanyIdMax),
+  "fromStationId": zod.number().min(getRouteResponseFromStationIdMin).max(getRouteResponseFromStationIdMax),
+  "toStationId": zod.number().min(getRouteResponseToStationIdMin).max(getRouteResponseToStationIdMax),
+  "distanceKm": zod.number(),
+  "durationMinutes": zod.number().min(getRouteResponseDurationMinutesMin).max(getRouteResponseDurationMinutesMax)
+})
 
 /**
  * @summary Update a route (admin or owning operator)
  */
 export const UpdateRouteParams = zod.object({
-  id: zod.number(),
-});
+  "id": zod.number()
+})
 
 export const updateRouteBodyDistanceKmExclusiveMin = 0;
 
 export const updateRouteBodyDurationMinutesExclusiveMin = 0;
 export const updateRouteBodyDurationMinutesMax = 9007199254740991;
 
+
+
 export const UpdateRouteBody = zod.object({
-  distanceKm: zod.number().gt(updateRouteBodyDistanceKmExclusiveMin).optional(),
-  durationMinutes: zod
-    .number()
-    .gt(updateRouteBodyDurationMinutesExclusiveMin)
-    .max(updateRouteBodyDurationMinutesMax)
-    .optional(),
-});
+  "distanceKm": zod.number().gt(updateRouteBodyDistanceKmExclusiveMin).optional(),
+  "durationMinutes": zod.number().gt(updateRouteBodyDurationMinutesExclusiveMin).max(updateRouteBodyDurationMinutesMax).optional()
+})
 
 export const updateRouteResponseIdMin = -9007199254740991;
 export const updateRouteResponseIdMax = 9007199254740991;
@@ -178,27 +149,21 @@ export const updateRouteResponseToStationIdMax = 9007199254740991;
 export const updateRouteResponseDurationMinutesMin = -9007199254740991;
 export const updateRouteResponseDurationMinutesMax = 9007199254740991;
 
+
+
 export const UpdateRouteResponse = zod.object({
-  id: zod.number().min(updateRouteResponseIdMin).max(updateRouteResponseIdMax),
-  companyId: zod.number().min(updateRouteResponseCompanyIdMin).max(updateRouteResponseCompanyIdMax),
-  fromStationId: zod
-    .number()
-    .min(updateRouteResponseFromStationIdMin)
-    .max(updateRouteResponseFromStationIdMax),
-  toStationId: zod
-    .number()
-    .min(updateRouteResponseToStationIdMin)
-    .max(updateRouteResponseToStationIdMax),
-  distanceKm: zod.number(),
-  durationMinutes: zod
-    .number()
-    .min(updateRouteResponseDurationMinutesMin)
-    .max(updateRouteResponseDurationMinutesMax),
-});
+  "id": zod.number().min(updateRouteResponseIdMin).max(updateRouteResponseIdMax),
+  "companyId": zod.number().min(updateRouteResponseCompanyIdMin).max(updateRouteResponseCompanyIdMax),
+  "fromStationId": zod.number().min(updateRouteResponseFromStationIdMin).max(updateRouteResponseFromStationIdMax),
+  "toStationId": zod.number().min(updateRouteResponseToStationIdMin).max(updateRouteResponseToStationIdMax),
+  "distanceKm": zod.number(),
+  "durationMinutes": zod.number().min(updateRouteResponseDurationMinutesMin).max(updateRouteResponseDurationMinutesMax)
+})
 
 /**
  * @summary Delete a route (admin or owning operator)
  */
 export const DeleteRouteParams = zod.object({
-  id: zod.number(),
-});
+  "id": zod.number()
+})
+

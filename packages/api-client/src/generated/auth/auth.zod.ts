@@ -7,6 +7,7 @@
  */
 import * as zod from 'zod';
 
+
 /**
  * @summary Create a new customer account
  */
@@ -15,25 +16,23 @@ export const registerUserBodyNameMax = 120;
 export const registerUserBodyPhoneMin = 8;
 export const registerUserBodyPhoneMax = 20;
 
+
 export const registerUserBodyPhoneRegExp = new RegExp('^[+\\d\\s-]+$');
 export const registerUserBodyEmailMax = 254;
 
-export const registerUserBodyEmailRegExp = new RegExp(
-  "^(?!\\.)(?!.\*\\.\\.)([A-Za-z0-9_'+\\-\\.]\*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]\*\\.)+[A-Za-z]{2,}$",
-);
+
+export const registerUserBodyEmailRegExp = new RegExp('^(?!\\.)(?!.\*\\.\\.)([A-Za-z0-9_\'+\\-\\.]\*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]\*\\.)+[A-Za-z]{2,}$');
 export const registerUserBodyPasswordMin = 8;
 export const registerUserBodyPasswordMax = 72;
 
+
+
 export const RegisterUserBody = zod.object({
-  name: zod.string().min(1).max(registerUserBodyNameMax),
-  phone: zod
-    .string()
-    .min(registerUserBodyPhoneMin)
-    .max(registerUserBodyPhoneMax)
-    .regex(registerUserBodyPhoneRegExp),
-  email: zod.email().max(registerUserBodyEmailMax).regex(registerUserBodyEmailRegExp),
-  password: zod.string().min(registerUserBodyPasswordMin).max(registerUserBodyPasswordMax),
-});
+  "name": zod.string().min(1).max(registerUserBodyNameMax),
+  "phone": zod.string().min(registerUserBodyPhoneMin).max(registerUserBodyPhoneMax).regex(registerUserBodyPhoneRegExp),
+  "email": zod.email().max(registerUserBodyEmailMax).regex(registerUserBodyEmailRegExp),
+  "password": zod.string().min(registerUserBodyPasswordMin).max(registerUserBodyPasswordMax)
+})
 
 /**
  * @summary Authenticate by phone/email + password
@@ -43,48 +42,49 @@ export const loginUserBodyIdentifierMax = 254;
 export const loginUserBodyPasswordMin = 8;
 export const loginUserBodyPasswordMax = 72;
 
+
+
 export const LoginUserBody = zod.object({
-  identifier: zod.string().min(1).max(loginUserBodyIdentifierMax).describe('phone OR email'),
-  password: zod.string().min(loginUserBodyPasswordMin).max(loginUserBodyPasswordMax),
-});
+  "identifier": zod.string().min(1).max(loginUserBodyIdentifierMax).describe('phone OR email'),
+  "password": zod.string().min(loginUserBodyPasswordMin).max(loginUserBodyPasswordMax)
+})
 
 export const loginUserResponseUserIdMin = -9007199254740991;
 export const loginUserResponseUserIdMax = 9007199254740991;
 
-export const loginUserResponseUserEmailRegExp = new RegExp(
-  "^(?!\\.)(?!.\*\\.\\.)([A-Za-z0-9_'+\\-\\.]\*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]\*\\.)+[A-Za-z]{2,}$",
-);
+export const loginUserResponseUserEmailRegExp = new RegExp('^(?!\\.)(?!.\*\\.\\.)([A-Za-z0-9_\'+\\-\\.]\*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]\*\\.)+[A-Za-z]{2,}$');
 export const loginUserResponseUserOperatorIdMin = -9007199254740991;
 export const loginUserResponseUserOperatorIdMax = 9007199254740991;
 
+
+
 export const LoginUserResponse = zod.object({
-  user: zod.object({
-    id: zod.number().min(loginUserResponseUserIdMin).max(loginUserResponseUserIdMax),
-    name: zod.string(),
-    phone: zod.string(),
-    email: zod.email().regex(loginUserResponseUserEmailRegExp),
-    role: zod.enum(['customer', 'operator', 'driver', 'admin']),
-    operatorId: zod
-      .number()
-      .min(loginUserResponseUserOperatorIdMin)
-      .max(loginUserResponseUserOperatorIdMax)
-      .nullable(),
-  }),
-  tokens: zod.object({
-    accessToken: zod.string(),
-    refreshToken: zod.string(),
-  }),
-});
+  "user": zod.object({
+  "id": zod.number().min(loginUserResponseUserIdMin).max(loginUserResponseUserIdMax),
+  "name": zod.string(),
+  "phone": zod.string(),
+  "email": zod.email().regex(loginUserResponseUserEmailRegExp),
+  "role": zod.enum(['customer', 'operator', 'driver', 'admin']),
+  "operatorId": zod.number().min(loginUserResponseUserOperatorIdMin).max(loginUserResponseUserOperatorIdMax).nullable()
+}),
+  "tokens": zod.object({
+  "accessToken": zod.string(),
+  "refreshToken": zod.string()
+})
+})
 
 /**
  * @summary Exchange refresh token for new pair
  */
 
+
+
 export const RefreshTokensBody = zod.object({
-  refreshToken: zod.string().min(1),
-});
+  "refreshToken": zod.string().min(1)
+})
 
 export const RefreshTokensResponse = zod.object({
-  accessToken: zod.string(),
-  refreshToken: zod.string(),
-});
+  "accessToken": zod.string(),
+  "refreshToken": zod.string()
+})
+

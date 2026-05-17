@@ -5,7 +5,10 @@
  * Multi-operator trip booking platform API
  * OpenAPI spec version: 0.1.0
  */
-import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -18,450 +21,390 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
+  UseQueryResult
 } from '@tanstack/react-query';
 
 import type {
   CreateSeatLayoutBodyDto,
   SeatLayoutDto,
-  UpdateSeatLayoutBodyDto,
+  UpdateSeatLayoutBodyDto
 } from '../bookeeAPI.schemas';
 
 import { axiosInstance } from '../../axios-instance';
-import type { ErrorType, BodyType } from '../../axios-instance';
+import type { ErrorType , BodyType } from '../../axios-instance';
+
+
+
 
 /**
  * @summary List all seat layouts (public)
  */
-export const listSeatLayouts = (signal?: AbortSignal) => {
-  return axiosInstance<SeatLayoutDto[]>({ url: `/api/v1/seat-layouts`, method: 'GET', signal });
-};
+export const listSeatLayouts = (
+
+ signal?: AbortSignal
+) => {
+
+
+      return axiosInstance<SeatLayoutDto[]>(
+      {url: `/api/v1/seat-layouts`, method: 'GET', signal
+    },
+      );
+    }
+
+
+
 
 export const getListSeatLayoutsQueryKey = () => {
-  return [`/api/v1/seat-layouts`] as const;
-};
+    return [
+    `/api/v1/seat-layouts`
+    ] as const;
+    }
 
-export const getListSeatLayoutsQueryOptions = <
-  TData = Awaited<ReturnType<typeof listSeatLayouts>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listSeatLayouts>>, TError, TData>>;
-}) => {
-  const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getListSeatLayoutsQueryKey();
+export const getListSeatLayoutsQueryOptions = <TData = Awaited<ReturnType<typeof listSeatLayouts>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listSeatLayouts>>, TError, TData>>, }
+) => {
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof listSeatLayouts>>> = ({ signal }) =>
-    listSeatLayouts(signal);
+const {query: queryOptions} = options ?? {};
 
-  return { queryKey, queryFn, staleTime: 30000, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof listSeatLayouts>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
+  const queryKey =  queryOptions?.queryKey ?? getListSeatLayoutsQueryKey();
 
-export type ListSeatLayoutsQueryResult = NonNullable<Awaited<ReturnType<typeof listSeatLayouts>>>;
-export type ListSeatLayoutsQueryError = ErrorType<unknown>;
 
-export function useListSeatLayouts<
-  TData = Awaited<ReturnType<typeof listSeatLayouts>>,
-  TError = ErrorType<unknown>,
->(
-  options: {
-    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof listSeatLayouts>>, TError, TData>> &
-      Pick<
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listSeatLayouts>>> = ({ signal }) => listSeatLayouts(signal);
+
+
+
+
+
+   return  { queryKey, queryFn,   staleTime: 30000,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listSeatLayouts>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ListSeatLayoutsQueryResult = NonNullable<Awaited<ReturnType<typeof listSeatLayouts>>>
+export type ListSeatLayoutsQueryError = ErrorType<unknown>
+
+
+export function useListSeatLayouts<TData = Awaited<ReturnType<typeof listSeatLayouts>>, TError = ErrorType<unknown>>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listSeatLayouts>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof listSeatLayouts>>,
           TError,
           Awaited<ReturnType<typeof listSeatLayouts>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useListSeatLayouts<
-  TData = Awaited<ReturnType<typeof listSeatLayouts>>,
-  TError = ErrorType<unknown>,
->(
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listSeatLayouts>>, TError, TData>> &
-      Pick<
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListSeatLayouts<TData = Awaited<ReturnType<typeof listSeatLayouts>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listSeatLayouts>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof listSeatLayouts>>,
           TError,
           Awaited<ReturnType<typeof listSeatLayouts>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useListSeatLayouts<
-  TData = Awaited<ReturnType<typeof listSeatLayouts>>,
-  TError = ErrorType<unknown>,
->(
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listSeatLayouts>>, TError, TData>>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListSeatLayouts<TData = Awaited<ReturnType<typeof listSeatLayouts>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listSeatLayouts>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary List all seat layouts (public)
  */
 
-export function useListSeatLayouts<
-  TData = Awaited<ReturnType<typeof listSeatLayouts>>,
-  TError = ErrorType<unknown>,
->(
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listSeatLayouts>>, TError, TData>>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getListSeatLayoutsQueryOptions(options);
+export function useListSeatLayouts<TData = Awaited<ReturnType<typeof listSeatLayouts>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listSeatLayouts>>, TError, TData>>, }
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
+  const queryOptions = getListSeatLayoutsQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+
+
+
+
 
 /**
  * @summary Create a seat layout with seats in one transaction (admin)
  */
 export const createSeatLayout = (
-  createSeatLayoutBodyDto: BodyType<CreateSeatLayoutBodyDto>,
-  signal?: AbortSignal,
+    createSeatLayoutBodyDto: BodyType<CreateSeatLayoutBodyDto>,
+ signal?: AbortSignal
 ) => {
-  return axiosInstance<SeatLayoutDto>({
-    url: `/api/v1/seat-layouts`,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    data: createSeatLayoutBodyDto,
-    signal,
-  });
-};
 
-export const getCreateSeatLayoutMutationOptions = <
-  TError = ErrorType<unknown>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof createSeatLayout>>,
-    TError,
-    { data: BodyType<CreateSeatLayoutBodyDto> },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof createSeatLayout>>,
-  TError,
-  { data: BodyType<CreateSeatLayoutBodyDto> },
-  TContext
-> => {
-  const mutationKey = ['createSeatLayout'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof createSeatLayout>>,
-    { data: BodyType<CreateSeatLayoutBodyDto> }
-  > = (props) => {
-    const { data } = props ?? {};
+      return axiosInstance<SeatLayoutDto>(
+      {url: `/api/v1/seat-layouts`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createSeatLayoutBodyDto, signal
+    },
+      );
+    }
 
-    return createSeatLayout(data);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type CreateSeatLayoutMutationResult = NonNullable<
-  Awaited<ReturnType<typeof createSeatLayout>>
->;
-export type CreateSeatLayoutMutationBody = BodyType<CreateSeatLayoutBodyDto>;
-export type CreateSeatLayoutMutationError = ErrorType<unknown>;
+export const getCreateSeatLayoutMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSeatLayout>>, TError,{data: BodyType<CreateSeatLayoutBodyDto>}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof createSeatLayout>>, TError,{data: BodyType<CreateSeatLayoutBodyDto>}, TContext> => {
 
-/**
+const mutationKey = ['createSeatLayout'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createSeatLayout>>, {data: BodyType<CreateSeatLayoutBodyDto>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createSeatLayout(data,)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateSeatLayoutMutationResult = NonNullable<Awaited<ReturnType<typeof createSeatLayout>>>
+    export type CreateSeatLayoutMutationBody = BodyType<CreateSeatLayoutBodyDto>
+    export type CreateSeatLayoutMutationError = ErrorType<unknown>
+
+    /**
  * @summary Create a seat layout with seats in one transaction (admin)
  */
-export const useCreateSeatLayout = <TError = ErrorType<unknown>, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof createSeatLayout>>,
-      TError,
-      { data: BodyType<CreateSeatLayoutBodyDto> },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof createSeatLayout>>,
-  TError,
-  { data: BodyType<CreateSeatLayoutBodyDto> },
-  TContext
-> => {
-  return useMutation(getCreateSeatLayoutMutationOptions(options), queryClient);
-};
-/**
+export const useCreateSeatLayout = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSeatLayout>>, TError,{data: BodyType<CreateSeatLayoutBodyDto>}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createSeatLayout>>,
+        TError,
+        {data: BodyType<CreateSeatLayoutBodyDto>},
+        TContext
+      > => {
+      return useMutation(getCreateSeatLayoutMutationOptions(options), queryClient);
+    }
+    /**
  * @summary Get a seat layout with seats (public)
  */
-export const getSeatLayout = (id: number, signal?: AbortSignal) => {
-  return axiosInstance<SeatLayoutDto>({ url: `/api/v1/seat-layouts/${id}`, method: 'GET', signal });
-};
-
-export const getGetSeatLayoutQueryKey = (id: number) => {
-  return [`/api/v1/seat-layouts/${id}`] as const;
-};
-
-export const getGetSeatLayoutQueryOptions = <
-  TData = Awaited<ReturnType<typeof getSeatLayout>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSeatLayout>>, TError, TData>>;
-  },
+export const getSeatLayout = (
+    id: number,
+ signal?: AbortSignal
 ) => {
-  const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetSeatLayoutQueryKey(id);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getSeatLayout>>> = ({ signal }) =>
-    getSeatLayout(id, signal);
+      return axiosInstance<SeatLayoutDto>(
+      {url: `/api/v1/seat-layouts/${id}`, method: 'GET', signal
+    },
+      );
+    }
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: id !== null && id !== undefined,
-    staleTime: 30000,
-    ...queryOptions,
-  } as UseQueryOptions<Awaited<ReturnType<typeof getSeatLayout>>, TError, TData> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
-};
 
-export type GetSeatLayoutQueryResult = NonNullable<Awaited<ReturnType<typeof getSeatLayout>>>;
-export type GetSeatLayoutQueryError = ErrorType<unknown>;
 
-export function useGetSeatLayout<
-  TData = Awaited<ReturnType<typeof getSeatLayout>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options: {
-    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSeatLayout>>, TError, TData>> &
-      Pick<
+
+export const getGetSeatLayoutQueryKey = (id: number,) => {
+    return [
+    `/api/v1/seat-layouts/${id}`
+    ] as const;
+    }
+
+
+export const getGetSeatLayoutQueryOptions = <TData = Awaited<ReturnType<typeof getSeatLayout>>, TError = ErrorType<unknown>>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSeatLayout>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetSeatLayoutQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSeatLayout>>> = ({ signal }) => getSeatLayout(id, signal);
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined,  staleTime: 30000,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSeatLayout>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetSeatLayoutQueryResult = NonNullable<Awaited<ReturnType<typeof getSeatLayout>>>
+export type GetSeatLayoutQueryError = ErrorType<unknown>
+
+
+export function useGetSeatLayout<TData = Awaited<ReturnType<typeof getSeatLayout>>, TError = ErrorType<unknown>>(
+ id: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSeatLayout>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getSeatLayout>>,
           TError,
           Awaited<ReturnType<typeof getSeatLayout>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetSeatLayout<
-  TData = Awaited<ReturnType<typeof getSeatLayout>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSeatLayout>>, TError, TData>> &
-      Pick<
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetSeatLayout<TData = Awaited<ReturnType<typeof getSeatLayout>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSeatLayout>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getSeatLayout>>,
           TError,
           Awaited<ReturnType<typeof getSeatLayout>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetSeatLayout<
-  TData = Awaited<ReturnType<typeof getSeatLayout>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSeatLayout>>, TError, TData>>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetSeatLayout<TData = Awaited<ReturnType<typeof getSeatLayout>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSeatLayout>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get a seat layout with seats (public)
  */
 
-export function useGetSeatLayout<
-  TData = Awaited<ReturnType<typeof getSeatLayout>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSeatLayout>>, TError, TData>>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getGetSeatLayoutQueryOptions(id, options);
+export function useGetSeatLayout<TData = Awaited<ReturnType<typeof getSeatLayout>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSeatLayout>>, TError, TData>>, }
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
+  const queryOptions = getGetSeatLayoutQueryOptions(id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+
+
+
+
 
 /**
  * @summary Update seat layout metadata (admin)
  */
 export const updateSeatLayout = (
-  id: number,
-  updateSeatLayoutBodyDto: BodyType<UpdateSeatLayoutBodyDto>,
-  signal?: AbortSignal,
+    id: number,
+    updateSeatLayoutBodyDto: BodyType<UpdateSeatLayoutBodyDto>,
+ signal?: AbortSignal
 ) => {
-  return axiosInstance<SeatLayoutDto>({
-    url: `/api/v1/seat-layouts/${id}`,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    data: updateSeatLayoutBodyDto,
-    signal,
-  });
-};
 
-export const getUpdateSeatLayoutMutationOptions = <
-  TError = ErrorType<unknown>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof updateSeatLayout>>,
-    TError,
-    { id: number; data: BodyType<UpdateSeatLayoutBodyDto> },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof updateSeatLayout>>,
-  TError,
-  { id: number; data: BodyType<UpdateSeatLayoutBodyDto> },
-  TContext
-> => {
-  const mutationKey = ['updateSeatLayout'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof updateSeatLayout>>,
-    { id: number; data: BodyType<UpdateSeatLayoutBodyDto> }
-  > = (props) => {
-    const { id, data } = props ?? {};
+      return axiosInstance<SeatLayoutDto>(
+      {url: `/api/v1/seat-layouts/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateSeatLayoutBodyDto, signal
+    },
+      );
+    }
 
-    return updateSeatLayout(id, data);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type UpdateSeatLayoutMutationResult = NonNullable<
-  Awaited<ReturnType<typeof updateSeatLayout>>
->;
-export type UpdateSeatLayoutMutationBody = BodyType<UpdateSeatLayoutBodyDto>;
-export type UpdateSeatLayoutMutationError = ErrorType<unknown>;
+export const getUpdateSeatLayoutMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateSeatLayout>>, TError,{id: number;data: BodyType<UpdateSeatLayoutBodyDto>}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof updateSeatLayout>>, TError,{id: number;data: BodyType<UpdateSeatLayoutBodyDto>}, TContext> => {
 
-/**
+const mutationKey = ['updateSeatLayout'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateSeatLayout>>, {id: number;data: BodyType<UpdateSeatLayoutBodyDto>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateSeatLayout(id,data,)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateSeatLayoutMutationResult = NonNullable<Awaited<ReturnType<typeof updateSeatLayout>>>
+    export type UpdateSeatLayoutMutationBody = BodyType<UpdateSeatLayoutBodyDto>
+    export type UpdateSeatLayoutMutationError = ErrorType<unknown>
+
+    /**
  * @summary Update seat layout metadata (admin)
  */
-export const useUpdateSeatLayout = <TError = ErrorType<unknown>, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof updateSeatLayout>>,
-      TError,
-      { id: number; data: BodyType<UpdateSeatLayoutBodyDto> },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof updateSeatLayout>>,
-  TError,
-  { id: number; data: BodyType<UpdateSeatLayoutBodyDto> },
-  TContext
-> => {
-  return useMutation(getUpdateSeatLayoutMutationOptions(options), queryClient);
-};
-/**
+export const useUpdateSeatLayout = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateSeatLayout>>, TError,{id: number;data: BodyType<UpdateSeatLayoutBodyDto>}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof updateSeatLayout>>,
+        TError,
+        {id: number;data: BodyType<UpdateSeatLayoutBodyDto>},
+        TContext
+      > => {
+      return useMutation(getUpdateSeatLayoutMutationOptions(options), queryClient);
+    }
+    /**
  * @summary Delete a seat layout (admin) — 409 if vehicles reference it
  */
-export const deleteSeatLayout = (id: number, signal?: AbortSignal) => {
-  return axiosInstance<void>({ url: `/api/v1/seat-layouts/${id}`, method: 'DELETE', signal });
-};
+export const deleteSeatLayout = (
+    id: number,
+ signal?: AbortSignal
+) => {
 
-export const getDeleteSeatLayoutMutationOptions = <
-  TError = ErrorType<unknown>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof deleteSeatLayout>>,
-    TError,
-    { id: number },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof deleteSeatLayout>>,
-  TError,
-  { id: number },
-  TContext
-> => {
-  const mutationKey = ['deleteSeatLayout'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof deleteSeatLayout>>,
-    { id: number }
-  > = (props) => {
-    const { id } = props ?? {};
+      return axiosInstance<void>(
+      {url: `/api/v1/seat-layouts/${id}`, method: 'DELETE', signal
+    },
+      );
+    }
 
-    return deleteSeatLayout(id);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type DeleteSeatLayoutMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteSeatLayout>>
->;
+export const getDeleteSeatLayoutMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteSeatLayout>>, TError,{id: number}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof deleteSeatLayout>>, TError,{id: number}, TContext> => {
 
-export type DeleteSeatLayoutMutationError = ErrorType<unknown>;
+const mutationKey = ['deleteSeatLayout'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
 
-/**
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteSeatLayout>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteSeatLayout(id,)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteSeatLayoutMutationResult = NonNullable<Awaited<ReturnType<typeof deleteSeatLayout>>>
+
+    export type DeleteSeatLayoutMutationError = ErrorType<unknown>
+
+    /**
  * @summary Delete a seat layout (admin) — 409 if vehicles reference it
  */
-export const useDeleteSeatLayout = <TError = ErrorType<unknown>, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof deleteSeatLayout>>,
-      TError,
-      { id: number },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof deleteSeatLayout>>,
-  TError,
-  { id: number },
-  TContext
-> => {
-  return useMutation(getDeleteSeatLayoutMutationOptions(options), queryClient);
-};
+export const useDeleteSeatLayout = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteSeatLayout>>, TError,{id: number}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteSeatLayout>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getDeleteSeatLayoutMutationOptions(options), queryClient);
+    }

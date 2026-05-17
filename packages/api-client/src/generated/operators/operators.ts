@@ -5,7 +5,10 @@
  * Multi-operator trip booking platform API
  * OpenAPI spec version: 0.1.0
  */
-import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -18,7 +21,7 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
+  UseQueryResult
 } from '@tanstack/react-query';
 
 import type {
@@ -27,694 +30,604 @@ import type {
   OperatorDto,
   PublicStaffUserDto,
   SetOperatorStatusBodyDto,
-  UpdateOperatorBodyDto,
+  UpdateOperatorBodyDto
 } from '../bookeeAPI.schemas';
 
 import { axiosInstance } from '../../axios-instance';
-import type { ErrorType, BodyType } from '../../axios-instance';
+import type { ErrorType , BodyType } from '../../axios-instance';
+
+
+
 
 /**
  * @summary List active operators (public)
  */
-export const listOperators = (signal?: AbortSignal) => {
-  return axiosInstance<OperatorDto[]>({ url: `/api/v1/operators`, method: 'GET', signal });
-};
+export const listOperators = (
+
+ signal?: AbortSignal
+) => {
+
+
+      return axiosInstance<OperatorDto[]>(
+      {url: `/api/v1/operators`, method: 'GET', signal
+    },
+      );
+    }
+
+
+
 
 export const getListOperatorsQueryKey = () => {
-  return [`/api/v1/operators`] as const;
-};
+    return [
+    `/api/v1/operators`
+    ] as const;
+    }
 
-export const getListOperatorsQueryOptions = <
-  TData = Awaited<ReturnType<typeof listOperators>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listOperators>>, TError, TData>>;
-}) => {
-  const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getListOperatorsQueryKey();
+export const getListOperatorsQueryOptions = <TData = Awaited<ReturnType<typeof listOperators>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listOperators>>, TError, TData>>, }
+) => {
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof listOperators>>> = ({ signal }) =>
-    listOperators(signal);
+const {query: queryOptions} = options ?? {};
 
-  return { queryKey, queryFn, staleTime: 30000, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof listOperators>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
+  const queryKey =  queryOptions?.queryKey ?? getListOperatorsQueryKey();
 
-export type ListOperatorsQueryResult = NonNullable<Awaited<ReturnType<typeof listOperators>>>;
-export type ListOperatorsQueryError = ErrorType<unknown>;
 
-export function useListOperators<
-  TData = Awaited<ReturnType<typeof listOperators>>,
-  TError = ErrorType<unknown>,
->(
-  options: {
-    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof listOperators>>, TError, TData>> &
-      Pick<
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listOperators>>> = ({ signal }) => listOperators(signal);
+
+
+
+
+
+   return  { queryKey, queryFn,   staleTime: 30000,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listOperators>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ListOperatorsQueryResult = NonNullable<Awaited<ReturnType<typeof listOperators>>>
+export type ListOperatorsQueryError = ErrorType<unknown>
+
+
+export function useListOperators<TData = Awaited<ReturnType<typeof listOperators>>, TError = ErrorType<unknown>>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listOperators>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof listOperators>>,
           TError,
           Awaited<ReturnType<typeof listOperators>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useListOperators<
-  TData = Awaited<ReturnType<typeof listOperators>>,
-  TError = ErrorType<unknown>,
->(
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listOperators>>, TError, TData>> &
-      Pick<
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListOperators<TData = Awaited<ReturnType<typeof listOperators>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listOperators>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof listOperators>>,
           TError,
           Awaited<ReturnType<typeof listOperators>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useListOperators<
-  TData = Awaited<ReturnType<typeof listOperators>>,
-  TError = ErrorType<unknown>,
->(
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listOperators>>, TError, TData>>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListOperators<TData = Awaited<ReturnType<typeof listOperators>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listOperators>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary List active operators (public)
  */
 
-export function useListOperators<
-  TData = Awaited<ReturnType<typeof listOperators>>,
-  TError = ErrorType<unknown>,
->(
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listOperators>>, TError, TData>>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getListOperatorsQueryOptions(options);
+export function useListOperators<TData = Awaited<ReturnType<typeof listOperators>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listOperators>>, TError, TData>>, }
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
+  const queryOptions = getListOperatorsQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+
+
+
+
 
 /**
  * @summary Create a new operator (admin only)
  */
 export const createOperator = (
-  createOperatorBodyDto: BodyType<CreateOperatorBodyDto>,
-  signal?: AbortSignal,
+    createOperatorBodyDto: BodyType<CreateOperatorBodyDto>,
+ signal?: AbortSignal
 ) => {
-  return axiosInstance<OperatorDto>({
-    url: `/api/v1/operators`,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    data: createOperatorBodyDto,
-    signal,
-  });
-};
 
-export const getCreateOperatorMutationOptions = <
-  TError = ErrorType<unknown>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof createOperator>>,
-    TError,
-    { data: BodyType<CreateOperatorBodyDto> },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof createOperator>>,
-  TError,
-  { data: BodyType<CreateOperatorBodyDto> },
-  TContext
-> => {
-  const mutationKey = ['createOperator'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof createOperator>>,
-    { data: BodyType<CreateOperatorBodyDto> }
-  > = (props) => {
-    const { data } = props ?? {};
+      return axiosInstance<OperatorDto>(
+      {url: `/api/v1/operators`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createOperatorBodyDto, signal
+    },
+      );
+    }
 
-    return createOperator(data);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type CreateOperatorMutationResult = NonNullable<Awaited<ReturnType<typeof createOperator>>>;
-export type CreateOperatorMutationBody = BodyType<CreateOperatorBodyDto>;
-export type CreateOperatorMutationError = ErrorType<unknown>;
+export const getCreateOperatorMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createOperator>>, TError,{data: BodyType<CreateOperatorBodyDto>}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof createOperator>>, TError,{data: BodyType<CreateOperatorBodyDto>}, TContext> => {
 
-/**
+const mutationKey = ['createOperator'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createOperator>>, {data: BodyType<CreateOperatorBodyDto>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createOperator(data,)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateOperatorMutationResult = NonNullable<Awaited<ReturnType<typeof createOperator>>>
+    export type CreateOperatorMutationBody = BodyType<CreateOperatorBodyDto>
+    export type CreateOperatorMutationError = ErrorType<unknown>
+
+    /**
  * @summary Create a new operator (admin only)
  */
-export const useCreateOperator = <TError = ErrorType<unknown>, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof createOperator>>,
-      TError,
-      { data: BodyType<CreateOperatorBodyDto> },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof createOperator>>,
-  TError,
-  { data: BodyType<CreateOperatorBodyDto> },
-  TContext
-> => {
-  return useMutation(getCreateOperatorMutationOptions(options), queryClient);
-};
-/**
+export const useCreateOperator = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createOperator>>, TError,{data: BodyType<CreateOperatorBodyDto>}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createOperator>>,
+        TError,
+        {data: BodyType<CreateOperatorBodyDto>},
+        TContext
+      > => {
+      return useMutation(getCreateOperatorMutationOptions(options), queryClient);
+    }
+    /**
  * @summary List every operator (admin only)
  */
-export const listAllOperators = (signal?: AbortSignal) => {
-  return axiosInstance<OperatorDto[]>({ url: `/api/v1/operators/all`, method: 'GET', signal });
-};
+export const listAllOperators = (
+
+ signal?: AbortSignal
+) => {
+
+
+      return axiosInstance<OperatorDto[]>(
+      {url: `/api/v1/operators/all`, method: 'GET', signal
+    },
+      );
+    }
+
+
+
 
 export const getListAllOperatorsQueryKey = () => {
-  return [`/api/v1/operators/all`] as const;
-};
+    return [
+    `/api/v1/operators/all`
+    ] as const;
+    }
 
-export const getListAllOperatorsQueryOptions = <
-  TData = Awaited<ReturnType<typeof listAllOperators>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllOperators>>, TError, TData>>;
-}) => {
-  const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getListAllOperatorsQueryKey();
+export const getListAllOperatorsQueryOptions = <TData = Awaited<ReturnType<typeof listAllOperators>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllOperators>>, TError, TData>>, }
+) => {
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof listAllOperators>>> = ({ signal }) =>
-    listAllOperators(signal);
+const {query: queryOptions} = options ?? {};
 
-  return { queryKey, queryFn, staleTime: 30000, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof listAllOperators>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
+  const queryKey =  queryOptions?.queryKey ?? getListAllOperatorsQueryKey();
 
-export type ListAllOperatorsQueryResult = NonNullable<Awaited<ReturnType<typeof listAllOperators>>>;
-export type ListAllOperatorsQueryError = ErrorType<unknown>;
 
-export function useListAllOperators<
-  TData = Awaited<ReturnType<typeof listAllOperators>>,
-  TError = ErrorType<unknown>,
->(
-  options: {
-    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllOperators>>, TError, TData>> &
-      Pick<
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAllOperators>>> = ({ signal }) => listAllOperators(signal);
+
+
+
+
+
+   return  { queryKey, queryFn,   staleTime: 30000,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAllOperators>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ListAllOperatorsQueryResult = NonNullable<Awaited<ReturnType<typeof listAllOperators>>>
+export type ListAllOperatorsQueryError = ErrorType<unknown>
+
+
+export function useListAllOperators<TData = Awaited<ReturnType<typeof listAllOperators>>, TError = ErrorType<unknown>>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllOperators>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof listAllOperators>>,
           TError,
           Awaited<ReturnType<typeof listAllOperators>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useListAllOperators<
-  TData = Awaited<ReturnType<typeof listAllOperators>>,
-  TError = ErrorType<unknown>,
->(
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllOperators>>, TError, TData>> &
-      Pick<
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListAllOperators<TData = Awaited<ReturnType<typeof listAllOperators>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllOperators>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof listAllOperators>>,
           TError,
           Awaited<ReturnType<typeof listAllOperators>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useListAllOperators<
-  TData = Awaited<ReturnType<typeof listAllOperators>>,
-  TError = ErrorType<unknown>,
->(
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllOperators>>, TError, TData>>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListAllOperators<TData = Awaited<ReturnType<typeof listAllOperators>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllOperators>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary List every operator (admin only)
  */
 
-export function useListAllOperators<
-  TData = Awaited<ReturnType<typeof listAllOperators>>,
-  TError = ErrorType<unknown>,
->(
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllOperators>>, TError, TData>>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getListAllOperatorsQueryOptions(options);
+export function useListAllOperators<TData = Awaited<ReturnType<typeof listAllOperators>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllOperators>>, TError, TData>>, }
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
+  const queryOptions = getListAllOperatorsQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
 
+
+
+
+
+
 /**
  * @summary Get a single operator by id
  */
-export const getOperator = (id: number, signal?: AbortSignal) => {
-  return axiosInstance<OperatorDto>({ url: `/api/v1/operators/${id}`, method: 'GET', signal });
-};
-
-export const getGetOperatorQueryKey = (id: number) => {
-  return [`/api/v1/operators/${id}`] as const;
-};
-
-export const getGetOperatorQueryOptions = <
-  TData = Awaited<ReturnType<typeof getOperator>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getOperator>>, TError, TData>>;
-  },
+export const getOperator = (
+    id: number,
+ signal?: AbortSignal
 ) => {
-  const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetOperatorQueryKey(id);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getOperator>>> = ({ signal }) =>
-    getOperator(id, signal);
+      return axiosInstance<OperatorDto>(
+      {url: `/api/v1/operators/${id}`, method: 'GET', signal
+    },
+      );
+    }
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: id !== null && id !== undefined,
-    staleTime: 30000,
-    ...queryOptions,
-  } as UseQueryOptions<Awaited<ReturnType<typeof getOperator>>, TError, TData> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
-};
 
-export type GetOperatorQueryResult = NonNullable<Awaited<ReturnType<typeof getOperator>>>;
-export type GetOperatorQueryError = ErrorType<unknown>;
 
-export function useGetOperator<
-  TData = Awaited<ReturnType<typeof getOperator>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options: {
-    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getOperator>>, TError, TData>> &
-      Pick<
+
+export const getGetOperatorQueryKey = (id: number,) => {
+    return [
+    `/api/v1/operators/${id}`
+    ] as const;
+    }
+
+
+export const getGetOperatorQueryOptions = <TData = Awaited<ReturnType<typeof getOperator>>, TError = ErrorType<unknown>>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOperator>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetOperatorQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOperator>>> = ({ signal }) => getOperator(id, signal);
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined,  staleTime: 30000,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getOperator>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetOperatorQueryResult = NonNullable<Awaited<ReturnType<typeof getOperator>>>
+export type GetOperatorQueryError = ErrorType<unknown>
+
+
+export function useGetOperator<TData = Awaited<ReturnType<typeof getOperator>>, TError = ErrorType<unknown>>(
+ id: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOperator>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getOperator>>,
           TError,
           Awaited<ReturnType<typeof getOperator>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetOperator<
-  TData = Awaited<ReturnType<typeof getOperator>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getOperator>>, TError, TData>> &
-      Pick<
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetOperator<TData = Awaited<ReturnType<typeof getOperator>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOperator>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getOperator>>,
           TError,
           Awaited<ReturnType<typeof getOperator>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetOperator<
-  TData = Awaited<ReturnType<typeof getOperator>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getOperator>>, TError, TData>>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetOperator<TData = Awaited<ReturnType<typeof getOperator>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOperator>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get a single operator by id
  */
 
-export function useGetOperator<
-  TData = Awaited<ReturnType<typeof getOperator>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getOperator>>, TError, TData>>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getGetOperatorQueryOptions(id, options);
+export function useGetOperator<TData = Awaited<ReturnType<typeof getOperator>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOperator>>, TError, TData>>, }
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
+  const queryOptions = getGetOperatorQueryOptions(id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+
+
+
+
 
 /**
  * @summary Update operator metadata (admin only)
  */
 export const updateOperator = (
-  id: number,
-  updateOperatorBodyDto: BodyType<UpdateOperatorBodyDto>,
-  signal?: AbortSignal,
+    id: number,
+    updateOperatorBodyDto: BodyType<UpdateOperatorBodyDto>,
+ signal?: AbortSignal
 ) => {
-  return axiosInstance<OperatorDto>({
-    url: `/api/v1/operators/${id}`,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    data: updateOperatorBodyDto,
-    signal,
-  });
-};
 
-export const getUpdateOperatorMutationOptions = <
-  TError = ErrorType<unknown>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof updateOperator>>,
-    TError,
-    { id: number; data: BodyType<UpdateOperatorBodyDto> },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof updateOperator>>,
-  TError,
-  { id: number; data: BodyType<UpdateOperatorBodyDto> },
-  TContext
-> => {
-  const mutationKey = ['updateOperator'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof updateOperator>>,
-    { id: number; data: BodyType<UpdateOperatorBodyDto> }
-  > = (props) => {
-    const { id, data } = props ?? {};
+      return axiosInstance<OperatorDto>(
+      {url: `/api/v1/operators/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateOperatorBodyDto, signal
+    },
+      );
+    }
 
-    return updateOperator(id, data);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type UpdateOperatorMutationResult = NonNullable<Awaited<ReturnType<typeof updateOperator>>>;
-export type UpdateOperatorMutationBody = BodyType<UpdateOperatorBodyDto>;
-export type UpdateOperatorMutationError = ErrorType<unknown>;
+export const getUpdateOperatorMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateOperator>>, TError,{id: number;data: BodyType<UpdateOperatorBodyDto>}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof updateOperator>>, TError,{id: number;data: BodyType<UpdateOperatorBodyDto>}, TContext> => {
 
-/**
+const mutationKey = ['updateOperator'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateOperator>>, {id: number;data: BodyType<UpdateOperatorBodyDto>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateOperator(id,data,)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateOperatorMutationResult = NonNullable<Awaited<ReturnType<typeof updateOperator>>>
+    export type UpdateOperatorMutationBody = BodyType<UpdateOperatorBodyDto>
+    export type UpdateOperatorMutationError = ErrorType<unknown>
+
+    /**
  * @summary Update operator metadata (admin only)
  */
-export const useUpdateOperator = <TError = ErrorType<unknown>, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof updateOperator>>,
-      TError,
-      { id: number; data: BodyType<UpdateOperatorBodyDto> },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof updateOperator>>,
-  TError,
-  { id: number; data: BodyType<UpdateOperatorBodyDto> },
-  TContext
-> => {
-  return useMutation(getUpdateOperatorMutationOptions(options), queryClient);
-};
-/**
+export const useUpdateOperator = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateOperator>>, TError,{id: number;data: BodyType<UpdateOperatorBodyDto>}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof updateOperator>>,
+        TError,
+        {id: number;data: BodyType<UpdateOperatorBodyDto>},
+        TContext
+      > => {
+      return useMutation(getUpdateOperatorMutationOptions(options), queryClient);
+    }
+    /**
  * @summary Delete operator (admin only)
  */
-export const deleteOperator = (id: number, signal?: AbortSignal) => {
-  return axiosInstance<void>({ url: `/api/v1/operators/${id}`, method: 'DELETE', signal });
-};
+export const deleteOperator = (
+    id: number,
+ signal?: AbortSignal
+) => {
 
-export const getDeleteOperatorMutationOptions = <
-  TError = ErrorType<unknown>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof deleteOperator>>,
-    TError,
-    { id: number },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof deleteOperator>>,
-  TError,
-  { id: number },
-  TContext
-> => {
-  const mutationKey = ['deleteOperator'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
 
-  const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteOperator>>, { id: number }> = (
-    props,
-  ) => {
-    const { id } = props ?? {};
+      return axiosInstance<void>(
+      {url: `/api/v1/operators/${id}`, method: 'DELETE', signal
+    },
+      );
+    }
 
-    return deleteOperator(id);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type DeleteOperatorMutationResult = NonNullable<Awaited<ReturnType<typeof deleteOperator>>>;
+export const getDeleteOperatorMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteOperator>>, TError,{id: number}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof deleteOperator>>, TError,{id: number}, TContext> => {
 
-export type DeleteOperatorMutationError = ErrorType<unknown>;
+const mutationKey = ['deleteOperator'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
 
-/**
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteOperator>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteOperator(id,)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteOperatorMutationResult = NonNullable<Awaited<ReturnType<typeof deleteOperator>>>
+
+    export type DeleteOperatorMutationError = ErrorType<unknown>
+
+    /**
  * @summary Delete operator (admin only)
  */
-export const useDeleteOperator = <TError = ErrorType<unknown>, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof deleteOperator>>,
-      TError,
-      { id: number },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof deleteOperator>>,
-  TError,
-  { id: number },
-  TContext
-> => {
-  return useMutation(getDeleteOperatorMutationOptions(options), queryClient);
-};
-/**
+export const useDeleteOperator = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteOperator>>, TError,{id: number}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteOperator>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getDeleteOperatorMutationOptions(options), queryClient);
+    }
+    /**
  * @summary Activate / suspend an operator (admin only)
  */
 export const setOperatorStatus = (
-  id: number,
-  setOperatorStatusBodyDto: BodyType<SetOperatorStatusBodyDto>,
-  signal?: AbortSignal,
+    id: number,
+    setOperatorStatusBodyDto: BodyType<SetOperatorStatusBodyDto>,
+ signal?: AbortSignal
 ) => {
-  return axiosInstance<OperatorDto>({
-    url: `/api/v1/operators/${id}/status`,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    data: setOperatorStatusBodyDto,
-    signal,
-  });
-};
 
-export const getSetOperatorStatusMutationOptions = <
-  TError = ErrorType<unknown>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof setOperatorStatus>>,
-    TError,
-    { id: number; data: BodyType<SetOperatorStatusBodyDto> },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof setOperatorStatus>>,
-  TError,
-  { id: number; data: BodyType<SetOperatorStatusBodyDto> },
-  TContext
-> => {
-  const mutationKey = ['setOperatorStatus'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof setOperatorStatus>>,
-    { id: number; data: BodyType<SetOperatorStatusBodyDto> }
-  > = (props) => {
-    const { id, data } = props ?? {};
+      return axiosInstance<OperatorDto>(
+      {url: `/api/v1/operators/${id}/status`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: setOperatorStatusBodyDto, signal
+    },
+      );
+    }
 
-    return setOperatorStatus(id, data);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type SetOperatorStatusMutationResult = NonNullable<
-  Awaited<ReturnType<typeof setOperatorStatus>>
->;
-export type SetOperatorStatusMutationBody = BodyType<SetOperatorStatusBodyDto>;
-export type SetOperatorStatusMutationError = ErrorType<unknown>;
+export const getSetOperatorStatusMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof setOperatorStatus>>, TError,{id: number;data: BodyType<SetOperatorStatusBodyDto>}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof setOperatorStatus>>, TError,{id: number;data: BodyType<SetOperatorStatusBodyDto>}, TContext> => {
 
-/**
+const mutationKey = ['setOperatorStatus'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof setOperatorStatus>>, {id: number;data: BodyType<SetOperatorStatusBodyDto>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  setOperatorStatus(id,data,)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SetOperatorStatusMutationResult = NonNullable<Awaited<ReturnType<typeof setOperatorStatus>>>
+    export type SetOperatorStatusMutationBody = BodyType<SetOperatorStatusBodyDto>
+    export type SetOperatorStatusMutationError = ErrorType<unknown>
+
+    /**
  * @summary Activate / suspend an operator (admin only)
  */
-export const useSetOperatorStatus = <TError = ErrorType<unknown>, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof setOperatorStatus>>,
-      TError,
-      { id: number; data: BodyType<SetOperatorStatusBodyDto> },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof setOperatorStatus>>,
-  TError,
-  { id: number; data: BodyType<SetOperatorStatusBodyDto> },
-  TContext
-> => {
-  return useMutation(getSetOperatorStatusMutationOptions(options), queryClient);
-};
-/**
+export const useSetOperatorStatus = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof setOperatorStatus>>, TError,{id: number;data: BodyType<SetOperatorStatusBodyDto>}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof setOperatorStatus>>,
+        TError,
+        {id: number;data: BodyType<SetOperatorStatusBodyDto>},
+        TContext
+      > => {
+      return useMutation(getSetOperatorStatusMutationOptions(options), queryClient);
+    }
+    /**
  * @summary Assign a user (role operator|driver) to an operator
  */
 export const assignOperatorStaff = (
-  id: number,
-  assignStaffBodyDto: BodyType<AssignStaffBodyDto>,
-  signal?: AbortSignal,
+    id: number,
+    assignStaffBodyDto: BodyType<AssignStaffBodyDto>,
+ signal?: AbortSignal
 ) => {
-  return axiosInstance<PublicStaffUserDto>({
-    url: `/api/v1/operators/${id}/staff`,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    data: assignStaffBodyDto,
-    signal,
-  });
-};
 
-export const getAssignOperatorStaffMutationOptions = <
-  TError = ErrorType<unknown>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof assignOperatorStaff>>,
-    TError,
-    { id: number; data: BodyType<AssignStaffBodyDto> },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof assignOperatorStaff>>,
-  TError,
-  { id: number; data: BodyType<AssignStaffBodyDto> },
-  TContext
-> => {
-  const mutationKey = ['assignOperatorStaff'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof assignOperatorStaff>>,
-    { id: number; data: BodyType<AssignStaffBodyDto> }
-  > = (props) => {
-    const { id, data } = props ?? {};
+      return axiosInstance<PublicStaffUserDto>(
+      {url: `/api/v1/operators/${id}/staff`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: assignStaffBodyDto, signal
+    },
+      );
+    }
 
-    return assignOperatorStaff(id, data);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type AssignOperatorStaffMutationResult = NonNullable<
-  Awaited<ReturnType<typeof assignOperatorStaff>>
->;
-export type AssignOperatorStaffMutationBody = BodyType<AssignStaffBodyDto>;
-export type AssignOperatorStaffMutationError = ErrorType<unknown>;
+export const getAssignOperatorStaffMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof assignOperatorStaff>>, TError,{id: number;data: BodyType<AssignStaffBodyDto>}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof assignOperatorStaff>>, TError,{id: number;data: BodyType<AssignStaffBodyDto>}, TContext> => {
 
-/**
+const mutationKey = ['assignOperatorStaff'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof assignOperatorStaff>>, {id: number;data: BodyType<AssignStaffBodyDto>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  assignOperatorStaff(id,data,)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AssignOperatorStaffMutationResult = NonNullable<Awaited<ReturnType<typeof assignOperatorStaff>>>
+    export type AssignOperatorStaffMutationBody = BodyType<AssignStaffBodyDto>
+    export type AssignOperatorStaffMutationError = ErrorType<unknown>
+
+    /**
  * @summary Assign a user (role operator|driver) to an operator
  */
-export const useAssignOperatorStaff = <TError = ErrorType<unknown>, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof assignOperatorStaff>>,
-      TError,
-      { id: number; data: BodyType<AssignStaffBodyDto> },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof assignOperatorStaff>>,
-  TError,
-  { id: number; data: BodyType<AssignStaffBodyDto> },
-  TContext
-> => {
-  return useMutation(getAssignOperatorStaffMutationOptions(options), queryClient);
-};
+export const useAssignOperatorStaff = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof assignOperatorStaff>>, TError,{id: number;data: BodyType<AssignStaffBodyDto>}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof assignOperatorStaff>>,
+        TError,
+        {id: number;data: BodyType<AssignStaffBodyDto>},
+        TContext
+      > => {
+      return useMutation(getAssignOperatorStaffMutationOptions(options), queryClient);
+    }

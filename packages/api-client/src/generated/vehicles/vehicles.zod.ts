@@ -7,6 +7,7 @@
  */
 import * as zod from 'zod';
 
+
 /**
  * @summary Search vehicles (public)
  */
@@ -15,14 +16,12 @@ export const listVehiclesQueryCompanyIdMax = 9007199254740991;
 
 export const listVehiclesQueryTypeMax = 50;
 
+
+
 export const ListVehiclesQueryParams = zod.object({
-  companyId: zod
-    .number()
-    .gt(listVehiclesQueryCompanyIdExclusiveMin)
-    .max(listVehiclesQueryCompanyIdMax)
-    .optional(),
-  type: zod.string().min(1).max(listVehiclesQueryTypeMax).optional(),
-});
+  "companyId": zod.number().gt(listVehiclesQueryCompanyIdExclusiveMin).max(listVehiclesQueryCompanyIdMax).optional(),
+  "type": zod.string().min(1).max(listVehiclesQueryTypeMax).optional()
+})
 
 export const listVehiclesResponseIdMin = -9007199254740991;
 export const listVehiclesResponseIdMax = 9007199254740991;
@@ -36,24 +35,17 @@ export const listVehiclesResponseSeatLayoutIdMax = 9007199254740991;
 export const listVehiclesResponseTotalSeatsMin = -9007199254740991;
 export const listVehiclesResponseTotalSeatsMax = 9007199254740991;
 
+
+
 export const ListVehiclesResponseItem = zod.object({
-  id: zod.number().min(listVehiclesResponseIdMin).max(listVehiclesResponseIdMax),
-  companyId: zod
-    .number()
-    .min(listVehiclesResponseCompanyIdMin)
-    .max(listVehiclesResponseCompanyIdMax),
-  plateNumber: zod.string(),
-  type: zod.string(),
-  seatLayoutId: zod
-    .number()
-    .min(listVehiclesResponseSeatLayoutIdMin)
-    .max(listVehiclesResponseSeatLayoutIdMax),
-  totalSeats: zod
-    .number()
-    .min(listVehiclesResponseTotalSeatsMin)
-    .max(listVehiclesResponseTotalSeatsMax),
-});
-export const ListVehiclesResponse = zod.array(ListVehiclesResponseItem);
+  "id": zod.number().min(listVehiclesResponseIdMin).max(listVehiclesResponseIdMax),
+  "companyId": zod.number().min(listVehiclesResponseCompanyIdMin).max(listVehiclesResponseCompanyIdMax),
+  "plateNumber": zod.string(),
+  "type": zod.string(),
+  "seatLayoutId": zod.number().min(listVehiclesResponseSeatLayoutIdMin).max(listVehiclesResponseSeatLayoutIdMax),
+  "totalSeats": zod.number().min(listVehiclesResponseTotalSeatsMin).max(listVehiclesResponseTotalSeatsMax)
+})
+export const ListVehiclesResponse = zod.array(ListVehiclesResponseItem)
 
 /**
  * @summary Create a vehicle (admin or operator-scoped)
@@ -71,29 +63,22 @@ export const createVehicleBodySeatLayoutIdMax = 9007199254740991;
 export const createVehicleBodyTotalSeatsExclusiveMin = 0;
 export const createVehicleBodyTotalSeatsMax = 9007199254740991;
 
+
+
 export const CreateVehicleBody = zod.object({
-  companyId: zod
-    .number()
-    .gt(createVehicleBodyCompanyIdExclusiveMin)
-    .max(createVehicleBodyCompanyIdMax),
-  plateNumber: zod.string().min(1).max(createVehicleBodyPlateNumberMax),
-  type: zod.string().min(1).max(createVehicleBodyTypeMax),
-  seatLayoutId: zod
-    .number()
-    .gt(createVehicleBodySeatLayoutIdExclusiveMin)
-    .max(createVehicleBodySeatLayoutIdMax),
-  totalSeats: zod
-    .number()
-    .gt(createVehicleBodyTotalSeatsExclusiveMin)
-    .max(createVehicleBodyTotalSeatsMax),
-});
+  "companyId": zod.number().gt(createVehicleBodyCompanyIdExclusiveMin).max(createVehicleBodyCompanyIdMax),
+  "plateNumber": zod.string().min(1).max(createVehicleBodyPlateNumberMax),
+  "type": zod.string().min(1).max(createVehicleBodyTypeMax),
+  "seatLayoutId": zod.number().gt(createVehicleBodySeatLayoutIdExclusiveMin).max(createVehicleBodySeatLayoutIdMax),
+  "totalSeats": zod.number().gt(createVehicleBodyTotalSeatsExclusiveMin).max(createVehicleBodyTotalSeatsMax)
+})
 
 /**
  * @summary Get a single vehicle (public)
  */
 export const GetVehicleParams = zod.object({
-  id: zod.number(),
-});
+  "id": zod.number()
+})
 
 export const getVehicleResponseIdMin = -9007199254740991;
 export const getVehicleResponseIdMax = 9007199254740991;
@@ -107,27 +92,23 @@ export const getVehicleResponseSeatLayoutIdMax = 9007199254740991;
 export const getVehicleResponseTotalSeatsMin = -9007199254740991;
 export const getVehicleResponseTotalSeatsMax = 9007199254740991;
 
+
+
 export const GetVehicleResponse = zod.object({
-  id: zod.number().min(getVehicleResponseIdMin).max(getVehicleResponseIdMax),
-  companyId: zod.number().min(getVehicleResponseCompanyIdMin).max(getVehicleResponseCompanyIdMax),
-  plateNumber: zod.string(),
-  type: zod.string(),
-  seatLayoutId: zod
-    .number()
-    .min(getVehicleResponseSeatLayoutIdMin)
-    .max(getVehicleResponseSeatLayoutIdMax),
-  totalSeats: zod
-    .number()
-    .min(getVehicleResponseTotalSeatsMin)
-    .max(getVehicleResponseTotalSeatsMax),
-});
+  "id": zod.number().min(getVehicleResponseIdMin).max(getVehicleResponseIdMax),
+  "companyId": zod.number().min(getVehicleResponseCompanyIdMin).max(getVehicleResponseCompanyIdMax),
+  "plateNumber": zod.string(),
+  "type": zod.string(),
+  "seatLayoutId": zod.number().min(getVehicleResponseSeatLayoutIdMin).max(getVehicleResponseSeatLayoutIdMax),
+  "totalSeats": zod.number().min(getVehicleResponseTotalSeatsMin).max(getVehicleResponseTotalSeatsMax)
+})
 
 /**
  * @summary Update a vehicle (admin or owning operator)
  */
 export const UpdateVehicleParams = zod.object({
-  id: zod.number(),
-});
+  "id": zod.number()
+})
 
 export const updateVehicleBodyPlateNumberMax = 20;
 
@@ -139,20 +120,14 @@ export const updateVehicleBodySeatLayoutIdMax = 9007199254740991;
 export const updateVehicleBodyTotalSeatsExclusiveMin = 0;
 export const updateVehicleBodyTotalSeatsMax = 9007199254740991;
 
+
+
 export const UpdateVehicleBody = zod.object({
-  plateNumber: zod.string().min(1).max(updateVehicleBodyPlateNumberMax).optional(),
-  type: zod.string().min(1).max(updateVehicleBodyTypeMax).optional(),
-  seatLayoutId: zod
-    .number()
-    .gt(updateVehicleBodySeatLayoutIdExclusiveMin)
-    .max(updateVehicleBodySeatLayoutIdMax)
-    .optional(),
-  totalSeats: zod
-    .number()
-    .gt(updateVehicleBodyTotalSeatsExclusiveMin)
-    .max(updateVehicleBodyTotalSeatsMax)
-    .optional(),
-});
+  "plateNumber": zod.string().min(1).max(updateVehicleBodyPlateNumberMax).optional(),
+  "type": zod.string().min(1).max(updateVehicleBodyTypeMax).optional(),
+  "seatLayoutId": zod.number().gt(updateVehicleBodySeatLayoutIdExclusiveMin).max(updateVehicleBodySeatLayoutIdMax).optional(),
+  "totalSeats": zod.number().gt(updateVehicleBodyTotalSeatsExclusiveMin).max(updateVehicleBodyTotalSeatsMax).optional()
+})
 
 export const updateVehicleResponseIdMin = -9007199254740991;
 export const updateVehicleResponseIdMax = 9007199254740991;
@@ -166,27 +141,21 @@ export const updateVehicleResponseSeatLayoutIdMax = 9007199254740991;
 export const updateVehicleResponseTotalSeatsMin = -9007199254740991;
 export const updateVehicleResponseTotalSeatsMax = 9007199254740991;
 
+
+
 export const UpdateVehicleResponse = zod.object({
-  id: zod.number().min(updateVehicleResponseIdMin).max(updateVehicleResponseIdMax),
-  companyId: zod
-    .number()
-    .min(updateVehicleResponseCompanyIdMin)
-    .max(updateVehicleResponseCompanyIdMax),
-  plateNumber: zod.string(),
-  type: zod.string(),
-  seatLayoutId: zod
-    .number()
-    .min(updateVehicleResponseSeatLayoutIdMin)
-    .max(updateVehicleResponseSeatLayoutIdMax),
-  totalSeats: zod
-    .number()
-    .min(updateVehicleResponseTotalSeatsMin)
-    .max(updateVehicleResponseTotalSeatsMax),
-});
+  "id": zod.number().min(updateVehicleResponseIdMin).max(updateVehicleResponseIdMax),
+  "companyId": zod.number().min(updateVehicleResponseCompanyIdMin).max(updateVehicleResponseCompanyIdMax),
+  "plateNumber": zod.string(),
+  "type": zod.string(),
+  "seatLayoutId": zod.number().min(updateVehicleResponseSeatLayoutIdMin).max(updateVehicleResponseSeatLayoutIdMax),
+  "totalSeats": zod.number().min(updateVehicleResponseTotalSeatsMin).max(updateVehicleResponseTotalSeatsMax)
+})
 
 /**
  * @summary Delete a vehicle (admin or owning operator) — 409 if active trips exist
  */
 export const DeleteVehicleParams = zod.object({
-  id: zod.number(),
-});
+  "id": zod.number()
+})
+

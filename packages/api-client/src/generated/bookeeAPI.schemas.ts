@@ -5,8 +5,8 @@
  * Multi-operator trip booking platform API
  * OpenAPI spec version: 0.1.0
  */
-export type HealthResponseDtoStatus =
-  (typeof HealthResponseDtoStatus)[keyof typeof HealthResponseDtoStatus];
+export type HealthResponseDtoStatus = typeof HealthResponseDtoStatus[keyof typeof HealthResponseDtoStatus];
+
 
 export const HealthResponseDtoStatus = {
   ok: 'ok',
@@ -21,30 +21,30 @@ export interface HealthResponseDto {
 
 export interface RegisterBodyDto {
   /**
-   * @minLength 1
-   * @maxLength 120
-   */
+     * @minLength 1
+     * @maxLength 120
+     */
   name: string;
   /**
-   * @minLength 8
-   * @maxLength 20
-   * @pattern ^[+\d\s-]+$
-   */
+     * @minLength 8
+     * @maxLength 20
+     * @pattern ^[+\d\s-]+$
+     */
   phone: string;
   /**
-   * @maxLength 254
-   * @pattern ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
-   */
+     * @maxLength 254
+     * @pattern ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+     */
   email: string;
   /**
-   * @minLength 8
-   * @maxLength 72
-   */
+     * @minLength 8
+     * @maxLength 72
+     */
   password: string;
 }
 
-export type AuthSessionDtoUserRole =
-  (typeof AuthSessionDtoUserRole)[keyof typeof AuthSessionDtoUserRole];
+export type AuthSessionDtoUserRole = typeof AuthSessionDtoUserRole[keyof typeof AuthSessionDtoUserRole];
+
 
 export const AuthSessionDtoUserRole = {
   customer: 'customer',
@@ -55,9 +55,9 @@ export const AuthSessionDtoUserRole = {
 
 export type AuthSessionDtoUser = {
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
   id: number;
   name: string;
   phone: string;
@@ -65,10 +65,10 @@ export type AuthSessionDtoUser = {
   email: string;
   role: AuthSessionDtoUserRole;
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     * @nullable
+     */
   operatorId: number | null;
 };
 
@@ -84,15 +84,15 @@ export interface AuthSessionDto {
 
 export interface LoginBodyDto {
   /**
-   * phone OR email
-   * @minLength 1
-   * @maxLength 254
-   */
+     * phone OR email
+     * @minLength 1
+     * @maxLength 254
+     */
   identifier: string;
   /**
-   * @minLength 8
-   * @maxLength 72
-   */
+     * @minLength 8
+     * @maxLength 72
+     */
   password: string;
 }
 
@@ -106,7 +106,8 @@ export interface AuthTokensDto {
   refreshToken: string;
 }
 
-export type PublicUserDtoRole = (typeof PublicUserDtoRole)[keyof typeof PublicUserDtoRole];
+export type PublicUserDtoRole = typeof PublicUserDtoRole[keyof typeof PublicUserDtoRole];
+
 
 export const PublicUserDtoRole = {
   customer: 'customer',
@@ -117,9 +118,9 @@ export const PublicUserDtoRole = {
 
 export interface PublicUserDto {
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
   id: number;
   name: string;
   phone: string;
@@ -127,10 +128,10 @@ export interface PublicUserDto {
   email: string;
   role: PublicUserDtoRole;
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     * @nullable
+     */
   operatorId: number | null;
   createdAt: string;
   updatedAt: string;
@@ -138,24 +139,25 @@ export interface PublicUserDto {
 
 export interface UpdateProfileBodyDto {
   /**
-   * @minLength 1
-   * @maxLength 120
-   */
+     * @minLength 1
+     * @maxLength 120
+     */
   name?: string;
   /**
-   * @minLength 8
-   * @maxLength 20
-   * @pattern ^[+\d\s-]+$
-   */
+     * @minLength 8
+     * @maxLength 20
+     * @pattern ^[+\d\s-]+$
+     */
   phone?: string;
   /**
-   * @maxLength 254
-   * @pattern ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
-   */
+     * @maxLength 254
+     * @pattern ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+     */
   email?: string;
 }
 
-export type OperatorDtoStatus = (typeof OperatorDtoStatus)[keyof typeof OperatorDtoStatus];
+export type OperatorDtoStatus = typeof OperatorDtoStatus[keyof typeof OperatorDtoStatus];
+
 
 export const OperatorDtoStatus = {
   pending: 'pending',
@@ -165,9 +167,9 @@ export const OperatorDtoStatus = {
 
 export interface OperatorDto {
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
   id: number;
   name: string;
   hotline: string;
@@ -178,15 +180,15 @@ export interface OperatorDto {
 
 export interface CreateOperatorBodyDto {
   /**
-   * @minLength 1
-   * @maxLength 120
-   */
+     * @minLength 1
+     * @maxLength 120
+     */
   name: string;
   /**
-   * @minLength 8
-   * @maxLength 20
-   * @pattern ^[+\d\s-]+$
-   */
+     * @minLength 8
+     * @maxLength 20
+     * @pattern ^[+\d\s-]+$
+     */
   hotline: string;
   /** @maxLength 500 */
   logo?: string;
@@ -194,24 +196,24 @@ export interface CreateOperatorBodyDto {
 
 export interface UpdateOperatorBodyDto {
   /**
-   * @minLength 1
-   * @maxLength 120
-   */
+     * @minLength 1
+     * @maxLength 120
+     */
   name?: string;
   /**
-   * @minLength 8
-   * @maxLength 20
-   */
+     * @minLength 8
+     * @maxLength 20
+     */
   hotline?: string;
   /**
-   * @maxLength 500
-   * @nullable
-   */
+     * @maxLength 500
+     * @nullable
+     */
   logo?: string | null;
 }
 
-export type SetOperatorStatusBodyDtoStatus =
-  (typeof SetOperatorStatusBodyDtoStatus)[keyof typeof SetOperatorStatusBodyDtoStatus];
+export type SetOperatorStatusBodyDtoStatus = typeof SetOperatorStatusBodyDtoStatus[keyof typeof SetOperatorStatusBodyDtoStatus];
+
 
 export const SetOperatorStatusBodyDtoStatus = {
   pending: 'pending',
@@ -223,8 +225,8 @@ export interface SetOperatorStatusBodyDto {
   status: SetOperatorStatusBodyDtoStatus;
 }
 
-export type AssignStaffBodyDtoRole =
-  (typeof AssignStaffBodyDtoRole)[keyof typeof AssignStaffBodyDtoRole];
+export type AssignStaffBodyDtoRole = typeof AssignStaffBodyDtoRole[keyof typeof AssignStaffBodyDtoRole];
+
 
 export const AssignStaffBodyDtoRole = {
   operator: 'operator',
@@ -233,15 +235,15 @@ export const AssignStaffBodyDtoRole = {
 
 export interface AssignStaffBodyDto {
   /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
   userId: number;
   role: AssignStaffBodyDtoRole;
 }
 
-export type PublicStaffUserDtoRole =
-  (typeof PublicStaffUserDtoRole)[keyof typeof PublicStaffUserDtoRole];
+export type PublicStaffUserDtoRole = typeof PublicStaffUserDtoRole[keyof typeof PublicStaffUserDtoRole];
+
 
 export const PublicStaffUserDtoRole = {
   customer: 'customer',
@@ -252,9 +254,9 @@ export const PublicStaffUserDtoRole = {
 
 export interface PublicStaffUserDto {
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
   id: number;
   name: string;
   phone: string;
@@ -262,10 +264,10 @@ export interface PublicStaffUserDto {
   email: string;
   role: PublicStaffUserDtoRole;
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     * @nullable
+     */
   operatorId: number | null;
   createdAt: string;
   updatedAt: string;
@@ -273,91 +275,91 @@ export interface PublicStaffUserDto {
 
 export type SeatLayoutDtoSeatsItem = {
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
   id: number;
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
   layoutId: number;
   code: string;
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
   floor: number;
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
   row: number;
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
   col: number;
 };
 
 export interface SeatLayoutDto {
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
   id: number;
   name: string;
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
   rows: number;
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
   cols: number;
   seats?: SeatLayoutDtoSeatsItem[];
 }
 
 export type CreateSeatLayoutBodyDtoSeatsItem = {
   /**
-   * @minLength 1
-   * @maxLength 20
-   */
+     * @minLength 1
+     * @maxLength 20
+     */
   code: string;
   /**
-   * @minimum 1
-   * @maximum 9007199254740991
-   */
+     * @minimum 1
+     * @maximum 9007199254740991
+     */
   floor?: number;
   /**
-   * @minimum 1
-   * @maximum 9007199254740991
-   */
+     * @minimum 1
+     * @maximum 9007199254740991
+     */
   row: number;
   /**
-   * @minimum 1
-   * @maximum 9007199254740991
-   */
+     * @minimum 1
+     * @maximum 9007199254740991
+     */
   col: number;
 };
 
 export interface CreateSeatLayoutBodyDto {
   /**
-   * @minLength 1
-   * @maxLength 200
-   */
+     * @minLength 1
+     * @maxLength 200
+     */
   name: string;
   /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
   rows: number;
   /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
   cols: number;
   /** @minItems 1 */
   seats: CreateSeatLayoutBodyDtoSeatsItem[];
@@ -365,27 +367,27 @@ export interface CreateSeatLayoutBodyDto {
 
 export interface UpdateSeatLayoutBodyDto {
   /**
-   * @minLength 1
-   * @maxLength 200
-   */
+     * @minLength 1
+     * @maxLength 200
+     */
   name?: string;
   /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
   rows?: number;
   /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
   cols?: number;
 }
 
 export interface StationDto {
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
   id: number;
   name: string;
   address: string;
@@ -396,111 +398,111 @@ export interface StationDto {
 
 export interface CreateStationBodyDto {
   /**
-   * @minLength 1
-   * @maxLength 200
-   */
+     * @minLength 1
+     * @maxLength 200
+     */
   name: string;
   /**
-   * @minLength 1
-   * @maxLength 500
-   */
+     * @minLength 1
+     * @maxLength 500
+     */
   address: string;
   /**
-   * @minimum -90
-   * @maximum 90
-   */
+     * @minimum -90
+     * @maximum 90
+     */
   lat: number;
   /**
-   * @minimum -180
-   * @maximum 180
-   */
+     * @minimum -180
+     * @maximum 180
+     */
   lng: number;
   /**
-   * @minLength 1
-   * @maxLength 120
-   */
+     * @minLength 1
+     * @maxLength 120
+     */
   city: string;
 }
 
 export interface UpdateStationBodyDto {
   /**
-   * @minLength 1
-   * @maxLength 200
-   */
+     * @minLength 1
+     * @maxLength 200
+     */
   name?: string;
   /**
-   * @minLength 1
-   * @maxLength 500
-   */
+     * @minLength 1
+     * @maxLength 500
+     */
   address?: string;
   /**
-   * @minimum -90
-   * @maximum 90
-   */
+     * @minimum -90
+     * @maximum 90
+     */
   lat?: number;
   /**
-   * @minimum -180
-   * @maximum 180
-   */
+     * @minimum -180
+     * @maximum 180
+     */
   lng?: number;
   /**
-   * @minLength 1
-   * @maxLength 120
-   */
+     * @minLength 1
+     * @maxLength 120
+     */
   city?: string;
 }
 
 export interface RouteDto {
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
   id: number;
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
   companyId: number;
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
   fromStationId: number;
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
   toStationId: number;
   distanceKm: number;
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
   durationMinutes: number;
 }
 
 export interface CreateRouteBodyDto {
   /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
   companyId: number;
   /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
   fromStationId: number;
   /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
   toStationId: number;
   /** @exclusiveMinimum 0 */
   distanceKm: number;
   /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
   durationMinutes: number;
 }
 
@@ -508,128 +510,129 @@ export interface UpdateRouteBodyDto {
   /** @exclusiveMinimum 0 */
   distanceKm?: number;
   /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
   durationMinutes?: number;
 }
 
 export interface VehicleDto {
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
   id: number;
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
   companyId: number;
   plateNumber: string;
   type: string;
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
   seatLayoutId: number;
   /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
   totalSeats: number;
 }
 
 export interface CreateVehicleBodyDto {
   /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
   companyId: number;
   /**
-   * @minLength 1
-   * @maxLength 20
-   */
+     * @minLength 1
+     * @maxLength 20
+     */
   plateNumber: string;
   /**
-   * @minLength 1
-   * @maxLength 50
-   */
+     * @minLength 1
+     * @maxLength 50
+     */
   type: string;
   /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
   seatLayoutId: number;
   /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
   totalSeats: number;
 }
 
 export interface UpdateVehicleBodyDto {
   /**
-   * @minLength 1
-   * @maxLength 20
-   */
+     * @minLength 1
+     * @maxLength 20
+     */
   plateNumber?: string;
   /**
-   * @minLength 1
-   * @maxLength 50
-   */
+     * @minLength 1
+     * @maxLength 50
+     */
   type?: string;
   /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
   seatLayoutId?: number;
   /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
   totalSeats?: number;
 }
 
 export type ListStationsParams = {
-  /**
-   * @minLength 1
-   * @maxLength 120
-   */
-  city?: string;
-  /**
-   * @minLength 1
-   * @maxLength 200
-   */
-  q?: string;
+/**
+ * @minLength 1
+ * @maxLength 120
+ */
+city?: string;
+/**
+ * @minLength 1
+ * @maxLength 200
+ */
+q?: string;
 };
 
 export type ListRoutesParams = {
-  /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
-  companyId?: number;
-  /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
-  fromStationId?: number;
-  /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
-  toStationId?: number;
+/**
+ * @maximum 9007199254740991
+ * @exclusiveMinimum 0
+ */
+companyId?: number;
+/**
+ * @maximum 9007199254740991
+ * @exclusiveMinimum 0
+ */
+fromStationId?: number;
+/**
+ * @maximum 9007199254740991
+ * @exclusiveMinimum 0
+ */
+toStationId?: number;
 };
 
 export type ListVehiclesParams = {
-  /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
-  companyId?: number;
-  /**
-   * @minLength 1
-   * @maxLength 50
-   */
-  type?: string;
+/**
+ * @maximum 9007199254740991
+ * @exclusiveMinimum 0
+ */
+companyId?: number;
+/**
+ * @minLength 1
+ * @maxLength 50
+ */
+type?: string;
 };
+

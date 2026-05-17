@@ -41,13 +41,7 @@ describe('SeatLayoutsController (HTTP integration)', () => {
   });
 
   beforeEach(async () => {
-    await fx.prisma.vehicle.deleteMany({});
-    await fx.prisma.seat.deleteMany({});
-    await fx.prisma.seatLayout.deleteMany({});
-    await fx.prisma.route.deleteMany({});
-    await fx.prisma.station.deleteMany({});
-    await fx.prisma.user.deleteMany({});
-    await fx.prisma.busCompany.deleteMany({});
+    await fx.resetDatabase();
 
     const admin = await fx.prisma.user.create({
       data: {

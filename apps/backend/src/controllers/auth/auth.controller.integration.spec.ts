@@ -42,7 +42,7 @@ describe('AuthController (HTTP integration)', () => {
   });
 
   beforeEach(async () => {
-    await fx.prisma.user.deleteMany({});
+    await fx.resetDatabase();
   });
 
   async function post(path: string, body: unknown): Promise<{ status: number; body: unknown }> {

@@ -38,7 +38,7 @@ describe('UsersController (HTTP integration)', () => {
   });
 
   beforeEach(async () => {
-    await fx.prisma.user.deleteMany({});
+    await fx.resetDatabase();
   });
 
   async function http(

@@ -43,9 +43,7 @@ describe('OperatorsController (HTTP integration)', () => {
   });
 
   beforeEach(async () => {
-    // Reset state.
-    await fx.prisma.busCompany.deleteMany({});
-    await fx.prisma.user.deleteMany({});
+    await fx.resetDatabase();
 
     // Mint an admin user + bearer token directly (skip registration which
     // can only mint customers).

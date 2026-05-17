@@ -7,6 +7,7 @@
  */
 import * as zod from 'zod';
 
+
 /**
  * @summary List all seat layouts (public)
  */
@@ -34,40 +35,23 @@ export const listSeatLayoutsResponseSeatsItemRowMax = 9007199254740991;
 export const listSeatLayoutsResponseSeatsItemColMin = -9007199254740991;
 export const listSeatLayoutsResponseSeatsItemColMax = 9007199254740991;
 
+
+
 export const ListSeatLayoutsResponseItem = zod.object({
-  id: zod.number().min(listSeatLayoutsResponseIdMin).max(listSeatLayoutsResponseIdMax),
-  name: zod.string(),
-  rows: zod.number().min(listSeatLayoutsResponseRowsMin).max(listSeatLayoutsResponseRowsMax),
-  cols: zod.number().min(listSeatLayoutsResponseColsMin).max(listSeatLayoutsResponseColsMax),
-  seats: zod
-    .array(
-      zod.object({
-        id: zod
-          .number()
-          .min(listSeatLayoutsResponseSeatsItemIdMin)
-          .max(listSeatLayoutsResponseSeatsItemIdMax),
-        layoutId: zod
-          .number()
-          .min(listSeatLayoutsResponseSeatsItemLayoutIdMin)
-          .max(listSeatLayoutsResponseSeatsItemLayoutIdMax),
-        code: zod.string(),
-        floor: zod
-          .number()
-          .min(listSeatLayoutsResponseSeatsItemFloorMin)
-          .max(listSeatLayoutsResponseSeatsItemFloorMax),
-        row: zod
-          .number()
-          .min(listSeatLayoutsResponseSeatsItemRowMin)
-          .max(listSeatLayoutsResponseSeatsItemRowMax),
-        col: zod
-          .number()
-          .min(listSeatLayoutsResponseSeatsItemColMin)
-          .max(listSeatLayoutsResponseSeatsItemColMax),
-      }),
-    )
-    .optional(),
-});
-export const ListSeatLayoutsResponse = zod.array(ListSeatLayoutsResponseItem);
+  "id": zod.number().min(listSeatLayoutsResponseIdMin).max(listSeatLayoutsResponseIdMax),
+  "name": zod.string(),
+  "rows": zod.number().min(listSeatLayoutsResponseRowsMin).max(listSeatLayoutsResponseRowsMax),
+  "cols": zod.number().min(listSeatLayoutsResponseColsMin).max(listSeatLayoutsResponseColsMax),
+  "seats": zod.array(zod.object({
+  "id": zod.number().min(listSeatLayoutsResponseSeatsItemIdMin).max(listSeatLayoutsResponseSeatsItemIdMax),
+  "layoutId": zod.number().min(listSeatLayoutsResponseSeatsItemLayoutIdMin).max(listSeatLayoutsResponseSeatsItemLayoutIdMax),
+  "code": zod.string(),
+  "floor": zod.number().min(listSeatLayoutsResponseSeatsItemFloorMin).max(listSeatLayoutsResponseSeatsItemFloorMax),
+  "row": zod.number().min(listSeatLayoutsResponseSeatsItemRowMin).max(listSeatLayoutsResponseSeatsItemRowMax),
+  "col": zod.number().min(listSeatLayoutsResponseSeatsItemColMin).max(listSeatLayoutsResponseSeatsItemColMax)
+})).optional()
+})
+export const ListSeatLayoutsResponse = zod.array(ListSeatLayoutsResponseItem)
 
 /**
  * @summary Create a seat layout with seats in one transaction (admin)
@@ -89,32 +73,27 @@ export const createSeatLayoutBodySeatsItemRowMax = 9007199254740991;
 
 export const createSeatLayoutBodySeatsItemColMax = 9007199254740991;
 
+
+
+
 export const CreateSeatLayoutBody = zod.object({
-  name: zod.string().min(1).max(createSeatLayoutBodyNameMax),
-  rows: zod.number().gt(createSeatLayoutBodyRowsExclusiveMin).max(createSeatLayoutBodyRowsMax),
-  cols: zod.number().gt(createSeatLayoutBodyColsExclusiveMin).max(createSeatLayoutBodyColsMax),
-  seats: zod
-    .array(
-      zod.object({
-        code: zod.string().min(1).max(createSeatLayoutBodySeatsItemCodeMax),
-        floor: zod
-          .number()
-          .min(1)
-          .max(createSeatLayoutBodySeatsItemFloorMax)
-          .default(createSeatLayoutBodySeatsItemFloorDefault),
-        row: zod.number().min(1).max(createSeatLayoutBodySeatsItemRowMax),
-        col: zod.number().min(1).max(createSeatLayoutBodySeatsItemColMax),
-      }),
-    )
-    .min(1),
-});
+  "name": zod.string().min(1).max(createSeatLayoutBodyNameMax),
+  "rows": zod.number().gt(createSeatLayoutBodyRowsExclusiveMin).max(createSeatLayoutBodyRowsMax),
+  "cols": zod.number().gt(createSeatLayoutBodyColsExclusiveMin).max(createSeatLayoutBodyColsMax),
+  "seats": zod.array(zod.object({
+  "code": zod.string().min(1).max(createSeatLayoutBodySeatsItemCodeMax),
+  "floor": zod.number().min(1).max(createSeatLayoutBodySeatsItemFloorMax).default(createSeatLayoutBodySeatsItemFloorDefault),
+  "row": zod.number().min(1).max(createSeatLayoutBodySeatsItemRowMax),
+  "col": zod.number().min(1).max(createSeatLayoutBodySeatsItemColMax)
+})).min(1)
+})
 
 /**
  * @summary Get a seat layout with seats (public)
  */
 export const GetSeatLayoutParams = zod.object({
-  id: zod.number(),
-});
+  "id": zod.number()
+})
 
 export const getSeatLayoutResponseIdMin = -9007199254740991;
 export const getSeatLayoutResponseIdMax = 9007199254740991;
@@ -140,46 +119,29 @@ export const getSeatLayoutResponseSeatsItemRowMax = 9007199254740991;
 export const getSeatLayoutResponseSeatsItemColMin = -9007199254740991;
 export const getSeatLayoutResponseSeatsItemColMax = 9007199254740991;
 
+
+
 export const GetSeatLayoutResponse = zod.object({
-  id: zod.number().min(getSeatLayoutResponseIdMin).max(getSeatLayoutResponseIdMax),
-  name: zod.string(),
-  rows: zod.number().min(getSeatLayoutResponseRowsMin).max(getSeatLayoutResponseRowsMax),
-  cols: zod.number().min(getSeatLayoutResponseColsMin).max(getSeatLayoutResponseColsMax),
-  seats: zod
-    .array(
-      zod.object({
-        id: zod
-          .number()
-          .min(getSeatLayoutResponseSeatsItemIdMin)
-          .max(getSeatLayoutResponseSeatsItemIdMax),
-        layoutId: zod
-          .number()
-          .min(getSeatLayoutResponseSeatsItemLayoutIdMin)
-          .max(getSeatLayoutResponseSeatsItemLayoutIdMax),
-        code: zod.string(),
-        floor: zod
-          .number()
-          .min(getSeatLayoutResponseSeatsItemFloorMin)
-          .max(getSeatLayoutResponseSeatsItemFloorMax),
-        row: zod
-          .number()
-          .min(getSeatLayoutResponseSeatsItemRowMin)
-          .max(getSeatLayoutResponseSeatsItemRowMax),
-        col: zod
-          .number()
-          .min(getSeatLayoutResponseSeatsItemColMin)
-          .max(getSeatLayoutResponseSeatsItemColMax),
-      }),
-    )
-    .optional(),
-});
+  "id": zod.number().min(getSeatLayoutResponseIdMin).max(getSeatLayoutResponseIdMax),
+  "name": zod.string(),
+  "rows": zod.number().min(getSeatLayoutResponseRowsMin).max(getSeatLayoutResponseRowsMax),
+  "cols": zod.number().min(getSeatLayoutResponseColsMin).max(getSeatLayoutResponseColsMax),
+  "seats": zod.array(zod.object({
+  "id": zod.number().min(getSeatLayoutResponseSeatsItemIdMin).max(getSeatLayoutResponseSeatsItemIdMax),
+  "layoutId": zod.number().min(getSeatLayoutResponseSeatsItemLayoutIdMin).max(getSeatLayoutResponseSeatsItemLayoutIdMax),
+  "code": zod.string(),
+  "floor": zod.number().min(getSeatLayoutResponseSeatsItemFloorMin).max(getSeatLayoutResponseSeatsItemFloorMax),
+  "row": zod.number().min(getSeatLayoutResponseSeatsItemRowMin).max(getSeatLayoutResponseSeatsItemRowMax),
+  "col": zod.number().min(getSeatLayoutResponseSeatsItemColMin).max(getSeatLayoutResponseSeatsItemColMax)
+})).optional()
+})
 
 /**
  * @summary Update seat layout metadata (admin)
  */
 export const UpdateSeatLayoutParams = zod.object({
-  id: zod.number(),
-});
+  "id": zod.number()
+})
 
 export const updateSeatLayoutBodyNameMax = 200;
 
@@ -189,19 +151,13 @@ export const updateSeatLayoutBodyRowsMax = 9007199254740991;
 export const updateSeatLayoutBodyColsExclusiveMin = 0;
 export const updateSeatLayoutBodyColsMax = 9007199254740991;
 
+
+
 export const UpdateSeatLayoutBody = zod.object({
-  name: zod.string().min(1).max(updateSeatLayoutBodyNameMax).optional(),
-  rows: zod
-    .number()
-    .gt(updateSeatLayoutBodyRowsExclusiveMin)
-    .max(updateSeatLayoutBodyRowsMax)
-    .optional(),
-  cols: zod
-    .number()
-    .gt(updateSeatLayoutBodyColsExclusiveMin)
-    .max(updateSeatLayoutBodyColsMax)
-    .optional(),
-});
+  "name": zod.string().min(1).max(updateSeatLayoutBodyNameMax).optional(),
+  "rows": zod.number().gt(updateSeatLayoutBodyRowsExclusiveMin).max(updateSeatLayoutBodyRowsMax).optional(),
+  "cols": zod.number().gt(updateSeatLayoutBodyColsExclusiveMin).max(updateSeatLayoutBodyColsMax).optional()
+})
 
 export const updateSeatLayoutResponseIdMin = -9007199254740991;
 export const updateSeatLayoutResponseIdMax = 9007199254740991;
@@ -227,43 +183,27 @@ export const updateSeatLayoutResponseSeatsItemRowMax = 9007199254740991;
 export const updateSeatLayoutResponseSeatsItemColMin = -9007199254740991;
 export const updateSeatLayoutResponseSeatsItemColMax = 9007199254740991;
 
+
+
 export const UpdateSeatLayoutResponse = zod.object({
-  id: zod.number().min(updateSeatLayoutResponseIdMin).max(updateSeatLayoutResponseIdMax),
-  name: zod.string(),
-  rows: zod.number().min(updateSeatLayoutResponseRowsMin).max(updateSeatLayoutResponseRowsMax),
-  cols: zod.number().min(updateSeatLayoutResponseColsMin).max(updateSeatLayoutResponseColsMax),
-  seats: zod
-    .array(
-      zod.object({
-        id: zod
-          .number()
-          .min(updateSeatLayoutResponseSeatsItemIdMin)
-          .max(updateSeatLayoutResponseSeatsItemIdMax),
-        layoutId: zod
-          .number()
-          .min(updateSeatLayoutResponseSeatsItemLayoutIdMin)
-          .max(updateSeatLayoutResponseSeatsItemLayoutIdMax),
-        code: zod.string(),
-        floor: zod
-          .number()
-          .min(updateSeatLayoutResponseSeatsItemFloorMin)
-          .max(updateSeatLayoutResponseSeatsItemFloorMax),
-        row: zod
-          .number()
-          .min(updateSeatLayoutResponseSeatsItemRowMin)
-          .max(updateSeatLayoutResponseSeatsItemRowMax),
-        col: zod
-          .number()
-          .min(updateSeatLayoutResponseSeatsItemColMin)
-          .max(updateSeatLayoutResponseSeatsItemColMax),
-      }),
-    )
-    .optional(),
-});
+  "id": zod.number().min(updateSeatLayoutResponseIdMin).max(updateSeatLayoutResponseIdMax),
+  "name": zod.string(),
+  "rows": zod.number().min(updateSeatLayoutResponseRowsMin).max(updateSeatLayoutResponseRowsMax),
+  "cols": zod.number().min(updateSeatLayoutResponseColsMin).max(updateSeatLayoutResponseColsMax),
+  "seats": zod.array(zod.object({
+  "id": zod.number().min(updateSeatLayoutResponseSeatsItemIdMin).max(updateSeatLayoutResponseSeatsItemIdMax),
+  "layoutId": zod.number().min(updateSeatLayoutResponseSeatsItemLayoutIdMin).max(updateSeatLayoutResponseSeatsItemLayoutIdMax),
+  "code": zod.string(),
+  "floor": zod.number().min(updateSeatLayoutResponseSeatsItemFloorMin).max(updateSeatLayoutResponseSeatsItemFloorMax),
+  "row": zod.number().min(updateSeatLayoutResponseSeatsItemRowMin).max(updateSeatLayoutResponseSeatsItemRowMax),
+  "col": zod.number().min(updateSeatLayoutResponseSeatsItemColMin).max(updateSeatLayoutResponseSeatsItemColMax)
+})).optional()
+})
 
 /**
  * @summary Delete a seat layout (admin) — 409 if vehicles reference it
  */
 export const DeleteSeatLayoutParams = zod.object({
-  id: zod.number(),
-});
+  "id": zod.number()
+})
+

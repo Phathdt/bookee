@@ -41,10 +41,7 @@ describe('StationsController (HTTP integration)', () => {
   });
 
   beforeEach(async () => {
-    await fx.prisma.route.deleteMany({});
-    await fx.prisma.station.deleteMany({});
-    await fx.prisma.user.deleteMany({});
-    await fx.prisma.busCompany.deleteMany({});
+    await fx.resetDatabase();
 
     const admin = await fx.prisma.user.create({
       data: {
