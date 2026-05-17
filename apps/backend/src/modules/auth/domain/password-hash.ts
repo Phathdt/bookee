@@ -4,9 +4,12 @@ import { compare, hash } from 'bcryptjs';
  * Password hashing value object. Wraps bcryptjs with explicit cost factor
  * (12 is current ITSec baseline for interactive web auth — adjust upward
  * as hardware improves). Constructor is private — use static factories.
+ *
+ * BCRYPT_COST env overrides the default — tests set it to 4 to avoid the
+ * ~250ms/hash hit dominating beforeEach in controller integration specs.
  */
 export class PasswordHash {
-  private static readonly COST = 12;
+  private static readonly COST = Number(process.env.BCRYPT_COST) || 12;
 
   private constructor(public readonly value: string) {}
 

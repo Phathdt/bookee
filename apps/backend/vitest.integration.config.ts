@@ -9,6 +9,7 @@ export default defineConfig({
   resolve: sharedResolve,
   plugins: sharedPlugins,
   test: {
+    name: 'integration',
     globals: true,
     environment: 'node',
     include: ['src/**/*.integration.spec.ts'],
@@ -16,6 +17,7 @@ export default defineConfig({
     testTimeout: 60_000,
     hookTimeout: 120_000,
     fileParallelism: false,
+    globalSetup: ['./test/global-setup.ts'],
     coverage: sharedCoverage,
   },
 });

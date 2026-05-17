@@ -8,6 +8,7 @@ export default defineConfig({
   resolve: sharedResolve,
   plugins: sharedPlugins,
   test: {
+    name: 'unit',
     globals: true,
     environment: 'node',
     include: ['src/**/*.spec.ts'],

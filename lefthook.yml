@@ -1,12 +1,18 @@
 pre-commit:
+  parallel: true
   jobs:
-    - name: oxlint
-      glob: '*.{ts,tsx,js,jsx}'
-      run: bunx oxlint --fix {staged_files}
-      stage_fixed: true
-    - name: oxfmt
-      glob: '*.{ts,tsx,js,jsx,json,md}'
-      run: bunx oxfmt {staged_files}
-      stage_fixed: true
+    # oxlint + oxfmt both stage_fixed and may touch the same files. Keep them
+    # in a serial group so oxlint runs first (its --fix output then gets
+    # formatted). Backend tests are independent — runs in parallel.
+    - group:
+        jobs:
+          - name: oxlint
+            glob: '*.{ts,tsx,js,jsx}'
+            run: bunx oxlint --fix {staged_files}
+            stage_fixed: true
+          - name: oxfmt
+            glob: '*.{ts,tsx,js,jsx,json,md}'
+            run: bunx oxfmt {staged_files}
+            stage_fixed: true
     - name: backend-tests
       run: bun run --filter @bookee/backend test
