@@ -1,4 +1,5 @@
 import { PrismaPg } from '@prisma/adapter-pg';
+import Redis from 'ioredis';
 
 import { PrismaClient } from '@/generated/prisma/client';
 import { DatabaseService } from '@/modules/database/database.service';
@@ -57,8 +58,19 @@ export async function startPostgresFixture(): Promise<PostgresFixture> {
   const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString }) });
   const databaseService = prisma as unknown as DatabaseService;
 
+  // Auxiliary Redis connection for state cleanup. The shared Redis container
+  // is booted by global-setup; we flush it alongside the DB so leftover seat
+  // locks from one spec can't poison availableSeats in another.
+  const redisUrl = process.env.REDIS_URL;
+  const redis = redisUrl
+    ? new Redis(redisUrl, { lazyConnect: false, enableReadyCheck: false })
+    : null;
+
   async function resetDatabase(): Promise<void> {
     await prisma.$executeRawUnsafe(truncateSql);
+    if (redis) {
+      await redis.flushall();
+    }
   }
 
   return {
@@ -68,6 +80,7 @@ export async function startPostgresFixture(): Promise<PostgresFixture> {
     resetDatabase,
     stop: async () => {
       await prisma.$disconnect();
+      if (redis) redis.disconnect();
     },
   };
 }
