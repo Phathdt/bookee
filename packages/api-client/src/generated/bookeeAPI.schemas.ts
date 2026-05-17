@@ -797,6 +797,93 @@ export interface UpdateVehicleBodyDto {
   totalSeats?: number;
 }
 
+export type CreateBookingBodyDtoPassengersItem = {
+  /** @minLength 1 */
+  fullName: string;
+  /** @minLength 1 */
+  phone: string;
+  /** @minLength 1 */
+  idCard: string;
+};
+
+export interface CreateBookingBodyDto {
+  /**
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
+  tripId: number;
+  /** @minItems 1 */
+  seatIds: number[];
+  /** @minItems 1 */
+  passengers: CreateBookingBodyDtoPassengersItem[];
+  couponCode?: string;
+}
+
+export type BookingWithDetailsDtoStatus = typeof BookingWithDetailsDtoStatus[keyof typeof BookingWithDetailsDtoStatus];
+
+
+export const BookingWithDetailsDtoStatus = {
+  pending: 'pending',
+  confirmed: 'confirmed',
+  cancelled: 'cancelled',
+  expired: 'expired',
+} as const;
+
+export type BookingWithDetailsDtoSeatsItem = {
+  id: number;
+  bookingId: number;
+  seatId: number;
+  price: number;
+};
+
+export type BookingWithDetailsDtoPassengersItem = {
+  id: number;
+  bookingId: number;
+  fullName: string;
+  phone: string;
+  idCardMasked: string;
+};
+
+export interface BookingWithDetailsDto {
+  id: number;
+  bookingCode: string;
+  /** @nullable */
+  userId: number | null;
+  tripId: number;
+  totalAmount: number;
+  status: BookingWithDetailsDtoStatus;
+  /** @nullable */
+  couponId: number | null;
+  createdAt: string;
+  updatedAt: string;
+  seats: BookingWithDetailsDtoSeatsItem[];
+  passengers: BookingWithDetailsDtoPassengersItem[];
+}
+
+export type BookingDtoStatus = typeof BookingDtoStatus[keyof typeof BookingDtoStatus];
+
+
+export const BookingDtoStatus = {
+  pending: 'pending',
+  confirmed: 'confirmed',
+  cancelled: 'cancelled',
+  expired: 'expired',
+} as const;
+
+export interface BookingDto {
+  id: number;
+  bookingCode: string;
+  /** @nullable */
+  userId: number | null;
+  tripId: number;
+  totalAmount: number;
+  status: BookingDtoStatus;
+  /** @nullable */
+  couponId: number | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type ListStationsParams = {
 /**
  * @minLength 1
@@ -924,5 +1011,16 @@ companyId?: number;
  * @maxLength 50
  */
 type?: string;
+};
+
+export type LookupBookingParams = {
+/**
+ * @minLength 1
+ */
+code: string;
+/**
+ * @minLength 1
+ */
+phone: string;
 };
 

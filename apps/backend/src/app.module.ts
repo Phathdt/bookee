@@ -3,6 +3,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 import { AuthController } from './controllers/auth/auth.controller';
+import { BookingsController } from './controllers/bookings/bookings.controller';
 import { HealthController } from './controllers/health/health.controller';
 import { OperatorsController } from './controllers/operators/operators.controller';
 import { RoutesController } from './controllers/routes/routes.controller';
@@ -12,6 +13,7 @@ import { UsersController } from './controllers/users/users.controller';
 import { TripsController } from './controllers/trips/trips.controller';
 import { VehiclesController } from './controllers/vehicles/vehicles.controller';
 import { AuthModule } from './modules/auth/auth.module';
+import { BookingsModule } from './modules/bookings/bookings.module';
 import { DatabaseModule } from './modules/database/database.module';
 import { LoggerModule } from './modules/logger/logger.module';
 import { OperatorsModule } from './modules/operators/operators.module';
@@ -21,6 +23,7 @@ import { StationsModule } from './modules/stations/stations.module';
 import { UsersModule } from './modules/users/users.module';
 import { TripsModule } from './modules/trips/trips.module';
 import { VehiclesModule } from './modules/vehicles/vehicles.module';
+import { SchedulersModule } from './schedulers/schedulers.module';
 
 /**
  * Root composition module.
@@ -44,6 +47,8 @@ import { VehiclesModule } from './modules/vehicles/vehicles.module';
     RoutesModule,
     TripsModule,
     VehiclesModule,
+    BookingsModule,
+    SchedulersModule,
     // Global throttler defaults; per-route overrides via @Throttle().
     ThrottlerModule.forRoot({
       throttlers: [{ ttl: 60_000, limit: 60 }],
@@ -59,6 +64,7 @@ import { VehiclesModule } from './modules/vehicles/vehicles.module';
     RoutesController,
     TripsController,
     VehiclesController,
+    BookingsController,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

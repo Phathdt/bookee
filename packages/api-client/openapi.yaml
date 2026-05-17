@@ -970,6 +970,87 @@ paths:
       summary: Delete a vehicle (admin or owning operator) — 409 if active trips exist
       tags:
         - vehicles
+  /api/v1/bookings:
+    post:
+      operationId: createBooking
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookingBodyDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingWithDetailsDto'
+      summary: Create a booking (guest or authenticated)
+      tags:
+        - bookings
+  /api/v1/bookings/me:
+    get:
+      operationId: listMyBookings
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookingDto'
+      security:
+        - bearer: []
+      summary: List current user bookings
+      tags:
+        - bookings
+  /api/v1/bookings/lookup:
+    get:
+      operationId: lookupBooking
+      parameters:
+        - name: code
+          required: true
+          in: query
+          schema:
+            minLength: 1
+            type: string
+        - name: phone
+          required: true
+          in: query
+          schema:
+            minLength: 1
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingWithDetailsDto'
+      summary: Look up booking by code + phone (public)
+      tags:
+        - bookings
+  /api/v1/bookings/{id}/cancel:
+    post:
+      operationId: cancelBooking
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Cancel a pending booking
+      tags:
+        - bookings
 info:
   title: Bookee API
   description: Multi-operator trip booking platform API
@@ -1919,3 +2000,161 @@ components:
           exclusiveMinimum: true
           maximum: 9007199254740991
           minimum: 0
+    CreateBookingBodyDto:
+      type: object
+      properties:
+        tripId:
+          type: integer
+          exclusiveMinimum: true
+          maximum: 9007199254740991
+          minimum: 0
+        seatIds:
+          minItems: 1
+          type: array
+          items:
+            type: integer
+            exclusiveMinimum: true
+            maximum: 9007199254740991
+            minimum: 0
+        passengers:
+          minItems: 1
+          type: array
+          items:
+            type: object
+            properties:
+              fullName:
+                type: string
+                minLength: 1
+              phone:
+                type: string
+                minLength: 1
+              idCard:
+                type: string
+                minLength: 1
+            required:
+              - fullName
+              - phone
+              - idCard
+        couponCode:
+          type: string
+      required:
+        - tripId
+        - seatIds
+        - passengers
+    BookingWithDetailsDto:
+      type: object
+      properties:
+        id:
+          type: number
+        bookingCode:
+          type: string
+        userId:
+          type: number
+          nullable: true
+        tripId:
+          type: number
+        totalAmount:
+          type: number
+        status:
+          type: string
+          enum:
+            - pending
+            - confirmed
+            - cancelled
+            - expired
+        couponId:
+          type: number
+          nullable: true
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+        seats:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: number
+              bookingId:
+                type: number
+              seatId:
+                type: number
+              price:
+                type: number
+            required:
+              - id
+              - bookingId
+              - seatId
+              - price
+        passengers:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: number
+              bookingId:
+                type: number
+              fullName:
+                type: string
+              phone:
+                type: string
+              idCardMasked:
+                type: string
+            required:
+              - id
+              - bookingId
+              - fullName
+              - phone
+              - idCardMasked
+      required:
+        - id
+        - bookingCode
+        - userId
+        - tripId
+        - totalAmount
+        - status
+        - couponId
+        - createdAt
+        - updatedAt
+        - seats
+        - passengers
+    BookingDto:
+      type: object
+      properties:
+        id:
+          type: number
+        bookingCode:
+          type: string
+        userId:
+          type: number
+          nullable: true
+        tripId:
+          type: number
+        totalAmount:
+          type: number
+        status:
+          type: string
+          enum:
+            - pending
+            - confirmed
+            - cancelled
+            - expired
+        couponId:
+          type: number
+          nullable: true
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+        - id
+        - bookingCode
+        - userId
+        - tripId
+        - totalAmount
+        - status
+        - couponId
+        - createdAt
+        - updatedAt

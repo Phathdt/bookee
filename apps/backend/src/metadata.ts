@@ -2,6 +2,8 @@
 export default async () => {
   const t = {
     ['./controllers/auth/dto/auth.dto']: await import('./controllers/auth/dto/auth.dto'),
+    ['./controllers/bookings/dto/bookings.dto']:
+      await import('./controllers/bookings/dto/bookings.dto'),
     ['./controllers/health/dto/health-response.dto']:
       await import('./controllers/health/dto/health-response.dto'),
     ['./controllers/operators/dto/operators.dto']:
@@ -30,6 +32,17 @@ export default async () => {
             AuthTokensDto: {},
             AuthenticatedUserDto: {},
             AuthSessionDto: {},
+          },
+        ],
+        [
+          import('./controllers/bookings/dto/bookings.dto'),
+          {
+            CreateBookingBodyDto: {},
+            LookupBookingQueryDto: {},
+            PassengerDto: {},
+            BookingSeatDto: {},
+            BookingDto: {},
+            BookingWithDetailsDto: {},
           },
         ],
         [import('./controllers/health/dto/health-response.dto'), { HealthResponseDto: {} }],
@@ -102,6 +115,17 @@ export default async () => {
               register: { type: t['./controllers/auth/dto/auth.dto'].AuthSessionDto },
               login: { type: t['./controllers/auth/dto/auth.dto'].AuthSessionDto },
               refresh: { type: t['./controllers/auth/dto/auth.dto'].AuthTokensDto },
+            },
+          },
+        ],
+        [
+          import('./controllers/bookings/bookings.controller'),
+          {
+            BookingsController: {
+              create: { type: t['./controllers/bookings/dto/bookings.dto'].BookingWithDetailsDto },
+              listMine: { type: [t['./controllers/bookings/dto/bookings.dto'].BookingDto] },
+              lookup: { type: t['./controllers/bookings/dto/bookings.dto'].BookingWithDetailsDto },
+              cancel: {},
             },
           },
         ],

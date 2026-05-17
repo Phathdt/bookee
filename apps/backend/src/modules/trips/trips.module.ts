@@ -8,11 +8,13 @@ import { TripsRepositoryPrisma } from './infrastructure/repositories/trips.repos
 import { DatabaseService } from '@/modules/database/database.service';
 import { IRoutesRepository } from '@/modules/routes/domain/interfaces/routes.repository';
 import { RoutesModule } from '@/modules/routes/routes.module';
+import { ISeatLockService } from '@/modules/seat-lock/domain/interfaces/seat-lock.service';
+import { SeatLockModule } from '@/modules/seat-lock/seat-lock.module';
 import { IVehiclesRepository } from '@/modules/vehicles/domain/interfaces/vehicles.repository';
 import { VehiclesModule } from '@/modules/vehicles/vehicles.module';
 
 @Module({
-  imports: [RoutesModule, VehiclesModule],
+  imports: [RoutesModule, VehiclesModule, SeatLockModule],
   providers: [
     {
       provide: ITripsRepository,
@@ -25,8 +27,9 @@ import { VehiclesModule } from '@/modules/vehicles/vehicles.module';
         repo: ITripsRepository,
         routes: IRoutesRepository,
         vehicles: IVehiclesRepository,
-      ) => new TripsService(repo, routes, vehicles),
-      inject: [ITripsRepository, IRoutesRepository, IVehiclesRepository],
+        seatLock: ISeatLockService,
+      ) => new TripsService(repo, routes, vehicles, seatLock),
+      inject: [ITripsRepository, IRoutesRepository, IVehiclesRepository, ISeatLockService],
     },
   ],
   exports: [ITripsService, ITripsRepository],

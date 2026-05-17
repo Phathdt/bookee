@@ -26,6 +26,11 @@ export async function setup(): Promise<void> {
   // Lower bcrypt cost for tests — 4 is ~5ms vs 12's ~250ms. Hashing dominates
   // beforeEach in controller specs because they POST /auth/register.
   process.env.BCRYPT_COST = process.env.BCRYPT_COST ?? '4';
+  // Deterministic AES-256 key for integration suite. Production loads from
+  // secret manager via the env.
+  process.env.ENCRYPTION_KEY =
+    process.env.ENCRYPTION_KEY ??
+    '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
   execSync('bunx prisma migrate deploy', {
     cwd: path.resolve(__dirname, '..'),
