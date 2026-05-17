@@ -8,8 +8,11 @@
     "build": "vite build",
     "preview": "vite preview --port 5173",
     "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "vitest run --passWithNoTests"
+    "test": "bun run test:unit",
+    "test:unit": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage --passWithNoTests"
   },
   "dependencies": {
     "@bookee/api-client": "workspace:*",

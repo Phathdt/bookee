@@ -24,6 +24,11 @@
       "inputs": ["src/**", "eslint.config.*", "package.json"],
       "outputs": []
     },
+    "lint:fix": {
+      "cache": false,
+      "inputs": ["src/**", "eslint.config.*", "package.json"],
+      "outputs": []
+    },
     "typecheck": {
       "dependsOn": ["^build", "db:generate"],
       "inputs": [
@@ -38,6 +43,11 @@
       "outputs": []
     },
     "test": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "test/**", "**/*.spec.ts", "**/*.test.ts"],
+      "outputs": []
+    },
+    "test:coverage": {
       "dependsOn": ["^build"],
       "inputs": ["src/**", "test/**", "**/*.spec.ts", "**/*.test.ts"],
       "outputs": ["coverage/**"]

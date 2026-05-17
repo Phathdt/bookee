@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "test": "mkdir -p test-results && cucumber-js --config .cucumber.cjs",
-    "test:headed": "HEADLESS=false cucumber-js --config .cucumber.cjs",
-    "test:smoke": "cucumber-js --config .cucumber.cjs --tags @smoke",
-    "test:auth": "cucumber-js --config .cucumber.cjs --tags @auth",
+    "e2e": "mkdir -p test-results && cucumber-js --config .cucumber.cjs",
+    "e2e:headed": "HEADLESS=false cucumber-js --config .cucumber.cjs",
+    "e2e:smoke": "cucumber-js --config .cucumber.cjs --tags @smoke",
+    "e2e:auth": "cucumber-js --config .cucumber.cjs --tags @auth",
     "typecheck": "tsc --noEmit",
     "install:browsers": "playwright install chromium",
     "clean": "rm -rf test-results"
