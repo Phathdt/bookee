@@ -25,7 +25,8 @@
     "db:down": "docker compose down",
     "db:logs": "docker compose logs -f",
     "db:reset": "docker compose down -v && docker compose up -d",
-    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\" --ignore-path .gitignore",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "prepare": "husky"
   },
   "prettier": "@bookee/config/prettier",

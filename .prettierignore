@@ -1,0 +1,27 @@
+node_modules/
+dist/
+build/
+.turbo/
+coverage/
+.next/
+test-results/
+playwright-report/
+
+# Generated code — never reformat
+**/generated/
+**/*.generated.ts
+packages/api-client/src/generated/
+packages/api-client/openapi.yaml
+
+# User docs / specs — own formatting conventions
+.claude/
+openspec/
+plans/
+docs/
+
+# Lock files
+bun.lock
+bun.lockb
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
