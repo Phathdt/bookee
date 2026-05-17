@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios';
 
 const DEFAULT_BASE_URL = '/api';
 const DEFAULT_TIMEOUT_MS = 30_000;

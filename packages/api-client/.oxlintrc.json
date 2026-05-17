@@ -1,5 +1,11 @@
 {
   "$schema": "../../node_modules/oxlint/configuration_schema.json",
   "extends": ["../../.oxlintrc.json"],
-  "ignorePatterns": ["src/generated/**", "openapi.yaml"]
+  "ignorePatterns": ["src/generated/**", "openapi.yaml"],
+  "rules": {
+    "typescript/consistent-type-imports": [
+      "warn",
+      { "prefer": "type-imports", "fixStyle": "inline-type-imports" }
+    ]
+  }
 }
