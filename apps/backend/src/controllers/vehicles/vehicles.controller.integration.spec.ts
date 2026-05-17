@@ -305,4 +305,70 @@ describe('VehiclesController (HTTP integration)', () => {
     const res = await http('DELETE', '/vehicles/99999', { token: adminToken });
     expect(res.status).toBe(404);
   });
+
+  it('DELETE /vehicles/:id returns 409 when active trips exist', async () => {
+    const created = await http('POST', '/vehicles', { token: adminToken, body: newVehicleBody() });
+    const vehicleId = (created.body as { id: number }).id;
+
+    // Create route for op1
+    const routeRes = await http('POST', '/routes', {
+      token: adminToken,
+      body: {
+        companyId: op1Id,
+        fromStationId: (
+          (await (
+            await fetch(`${baseUrl}/stations`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${adminToken}`,
+              },
+              body: JSON.stringify({
+                name: 'StationX',
+                address: 'Addr X',
+                lat: 10.0,
+                lng: 106.0,
+                city: 'CityX',
+              }),
+            })
+          ).json()) as { id: number }
+        ).id,
+        toStationId: (
+          (await (
+            await fetch(`${baseUrl}/stations`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${adminToken}`,
+              },
+              body: JSON.stringify({
+                name: 'StationY',
+                address: 'Addr Y',
+                lat: 11.0,
+                lng: 107.0,
+                city: 'CityY',
+              }),
+            })
+          ).json()) as { id: number }
+        ).id,
+        distanceKm: 100,
+        durationMinutes: 120,
+      },
+    });
+    const routeId = (routeRes.body as { id: number }).id;
+
+    await http('POST', '/trips', {
+      token: adminToken,
+      body: {
+        routeId,
+        vehicleId,
+        departureTime: '2030-06-01T08:00:00.000Z',
+        arrivalTime: '2030-06-01T10:00:00.000Z',
+        basePrice: 50000,
+      },
+    });
+
+    const res = await http('DELETE', `/vehicles/${vehicleId}`, { token: adminToken });
+    expect(res.status).toBe(409);
+  });
 });

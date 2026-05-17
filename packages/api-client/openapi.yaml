@@ -613,6 +613,163 @@ paths:
       summary: Delete a route (admin or owning operator)
       tags:
         - routes
+  /api/v1/trips:
+    get:
+      operationId: listTrips
+      parameters:
+        - name: companyId
+          required: false
+          in: query
+          schema:
+            maximum: 9007199254740991
+            exclusiveMinimum: true
+            type: integer
+            minimum: 0
+        - name: vehicleId
+          required: false
+          in: query
+          schema:
+            maximum: 9007199254740991
+            exclusiveMinimum: true
+            type: integer
+            minimum: 0
+        - name: routeId
+          required: false
+          in: query
+          schema:
+            maximum: 9007199254740991
+            exclusiveMinimum: true
+            type: integer
+            minimum: 0
+        - name: status
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - scheduled
+              - in_progress
+              - completed
+              - cancelled
+        - name: from
+          required: false
+          in: query
+          schema:
+            format: date-time
+            pattern: >-
+              ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
+            type: string
+        - name: to
+          required: false
+          in: query
+          schema:
+            format: date-time
+            pattern: >-
+              ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TripDto'
+      summary: Search trips (public)
+      tags:
+        - trips
+    post:
+      operationId: createTrip
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTripBodyDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripDto'
+      security:
+        - bearer: []
+      summary: Create a trip (admin or operator-scoped)
+      tags:
+        - trips
+  /api/v1/trips/{id}:
+    get:
+      operationId: getTrip
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripDto'
+      summary: Get a single trip (public)
+      tags:
+        - trips
+  /api/v1/trips/bulk:
+    post:
+      operationId: bulkCreateTrips
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkCreateTripsBodyDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TripDto'
+      security:
+        - bearer: []
+      summary: Bulk-create trips from a date range (admin or operator-scoped)
+      tags:
+        - trips
+  /api/v1/trips/{id}/status:
+    patch:
+      operationId: setTripStatus
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetTripStatusBodyDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripDto'
+      security:
+        - bearer: []
+      summary: Transition trip status via state machine (admin or operator-scoped)
+      tags:
+        - trips
   /api/v1/vehicles:
     get:
       operationId: listVehicles
@@ -1319,6 +1476,139 @@ components:
           exclusiveMinimum: true
           maximum: 9007199254740991
           minimum: 0
+    TripDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        routeId:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        vehicleId:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        departureTime:
+          type: string
+          format: date-time
+          pattern: >-
+            ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
+        arrivalTime:
+          type: string
+          format: date-time
+          pattern: >-
+            ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
+        basePrice:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        status:
+          type: string
+          enum:
+            - scheduled
+            - in_progress
+            - completed
+            - cancelled
+      required:
+        - id
+        - routeId
+        - vehicleId
+        - departureTime
+        - arrivalTime
+        - basePrice
+        - status
+    CreateTripBodyDto:
+      type: object
+      properties:
+        routeId:
+          type: integer
+          exclusiveMinimum: true
+          maximum: 9007199254740991
+          minimum: 0
+        vehicleId:
+          type: integer
+          exclusiveMinimum: true
+          maximum: 9007199254740991
+          minimum: 0
+        departureTime:
+          type: string
+          format: date-time
+          pattern: >-
+            ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
+        arrivalTime:
+          type: string
+          format: date-time
+          pattern: >-
+            ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
+        basePrice:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+      required:
+        - routeId
+        - vehicleId
+        - departureTime
+        - arrivalTime
+        - basePrice
+    BulkCreateTripsBodyDto:
+      type: object
+      properties:
+        routeId:
+          type: integer
+          exclusiveMinimum: true
+          maximum: 9007199254740991
+          minimum: 0
+        vehicleId:
+          type: integer
+          exclusiveMinimum: true
+          maximum: 9007199254740991
+          minimum: 0
+        basePrice:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        dateRange:
+          type: object
+          properties:
+            start:
+              type: string
+              pattern: ^\d{4}-\d{2}-\d{2}$
+            end:
+              type: string
+              pattern: ^\d{4}-\d{2}-\d{2}$
+          required:
+            - start
+            - end
+        dailyDepartureTime:
+          type: string
+          pattern: ^\d{2}:\d{2}$
+        tripDurationMinutes:
+          type: integer
+          exclusiveMinimum: true
+          maximum: 9007199254740991
+          minimum: 0
+      required:
+        - routeId
+        - vehicleId
+        - basePrice
+        - dateRange
+        - dailyDepartureTime
+        - tripDurationMinutes
+    SetTripStatusBodyDto:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - scheduled
+            - in_progress
+            - completed
+            - cancelled
+      required:
+        - status
     VehicleDto:
       type: object
       properties:

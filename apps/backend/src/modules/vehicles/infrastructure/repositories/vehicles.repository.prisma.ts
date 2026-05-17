@@ -68,12 +68,13 @@ export class VehiclesRepositoryPrisma extends IVehiclesRepository {
     await this.db.vehicle.delete({ where: { id } });
   }
 
-  /**
-   * Stub — Trip module not built yet (Section 7).
-   * Returns false so vehicles can always be deleted until trips exist.
-   * Section 7 will flip this to query db.trip for active trips.
-   */
-  async hasActiveTrips(_vehicleId: number): Promise<boolean> {
-    return false;
+  async hasActiveTrips(vehicleId: number): Promise<boolean> {
+    const count = await this.db.trip.count({
+      where: {
+        vehicleId,
+        status: { in: ['scheduled', 'in_progress'] },
+      },
+    });
+    return count > 0;
   }
 }

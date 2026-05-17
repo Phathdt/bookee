@@ -1,3 +1,4 @@
+/* eslint-disable */
 export default async () => {
   const t = {
     ['./controllers/auth/dto/auth.dto']: await import('./controllers/auth/dto/auth.dto'),
@@ -11,6 +12,7 @@ export default async () => {
     ['./controllers/stations/dto/stations.dto']:
       await import('./controllers/stations/dto/stations.dto'),
     ['./controllers/users/dto/users.dto']: await import('./controllers/users/dto/users.dto'),
+    ['./controllers/trips/dto/trips.dto']: await import('./controllers/trips/dto/trips.dto'),
     ['./controllers/vehicles/dto/vehicles.dto']:
       await import('./controllers/vehicles/dto/vehicles.dto'),
   };
@@ -65,6 +67,16 @@ export default async () => {
         [
           import('./controllers/users/dto/users.dto'),
           { UpdateProfileBodyDto: {}, PublicUserDto: {} },
+        ],
+        [
+          import('./controllers/trips/dto/trips.dto'),
+          {
+            TripDto: {},
+            CreateTripBodyDto: {},
+            BulkCreateTripsBodyDto: {},
+            SetTripStatusBodyDto: {},
+            TripSearchQueryDto: {},
+          },
         ],
         [
           import('./controllers/vehicles/dto/vehicles.dto'),
@@ -154,6 +166,18 @@ export default async () => {
             UsersController: {
               getMe: { type: t['./controllers/users/dto/users.dto'].PublicUserDto },
               updateMe: { type: t['./controllers/users/dto/users.dto'].PublicUserDto },
+            },
+          },
+        ],
+        [
+          import('./controllers/trips/trips.controller'),
+          {
+            TripsController: {
+              list: { type: [t['./controllers/trips/dto/trips.dto'].TripDto] },
+              getOne: { type: t['./controllers/trips/dto/trips.dto'].TripDto },
+              create: { type: t['./controllers/trips/dto/trips.dto'].TripDto },
+              createBulk: { type: [t['./controllers/trips/dto/trips.dto'].TripDto] },
+              setStatus: { type: t['./controllers/trips/dto/trips.dto'].TripDto },
             },
           },
         ],

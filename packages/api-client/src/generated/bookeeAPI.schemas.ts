@@ -516,6 +516,113 @@ export interface UpdateRouteBodyDto {
   durationMinutes?: number;
 }
 
+export type TripDtoStatus = typeof TripDtoStatus[keyof typeof TripDtoStatus];
+
+
+export const TripDtoStatus = {
+  scheduled: 'scheduled',
+  in_progress: 'in_progress',
+  completed: 'completed',
+  cancelled: 'cancelled',
+} as const;
+
+export interface TripDto {
+  /**
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
+  id: number;
+  /**
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
+  routeId: number;
+  /**
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
+  vehicleId: number;
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
+  departureTime: string;
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
+  arrivalTime: string;
+  /**
+     * @minimum -9007199254740991
+     * @maximum 9007199254740991
+     */
+  basePrice: number;
+  status: TripDtoStatus;
+}
+
+export interface CreateTripBodyDto {
+  /**
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
+  routeId: number;
+  /**
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
+  vehicleId: number;
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
+  departureTime: string;
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
+  arrivalTime: string;
+  /**
+     * @minimum 0
+     * @maximum 9007199254740991
+     */
+  basePrice: number;
+}
+
+export type BulkCreateTripsBodyDtoDateRange = {
+  /** @pattern ^\d{4}-\d{2}-\d{2}$ */
+  start: string;
+  /** @pattern ^\d{4}-\d{2}-\d{2}$ */
+  end: string;
+};
+
+export interface BulkCreateTripsBodyDto {
+  /**
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
+  routeId: number;
+  /**
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
+  vehicleId: number;
+  /**
+     * @minimum 0
+     * @maximum 9007199254740991
+     */
+  basePrice: number;
+  dateRange: BulkCreateTripsBodyDtoDateRange;
+  /** @pattern ^\d{2}:\d{2}$ */
+  dailyDepartureTime: string;
+  /**
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
+  tripDurationMinutes: number;
+}
+
+export type SetTripStatusBodyDtoStatus = typeof SetTripStatusBodyDtoStatus[keyof typeof SetTripStatusBodyDtoStatus];
+
+
+export const SetTripStatusBodyDtoStatus = {
+  scheduled: 'scheduled',
+  in_progress: 'in_progress',
+  completed: 'completed',
+  cancelled: 'cancelled',
+} as const;
+
+export interface SetTripStatusBodyDto {
+  status: SetTripStatusBodyDtoStatus;
+}
+
 export interface VehicleDto {
   /**
      * @minimum -9007199254740991
@@ -622,6 +729,43 @@ fromStationId?: number;
  */
 toStationId?: number;
 };
+
+export type ListTripsParams = {
+/**
+ * @maximum 9007199254740991
+ * @exclusiveMinimum 0
+ */
+companyId?: number;
+/**
+ * @maximum 9007199254740991
+ * @exclusiveMinimum 0
+ */
+vehicleId?: number;
+/**
+ * @maximum 9007199254740991
+ * @exclusiveMinimum 0
+ */
+routeId?: number;
+status?: ListTripsStatus;
+/**
+ * @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
+ */
+from?: string;
+/**
+ * @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
+ */
+to?: string;
+};
+
+export type ListTripsStatus = typeof ListTripsStatus[keyof typeof ListTripsStatus];
+
+
+export const ListTripsStatus = {
+  scheduled: 'scheduled',
+  in_progress: 'in_progress',
+  completed: 'completed',
+  cancelled: 'cancelled',
+} as const;
 
 export type ListVehiclesParams = {
 /**

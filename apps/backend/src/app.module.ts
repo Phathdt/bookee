@@ -9,6 +9,7 @@ import { RoutesController } from './controllers/routes/routes.controller';
 import { SeatLayoutsController } from './controllers/seat-layouts/seat-layouts.controller';
 import { StationsController } from './controllers/stations/stations.controller';
 import { UsersController } from './controllers/users/users.controller';
+import { TripsController } from './controllers/trips/trips.controller';
 import { VehiclesController } from './controllers/vehicles/vehicles.controller';
 import { AuthModule } from './modules/auth/auth.module';
 import { DatabaseModule } from './modules/database/database.module';
@@ -18,6 +19,7 @@ import { RoutesModule } from './modules/routes/routes.module';
 import { SeatLayoutsModule } from './modules/seat-layouts/seat-layouts.module';
 import { StationsModule } from './modules/stations/stations.module';
 import { UsersModule } from './modules/users/users.module';
+import { TripsModule } from './modules/trips/trips.module';
 import { VehiclesModule } from './modules/vehicles/vehicles.module';
 
 /**
@@ -40,6 +42,7 @@ import { VehiclesModule } from './modules/vehicles/vehicles.module';
     SeatLayoutsModule,
     StationsModule,
     RoutesModule,
+    TripsModule,
     VehiclesModule,
     // Global throttler defaults; per-route overrides via @Throttle().
     ThrottlerModule.forRoot({
@@ -54,6 +57,7 @@ import { VehiclesModule } from './modules/vehicles/vehicles.module';
     SeatLayoutsController,
     StationsController,
     RoutesController,
+    TripsController,
     VehiclesController,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],

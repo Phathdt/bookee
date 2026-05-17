@@ -227,7 +227,7 @@ describe('VehiclesRepositoryPrisma (integration)', () => {
     expect(await repo.findById(v.id)).toBeNull();
   });
 
-  it('hasActiveTrips: returns false (stub — Trip module not yet built)', async () => {
+  it('hasActiveTrips: returns false when no trips exist', async () => {
     const { company, layout } = await seedDeps();
     const v = await repo.create({
       companyId: company.id,
@@ -235,6 +235,84 @@ describe('VehiclesRepositoryPrisma (integration)', () => {
       type: 'sleeper',
       seatLayoutId: layout.id,
       totalSeats: 40,
+    });
+    expect(await repo.hasActiveTrips(v.id)).toBe(false);
+  });
+
+  it('hasActiveTrips: returns true when a scheduled trip exists', async () => {
+    const { company, layout } = await seedDeps();
+    const v = await repo.create({
+      companyId: company.id,
+      plateNumber: plateA,
+      type: 'sleeper',
+      seatLayoutId: layout.id,
+      totalSeats: 40,
+    });
+    const route = await fx.prisma.route.create({
+      data: {
+        companyId: company.id,
+        fromStationId: (
+          await fx.prisma.station.create({
+            data: { name: 'A', address: 'Addr A', lat: 10.0, lng: 106.0, city: 'X' },
+          })
+        ).id,
+        toStationId: (
+          await fx.prisma.station.create({
+            data: { name: 'B', address: 'Addr B', lat: 11.0, lng: 107.0, city: 'Y' },
+          })
+        ).id,
+        distanceKm: 100,
+        durationMinutes: 120,
+      },
+    });
+    await fx.prisma.trip.create({
+      data: {
+        vehicleId: v.id,
+        routeId: route.id,
+        departureTime: new Date('2030-01-01T08:00:00Z'),
+        arrivalTime: new Date('2030-01-01T10:00:00Z'),
+        basePrice: 50000,
+        status: 'scheduled',
+      },
+    });
+    expect(await repo.hasActiveTrips(v.id)).toBe(true);
+  });
+
+  it('hasActiveTrips: returns false when only cancelled trip exists', async () => {
+    const { company, layout } = await seedDeps();
+    const v = await repo.create({
+      companyId: company.id,
+      plateNumber: plateA,
+      type: 'sleeper',
+      seatLayoutId: layout.id,
+      totalSeats: 40,
+    });
+    const route = await fx.prisma.route.create({
+      data: {
+        companyId: company.id,
+        fromStationId: (
+          await fx.prisma.station.create({
+            data: { name: 'C', address: 'Addr C', lat: 12.0, lng: 108.0, city: 'X' },
+          })
+        ).id,
+        toStationId: (
+          await fx.prisma.station.create({
+            data: { name: 'D', address: 'Addr D', lat: 13.0, lng: 109.0, city: 'Y' },
+          })
+        ).id,
+        distanceKm: 80,
+        durationMinutes: 90,
+      },
+    });
+    await fx.prisma.trip.create({
+      data: {
+        vehicleId: v.id,
+        routeId: route.id,
+        departureTime: new Date('2030-02-01T08:00:00Z'),
+        arrivalTime: new Date('2030-02-01T09:30:00Z'),
+        basePrice: 40000,
+        status: 'cancelled',
+      },
     });
     expect(await repo.hasActiveTrips(v.id)).toBe(false);
   });
