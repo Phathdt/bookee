@@ -82,7 +82,7 @@ apps/user-web     → packages/api-client, packages/config
 
 - After cloning, run `bun install` once at root — workspace symlinks won't exist otherwise.
 - Adding a new package: create `packages/<name>/package.json` with `name: "@bookee/<name>"`, then re-run `bun install` at root.
-- Husky hooks install on `bun install` via `"prepare": "husky"`.
+- Lefthook hooks install on `bun install` via `"prepare": "lefthook install"`.
 
 ## API client codegen
 
