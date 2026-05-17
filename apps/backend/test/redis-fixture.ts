@@ -1,4 +1,3 @@
-import { RedisContainer, StartedRedisContainer } from '@testcontainers/redis';
 import Redis from 'ioredis';
 
 import { IRedisClient } from '@/modules/redis/redis.client';
@@ -50,18 +49,19 @@ class TestRedisClient extends IRedisClient {
   }
 }
 
-let sharedContainer: StartedRedisContainer | undefined;
-
 /**
- * Starts (or reuses) a Redis 8-alpine testcontainer.
- * Returns a fixture with a connected IRedisClient and helpers.
+ * Opens an ioredis client against the shared testcontainer Redis booted in
+ * `globalSetup`. No new container per spec — `REDIS_URL` is set by
+ * global-setup.ts before any spec file evaluates.
+ *
+ * Returns a fixture with the client + a `flushAll` helper for beforeEach
+ * isolation between specs.
  */
 export async function startRedisFixture(): Promise<RedisFixture> {
-  if (!sharedContainer) {
-    sharedContainer = await new RedisContainer('redis:8-alpine').withReuse().start();
+  const connectionString = process.env.REDIS_URL;
+  if (!connectionString) {
+    throw new Error('REDIS_URL is not set — did vitest globalSetup (test/global-setup.ts) run?');
   }
-  const container = sharedContainer;
-  const connectionString = container.getConnectionUrl();
 
   const ioredis = new Redis(connectionString, { lazyConnect: false, enableReadyCheck: false });
   const client = new TestRedisClient(ioredis);

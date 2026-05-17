@@ -2,6 +2,7 @@ import { execSync } from 'node:child_process';
 import * as path from 'node:path';
 
 import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
+import { RedisContainer, StartedRedisContainer } from '@testcontainers/redis';
 
 /**
  * Vitest globalSetup — runs ONCE before the integration suite. Spins up a
@@ -11,18 +12,27 @@ import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers
  * across 14 files).
  */
 
-let container: StartedPostgreSqlContainer | undefined;
+let pgContainer: StartedPostgreSqlContainer | undefined;
+let redisContainer: StartedRedisContainer | undefined;
 
 export async function setup(): Promise<void> {
-  container = await new PostgreSqlContainer('postgres:18-alpine')
-    .withDatabase('bookee_test')
-    .withUsername('bookee')
-    .withPassword('bookee')
-    .withReuse()
-    .start();
+  // Start Postgres + Redis in parallel — independent fixtures.
+  [pgContainer, redisContainer] = await Promise.all([
+    new PostgreSqlContainer('postgres:18-alpine')
+      .withDatabase('bookee_test')
+      .withUsername('bookee')
+      .withPassword('bookee')
+      .withReuse()
+      .start(),
+    new RedisContainer('redis:8-alpine').withReuse().start(),
+  ]);
 
-  const url = container.getConnectionUri();
+  const url = pgContainer.getConnectionUri();
   process.env.TEST_DATABASE_URL = url;
+  // RedisModule reads process.env.REDIS_URL on AppModule boot — point it at
+  // the testcontainer so specs don't pollute the local dev Redis (or fail
+  // when docker-compose isn't running).
+  process.env.REDIS_URL = redisContainer.getConnectionUrl();
   // Lower bcrypt cost for tests — 4 is ~5ms vs 12's ~250ms. Hashing dominates
   // beforeEach in controller specs because they POST /auth/register.
   process.env.BCRYPT_COST = process.env.BCRYPT_COST ?? '4';
@@ -37,6 +47,13 @@ export async function setup(): Promise<void> {
     env: { ...process.env, DATABASE_URL: url },
     stdio: 'pipe',
   });
+}
+
+// Re-export so fixtures can reference the running Redis container without
+// re-instantiating it per spec.
+export function getRedisUrl(): string {
+  if (!redisContainer) throw new Error('Redis testcontainer not initialised');
+  return redisContainer.getConnectionUrl();
 }
 
 export async function teardown(): Promise<void> {
