@@ -12,6 +12,12 @@ export * from './generated/health/health';
 export * from './generated/auth/auth';
 export * from './generated/users/users';
 export * from './generated/operators/operators';
+export * from './generated/stations/stations';
+export * from './generated/routes/routes';
+export * from './generated/seat-layouts/seat-layouts';
+export * from './generated/vehicles/vehicles';
+export * from './generated/trips/trips';
+export * from './generated/bookings/bookings';
 export * from './generated/bookeeAPI.schemas';
 
 export { axiosInstance, AXIOS_INSTANCE, setAuthToken, setApiBaseUrl } from './axios-instance';
