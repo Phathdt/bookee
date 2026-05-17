@@ -33,11 +33,23 @@
   "rules": {
     "no-console": ["warn", { "allow": ["warn", "error"] }],
     "no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
+    "sort-imports": [
+      "warn",
+      {
+        "ignoreCase": true,
+        "ignoreDeclarationSort": true,
+        "ignoreMemberSort": false,
+        "memberSyntaxSortOrder": ["none", "all", "multiple", "single"]
+      }
+    ],
     "typescript/no-explicit-any": "warn",
     "typescript/consistent-type-imports": [
       "warn",
       { "prefer": "no-type-imports", "fixStyle": "separate-type-imports" }
-    ]
+    ],
+    "import/no-unassigned-import": "off",
+    "import/no-named-as-default-member": "off",
+    "unicorn/no-array-sort": "off"
   },
   "overrides": [
     {

@@ -13,7 +13,7 @@ import {
   UpdateOperatorInput,
 } from '../../domain/interfaces/operators.service';
 
-import { toPublicUser, PublicUser } from '@/modules/auth/domain/entities/user.entity';
+import { PublicUser, toPublicUser } from '@/modules/auth/domain/entities/user.entity';
 import { IUserRepository } from '@/modules/auth/domain/interfaces/user.repository';
 import { UserNotFoundError } from '@/modules/users/domain/errors';
 

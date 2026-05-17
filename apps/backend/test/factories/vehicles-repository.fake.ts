@@ -1,7 +1,7 @@
 import { Vehicle } from '@/modules/vehicles/domain/entities/vehicle.entity';
 import {
-  IVehiclesRepository,
   CreateVehicleInput,
+  IVehiclesRepository,
   UpdateVehicleInput,
   VehicleListFilter,
 } from '@/modules/vehicles/domain/interfaces/vehicles.repository';

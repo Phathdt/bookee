@@ -1,7 +1,7 @@
 import { Station } from '../../domain/entities/station.entity';
 import {
-  IStationsRepository,
   CreateStationInput,
+  IStationsRepository,
   StationSearchFilter,
   UpdateStationInput,
 } from '../../domain/interfaces/stations.repository';

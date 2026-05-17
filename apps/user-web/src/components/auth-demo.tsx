@@ -1,9 +1,9 @@
 import {
+  type PublicUserDto,
   useGetMe,
   useLoginUser,
   useRegisterUser,
   useUpdateMe,
-  type PublicUserDto,
 } from '@bookee/api-client';
 import { LogOut, User } from 'lucide-react';
 import { useState } from 'react';
@@ -103,6 +103,7 @@ function AuthForms({ onSuccess }: { onSuccess: (accessToken: string) => void }) 
       {mode === 'register' && (
         <>
           <input
+            aria-label="Họ và tên"
             placeholder="Họ và tên"
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -110,6 +111,7 @@ function AuthForms({ onSuccess }: { onSuccess: (accessToken: string) => void }) 
             required
           />
           <input
+            aria-label="Số điện thoại"
             placeholder="Số điện thoại"
             value={form.phone}
             onChange={(e) => setForm({ ...form, phone: e.target.value })}
@@ -120,6 +122,7 @@ function AuthForms({ onSuccess }: { onSuccess: (accessToken: string) => void }) 
       )}
 
       <input
+        aria-label="Email"
         type="email"
         placeholder="Email"
         value={form.email}
@@ -128,6 +131,7 @@ function AuthForms({ onSuccess }: { onSuccess: (accessToken: string) => void }) 
         required={mode === 'register'}
       />
       <input
+        aria-label="Password"
         type="password"
         placeholder="Password (≥ 8 ký tự)"
         value={form.password}
@@ -190,6 +194,7 @@ function ProfilePanel({ onLogout }: { onLogout: () => void }) {
         }}
       >
         <input
+          aria-label="New display name"
           placeholder="New display name"
           value={newName}
           onChange={(e) => setNewName(e.target.value)}

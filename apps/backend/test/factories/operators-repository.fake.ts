@@ -1,8 +1,8 @@
 import { Operator } from '@/modules/operators/domain/entities/operator.entity';
 import { OperatorStatus } from '@/modules/operators/domain/enums';
 import {
-  IOperatorsRepository,
   CreateOperatorInput,
+  IOperatorsRepository,
   UpdateOperatorInput,
 } from '@/modules/operators/domain/interfaces/operators.repository';
 

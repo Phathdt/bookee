@@ -1,7 +1,7 @@
-import { SeatLayout, SeatLayoutWithSeats, Seat } from '../../domain/entities/seat-layout.entity';
+import { Seat, SeatLayout, SeatLayoutWithSeats } from '../../domain/entities/seat-layout.entity';
 import {
-  ISeatLayoutsRepository,
   CreateSeatLayoutInput,
+  ISeatLayoutsRepository,
   UpdateSeatLayoutInput,
 } from '../../domain/interfaces/seat-layouts.repository';
 

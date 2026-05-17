@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { writeFile, mkdir } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 
 import { NestFactory } from '@nestjs/core';

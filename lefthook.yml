@@ -1,12 +1,12 @@
 pre-commit:
   jobs:
     - name: oxlint
-      glob: "*.{ts,tsx,js,jsx}"
+      glob: '*.{ts,tsx,js,jsx}'
       run: bunx oxlint --fix {staged_files}
       stage_fixed: true
-    - name: prettier
-      glob: "*.{ts,tsx,js,jsx,json,md}"
-      run: bunx prettier --write {staged_files}
+    - name: oxfmt
+      glob: '*.{ts,tsx,js,jsx,json,md}'
+      run: bunx oxfmt {staged_files}
       stage_fixed: true
     - name: backend-tests
       run: bun run --filter @bookee/backend test

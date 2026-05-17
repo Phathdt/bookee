@@ -4,8 +4,8 @@ import {
   SeatLayoutWithSeats,
 } from '@/modules/seat-layouts/domain/entities/seat-layout.entity';
 import {
-  ISeatLayoutsRepository,
   CreateSeatLayoutInput,
+  ISeatLayoutsRepository,
   UpdateSeatLayoutInput,
 } from '@/modules/seat-layouts/domain/interfaces/seat-layouts.repository';
 

@@ -4,7 +4,7 @@ import { Test } from '@nestjs/testing';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
-import { startPostgresFixture, PostgresFixture } from '../../../test/postgres-fixture';
+import { PostgresFixture, startPostgresFixture } from '../../../test/postgres-fixture';
 import { AppModule } from '../../app.module';
 import { DatabaseService } from '../../modules/database/database.service';
 
@@ -92,7 +92,7 @@ describe('OperatorsController (HTTP integration)', () => {
         'Content-Type': 'application/json',
         ...(init.token ? { Authorization: `Bearer ${init.token}` } : {}),
       },
-      body: init.body ? JSON.stringify(init.body) : undefined,
+      ...(init.body ? { body: JSON.stringify(init.body) } : {}),
     });
     const text = await res.text();
     return { status: res.status, body: text ? JSON.parse(text) : null };

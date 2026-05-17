@@ -1,7 +1,7 @@
 import { Route } from '../../domain/entities/route.entity';
 import {
-  IRoutesRepository,
   CreateRouteInput,
+  IRoutesRepository,
   RouteListFilter,
   UpdateRouteInput,
 } from '../../domain/interfaces/routes.repository';

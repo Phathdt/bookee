@@ -2,17 +2,15 @@
   "name": "@bookee/config",
   "version": "0.0.0",
   "private": true,
+  "files": [
+    "tsconfig"
+  ],
   "type": "module",
   "exports": {
     "./tsconfig/base.json": "./tsconfig/base.json",
     "./tsconfig/react.json": "./tsconfig/react.json",
-    "./tsconfig/nestjs.json": "./tsconfig/nestjs.json",
-    "./prettier": "./prettier/index.js"
+    "./tsconfig/nestjs.json": "./tsconfig/nestjs.json"
   },
-  "files": [
-    "tsconfig",
-    "prettier"
-  ],
   "peerDependencies": {
     "typescript": "^5.0.0"
   }

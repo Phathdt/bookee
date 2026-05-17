@@ -31,7 +31,7 @@ bun run build          # build all apps + packages
 bun run typecheck      # tsc --noEmit across workspace
 bun run lint           # oxlint across workspace
 bun run test           # run vitest across workspace
-bun run format         # prettier write
+bun run format         # oxfmt write
 bun run codegen        # regenerate api-client from openapi.yaml
 ```
 
@@ -56,7 +56,7 @@ bookee/
 │   ├── operator-cms/        # React+Vite admin portal (port 5173)
 │   └── user-web/            # React+Vite customer site (port 5174)
 ├── packages/
-│   ├── config/              # tsconfig + prettier presets (oxlint configured at root)
+│   ├── config/              # tsconfig presets (oxlint + oxfmt configured at root)
 │   └── api-client/          # openapi.yaml + generated React Query hooks + Zod schemas
 ├── turbo.json               # pipeline definition
 └── package.json             # root, workspaces + scripts

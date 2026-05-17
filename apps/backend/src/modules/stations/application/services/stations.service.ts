@@ -5,10 +5,10 @@ import {
   StationValidationError,
 } from '../../domain/errors';
 import {
-  IStationsRepository,
   CreateStationInput,
-  UpdateStationInput,
+  IStationsRepository,
   StationSearchFilter,
+  UpdateStationInput,
 } from '../../domain/interfaces/stations.repository';
 import { IStationsService } from '../../domain/interfaces/stations.service';
 

@@ -2,19 +2,19 @@
   "name": "@bookee/api-client",
   "version": "0.0.0",
   "private": true,
+  "files": [
+    "src",
+    "openapi.yaml"
+  ],
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
     "./zod": "./src/zod-index.ts"
   },
-  "files": [
-    "src",
-    "openapi.yaml"
-  ],
   "scripts": {
     "build": "orval --config ./orval.config.ts",
     "codegen": "orval --config ./orval.config.ts",
-    "lint": "oxlint",
+    "lint": "oxlint --deny-warnings",
     "lint:fix": "oxlint --fix",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
@@ -22,13 +22,13 @@
     "axios": "^1.7.9",
     "zod": "^4.4.3"
   },
-  "peerDependencies": {
-    "@tanstack/react-query": "^5"
-  },
   "devDependencies": {
     "@bookee/config": "workspace:*",
     "@tanstack/react-query": "^5.100.10",
     "orval": "^8.10.0",
     "typescript": "^5.9.3"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5"
   }
 }

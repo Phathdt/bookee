@@ -1,8 +1,8 @@
 import { User } from '../../domain/entities/user.entity';
 import { isUserRole } from '../../domain/enums';
 import {
-  IUserRepository,
   CreateUserInput,
+  IUserRepository,
   UpdateUserInput,
 } from '../../domain/interfaces/user.repository';
 

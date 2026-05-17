@@ -1,4 +1,4 @@
-import { useListOperators, type OperatorDto } from '@bookee/api-client';
+import { type OperatorDto, useListOperators } from '@bookee/api-client';
 import { Building2 } from 'lucide-react';
 
 export function OperatorsList() {

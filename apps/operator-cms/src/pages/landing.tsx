@@ -1,4 +1,4 @@
-import { useGetHealth, type HealthResponseDto } from '@bookee/api-client';
+import { type HealthResponseDto, useGetHealth } from '@bookee/api-client';
 import { Activity, RefreshCw } from 'lucide-react';
 
 import { AuthDemo } from '@/components/auth-demo';
