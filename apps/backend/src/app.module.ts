@@ -5,11 +5,15 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AuthController } from './controllers/auth/auth.controller';
 import { HealthController } from './controllers/health/health.controller';
 import { OperatorsController } from './controllers/operators/operators.controller';
+import { RoutesController } from './controllers/routes/routes.controller';
+import { StationsController } from './controllers/stations/stations.controller';
 import { UsersController } from './controllers/users/users.controller';
 import { AuthModule } from './modules/auth/auth.module';
 import { DatabaseModule } from './modules/database/database.module';
 import { LoggerModule } from './modules/logger/logger.module';
 import { OperatorsModule } from './modules/operators/operators.module';
+import { RoutesModule } from './modules/routes/routes.module';
+import { StationsModule } from './modules/stations/stations.module';
 import { UsersModule } from './modules/users/users.module';
 
 /**
@@ -29,12 +33,21 @@ import { UsersModule } from './modules/users/users.module';
     AuthModule,
     UsersModule,
     OperatorsModule,
+    StationsModule,
+    RoutesModule,
     // Global throttler defaults; per-route overrides via @Throttle().
     ThrottlerModule.forRoot({
       throttlers: [{ ttl: 60_000, limit: 60 }],
     }),
   ],
-  controllers: [HealthController, AuthController, UsersController, OperatorsController],
+  controllers: [
+    HealthController,
+    AuthController,
+    UsersController,
+    OperatorsController,
+    StationsController,
+    RoutesController,
+  ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
 export class AppModule {}
