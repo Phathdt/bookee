@@ -6,15 +6,19 @@ import { AuthController } from './controllers/auth/auth.controller';
 import { HealthController } from './controllers/health/health.controller';
 import { OperatorsController } from './controllers/operators/operators.controller';
 import { RoutesController } from './controllers/routes/routes.controller';
+import { SeatLayoutsController } from './controllers/seat-layouts/seat-layouts.controller';
 import { StationsController } from './controllers/stations/stations.controller';
 import { UsersController } from './controllers/users/users.controller';
+import { VehiclesController } from './controllers/vehicles/vehicles.controller';
 import { AuthModule } from './modules/auth/auth.module';
 import { DatabaseModule } from './modules/database/database.module';
 import { LoggerModule } from './modules/logger/logger.module';
 import { OperatorsModule } from './modules/operators/operators.module';
 import { RoutesModule } from './modules/routes/routes.module';
+import { SeatLayoutsModule } from './modules/seat-layouts/seat-layouts.module';
 import { StationsModule } from './modules/stations/stations.module';
 import { UsersModule } from './modules/users/users.module';
+import { VehiclesModule } from './modules/vehicles/vehicles.module';
 
 /**
  * Root composition module.
@@ -33,8 +37,10 @@ import { UsersModule } from './modules/users/users.module';
     AuthModule,
     UsersModule,
     OperatorsModule,
+    SeatLayoutsModule,
     StationsModule,
     RoutesModule,
+    VehiclesModule,
     // Global throttler defaults; per-route overrides via @Throttle().
     ThrottlerModule.forRoot({
       throttlers: [{ ttl: 60_000, limit: 60 }],
@@ -45,8 +51,10 @@ import { UsersModule } from './modules/users/users.module';
     AuthController,
     UsersController,
     OperatorsController,
+    SeatLayoutsController,
     StationsController,
     RoutesController,
+    VehiclesController,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

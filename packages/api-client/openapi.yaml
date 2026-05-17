@@ -281,6 +281,451 @@ paths:
       summary: Assign a user (role operator|driver) to an operator
       tags:
         - operators
+  /api/v1/seat-layouts:
+    get:
+      operationId: listSeatLayouts
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SeatLayoutDto'
+      summary: List all seat layouts (public)
+      tags:
+        - seat-layouts
+    post:
+      operationId: createSeatLayout
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSeatLayoutBodyDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeatLayoutDto'
+      security:
+        - bearer: []
+      summary: Create a seat layout with seats in one transaction (admin)
+      tags:
+        - seat-layouts
+  /api/v1/seat-layouts/{id}:
+    get:
+      operationId: getSeatLayout
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeatLayoutDto'
+      summary: Get a seat layout with seats (public)
+      tags:
+        - seat-layouts
+    patch:
+      operationId: updateSeatLayout
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSeatLayoutBodyDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeatLayoutDto'
+      security:
+        - bearer: []
+      summary: Update seat layout metadata (admin)
+      tags:
+        - seat-layouts
+    delete:
+      operationId: deleteSeatLayout
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '204':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete a seat layout (admin) — 409 if vehicles reference it
+      tags:
+        - seat-layouts
+  /api/v1/stations:
+    get:
+      operationId: listStations
+      parameters:
+        - name: city
+          required: false
+          in: query
+          schema:
+            minLength: 1
+            maxLength: 120
+            type: string
+        - name: q
+          required: false
+          in: query
+          schema:
+            minLength: 1
+            maxLength: 200
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StationDto'
+      summary: Search stations (public)
+      tags:
+        - stations
+    post:
+      operationId: createStation
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateStationBodyDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StationDto'
+      security:
+        - bearer: []
+      summary: Create a station (admin)
+      tags:
+        - stations
+  /api/v1/stations/{id}:
+    get:
+      operationId: getStation
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StationDto'
+      summary: Get a single station
+      tags:
+        - stations
+    patch:
+      operationId: updateStation
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStationBodyDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StationDto'
+      security:
+        - bearer: []
+      summary: Update a station (admin)
+      tags:
+        - stations
+    delete:
+      operationId: deleteStation
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '204':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete a station (admin)
+      tags:
+        - stations
+  /api/v1/routes:
+    get:
+      operationId: listRoutes
+      parameters:
+        - name: companyId
+          required: false
+          in: query
+          schema:
+            maximum: 9007199254740991
+            exclusiveMinimum: true
+            type: integer
+            minimum: 0
+        - name: fromStationId
+          required: false
+          in: query
+          schema:
+            maximum: 9007199254740991
+            exclusiveMinimum: true
+            type: integer
+            minimum: 0
+        - name: toStationId
+          required: false
+          in: query
+          schema:
+            maximum: 9007199254740991
+            exclusiveMinimum: true
+            type: integer
+            minimum: 0
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RouteDto'
+      summary: Search routes (public)
+      tags:
+        - routes
+    post:
+      operationId: createRoute
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRouteBodyDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteDto'
+      security:
+        - bearer: []
+      summary: Create a route (admin or operator-scoped)
+      tags:
+        - routes
+  /api/v1/routes/{id}:
+    get:
+      operationId: getRoute
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteDto'
+      summary: Get a single route
+      tags:
+        - routes
+    patch:
+      operationId: updateRoute
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRouteBodyDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteDto'
+      security:
+        - bearer: []
+      summary: Update a route (admin or owning operator)
+      tags:
+        - routes
+    delete:
+      operationId: deleteRoute
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '204':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete a route (admin or owning operator)
+      tags:
+        - routes
+  /api/v1/vehicles:
+    get:
+      operationId: listVehicles
+      parameters:
+        - name: companyId
+          required: false
+          in: query
+          schema:
+            maximum: 9007199254740991
+            exclusiveMinimum: true
+            type: integer
+            minimum: 0
+        - name: type
+          required: false
+          in: query
+          schema:
+            minLength: 1
+            maxLength: 50
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VehicleDto'
+      summary: Search vehicles (public)
+      tags:
+        - vehicles
+    post:
+      operationId: createVehicle
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVehicleBodyDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleDto'
+      security:
+        - bearer: []
+      summary: Create a vehicle (admin or operator-scoped)
+      tags:
+        - vehicles
+  /api/v1/vehicles/{id}:
+    get:
+      operationId: getVehicle
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleDto'
+      summary: Get a single vehicle (public)
+      tags:
+        - vehicles
+    patch:
+      operationId: updateVehicle
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateVehicleBodyDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleDto'
+      security:
+        - bearer: []
+      summary: Update a vehicle (admin or owning operator)
+      tags:
+        - vehicles
+    delete:
+      operationId: deleteVehicle
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '204':
+          description: ''
+      security:
+        - bearer: []
+      summary: Delete a vehicle (admin or owning operator) — 409 if active trips exist
+      tags:
+        - vehicles
 info:
   title: Bookee API
   description: Multi-operator trip booking platform API
@@ -599,3 +1044,361 @@ components:
         - operatorId
         - createdAt
         - updatedAt
+    SeatLayoutDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        name:
+          type: string
+        rows:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        cols:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        seats:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                minimum: -9007199254740991
+                maximum: 9007199254740991
+              layoutId:
+                type: integer
+                minimum: -9007199254740991
+                maximum: 9007199254740991
+              code:
+                type: string
+              floor:
+                type: integer
+                minimum: -9007199254740991
+                maximum: 9007199254740991
+              row:
+                type: integer
+                minimum: -9007199254740991
+                maximum: 9007199254740991
+              col:
+                type: integer
+                minimum: -9007199254740991
+                maximum: 9007199254740991
+            required:
+              - id
+              - layoutId
+              - code
+              - floor
+              - row
+              - col
+      required:
+        - id
+        - name
+        - rows
+        - cols
+    CreateSeatLayoutBodyDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        rows:
+          type: integer
+          exclusiveMinimum: true
+          maximum: 9007199254740991
+          minimum: 0
+        cols:
+          type: integer
+          exclusiveMinimum: true
+          maximum: 9007199254740991
+          minimum: 0
+        seats:
+          minItems: 1
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                minLength: 1
+                maxLength: 20
+              floor:
+                default: 1
+                type: integer
+                minimum: 1
+                maximum: 9007199254740991
+              row:
+                type: integer
+                minimum: 1
+                maximum: 9007199254740991
+              col:
+                type: integer
+                minimum: 1
+                maximum: 9007199254740991
+            required:
+              - code
+              - row
+              - col
+      required:
+        - name
+        - rows
+        - cols
+        - seats
+    UpdateSeatLayoutBodyDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        rows:
+          type: integer
+          exclusiveMinimum: true
+          maximum: 9007199254740991
+          minimum: 0
+        cols:
+          type: integer
+          exclusiveMinimum: true
+          maximum: 9007199254740991
+          minimum: 0
+    StationDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        name:
+          type: string
+        address:
+          type: string
+        lat:
+          type: number
+        lng:
+          type: number
+        city:
+          type: string
+      required:
+        - id
+        - name
+        - address
+        - lat
+        - lng
+        - city
+    CreateStationBodyDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        address:
+          type: string
+          minLength: 1
+          maxLength: 500
+        lat:
+          type: number
+          minimum: -90
+          maximum: 90
+        lng:
+          type: number
+          minimum: -180
+          maximum: 180
+        city:
+          type: string
+          minLength: 1
+          maxLength: 120
+      required:
+        - name
+        - address
+        - lat
+        - lng
+        - city
+    UpdateStationBodyDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        address:
+          type: string
+          minLength: 1
+          maxLength: 500
+        lat:
+          type: number
+          minimum: -90
+          maximum: 90
+        lng:
+          type: number
+          minimum: -180
+          maximum: 180
+        city:
+          type: string
+          minLength: 1
+          maxLength: 120
+    RouteDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        companyId:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        fromStationId:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        toStationId:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        distanceKm:
+          type: number
+        durationMinutes:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+      required:
+        - id
+        - companyId
+        - fromStationId
+        - toStationId
+        - distanceKm
+        - durationMinutes
+    CreateRouteBodyDto:
+      type: object
+      properties:
+        companyId:
+          type: integer
+          exclusiveMinimum: true
+          maximum: 9007199254740991
+          minimum: 0
+        fromStationId:
+          type: integer
+          exclusiveMinimum: true
+          maximum: 9007199254740991
+          minimum: 0
+        toStationId:
+          type: integer
+          exclusiveMinimum: true
+          maximum: 9007199254740991
+          minimum: 0
+        distanceKm:
+          type: number
+          exclusiveMinimum: true
+          minimum: 0
+        durationMinutes:
+          type: integer
+          exclusiveMinimum: true
+          maximum: 9007199254740991
+          minimum: 0
+      required:
+        - companyId
+        - fromStationId
+        - toStationId
+        - distanceKm
+        - durationMinutes
+    UpdateRouteBodyDto:
+      type: object
+      properties:
+        distanceKm:
+          type: number
+          exclusiveMinimum: true
+          minimum: 0
+        durationMinutes:
+          type: integer
+          exclusiveMinimum: true
+          maximum: 9007199254740991
+          minimum: 0
+    VehicleDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        companyId:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        plateNumber:
+          type: string
+        type:
+          type: string
+        seatLayoutId:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        totalSeats:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+      required:
+        - id
+        - companyId
+        - plateNumber
+        - type
+        - seatLayoutId
+        - totalSeats
+    CreateVehicleBodyDto:
+      type: object
+      properties:
+        companyId:
+          type: integer
+          exclusiveMinimum: true
+          maximum: 9007199254740991
+          minimum: 0
+        plateNumber:
+          type: string
+          minLength: 1
+          maxLength: 20
+        type:
+          type: string
+          minLength: 1
+          maxLength: 50
+        seatLayoutId:
+          type: integer
+          exclusiveMinimum: true
+          maximum: 9007199254740991
+          minimum: 0
+        totalSeats:
+          type: integer
+          exclusiveMinimum: true
+          maximum: 9007199254740991
+          minimum: 0
+      required:
+        - companyId
+        - plateNumber
+        - type
+        - seatLayoutId
+        - totalSeats
+    UpdateVehicleBodyDto:
+      type: object
+      properties:
+        plateNumber:
+          type: string
+          minLength: 1
+          maxLength: 20
+        type:
+          type: string
+          minLength: 1
+          maxLength: 50
+        seatLayoutId:
+          type: integer
+          exclusiveMinimum: true
+          maximum: 9007199254740991
+          minimum: 0
+        totalSeats:
+          type: integer
+          exclusiveMinimum: true
+          maximum: 9007199254740991
+          minimum: 0

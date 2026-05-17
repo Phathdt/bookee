@@ -5,7 +5,8 @@ import { PublicUserDto, UpdateProfileBodyDto } from './dto/users.dto';
 import { mapUsersDomainError } from './map-domain-error';
 
 import { PublicUser } from '@/modules/auth/domain/entities/user.entity';
-import { JwtPayload } from '@/modules/auth/domain/jwt-payload';
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import type { JwtPayload } from '@/modules/auth/domain/jwt-payload';
 import { CurrentUser } from '@/modules/auth/infrastructure/decorators/current-user.decorator';
 import { JwtAuthGuard } from '@/modules/auth/infrastructure/guards/jwt-auth.guard';
 import { IUsersService } from '@/modules/users/domain/interfaces/users.service';

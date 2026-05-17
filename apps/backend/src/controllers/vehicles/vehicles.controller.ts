@@ -15,12 +15,12 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import {
-  CreateRouteBodyDto,
-  RouteDto,
-  RouteSearchQueryDto,
-  UpdateRouteBodyDto,
-} from './dto/routes.dto';
-import { mapRoutesDomainError } from './map-domain-error';
+  CreateVehicleBodyDto,
+  UpdateVehicleBodyDto,
+  VehicleDto,
+  VehicleSearchQueryDto,
+} from './dto/vehicles.dto';
+import { mapVehiclesDomainError } from './map-domain-error';
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import type { JwtPayload } from '@/modules/auth/domain/jwt-payload';
@@ -28,39 +28,37 @@ import { CurrentUser } from '@/modules/auth/infrastructure/decorators/current-us
 import { Roles } from '@/modules/auth/infrastructure/decorators/roles.decorator';
 import { JwtAuthGuard } from '@/modules/auth/infrastructure/guards/jwt-auth.guard';
 import { RolesGuard } from '@/modules/auth/infrastructure/guards/roles.guard';
-import { ActorContext, IRoutesService } from '@/modules/routes/domain/interfaces/routes.service';
+import {
+  ActorContext,
+  IVehiclesService,
+} from '@/modules/vehicles/domain/interfaces/vehicles.service';
 
 function toActor(user: JwtPayload): ActorContext {
-  // admin (operatorId null) bypasses scope; everyone else is scoped to their op.
   return { actorOperatorId: user.role === 'admin' ? null : user.operatorId };
 }
 
-@ApiTags('routes')
-@Controller('routes')
-export class RoutesController {
-  constructor(@Inject(IRoutesService) private readonly routes: IRoutesService) {}
+@ApiTags('vehicles')
+@Controller('vehicles')
+export class VehiclesController {
+  constructor(@Inject(IVehiclesService) private readonly vehicles: IVehiclesService) {}
 
   // ---- Public read --------------------------------------------------------
 
   @Get()
-  @ApiOperation({ operationId: 'listRoutes', summary: 'Search routes (public)' })
-  @ApiResponse({ status: 200, type: [RouteDto] })
-  list(@Query() query: RouteSearchQueryDto): Promise<RouteDto[]> {
-    return this.routes.list({
-      companyId: query.companyId,
-      fromStationId: query.fromStationId,
-      toStationId: query.toStationId,
-    });
+  @ApiOperation({ operationId: 'listVehicles', summary: 'Search vehicles (public)' })
+  @ApiResponse({ status: 200, type: [VehicleDto] })
+  list(@Query() query: VehicleSearchQueryDto): Promise<VehicleDto[]> {
+    return this.vehicles.list({ companyId: query.companyId, type: query.type });
   }
 
   @Get(':id')
-  @ApiOperation({ operationId: 'getRoute', summary: 'Get a single route' })
-  @ApiResponse({ status: 200, type: RouteDto })
-  async getOne(@Param('id', ParseIntPipe) id: number): Promise<RouteDto> {
+  @ApiOperation({ operationId: 'getVehicle', summary: 'Get a single vehicle (public)' })
+  @ApiResponse({ status: 200, type: VehicleDto })
+  async getOne(@Param('id', ParseIntPipe) id: number): Promise<VehicleDto> {
     try {
-      return await this.routes.getById(id);
+      return await this.vehicles.getById(id);
     } catch (err) {
-      throw mapRoutesDomainError(err);
+      throw mapVehiclesDomainError(err);
     }
   }
 
@@ -71,18 +69,18 @@ export class RoutesController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(['admin', 'operator'])
   @ApiOperation({
-    operationId: 'createRoute',
-    summary: 'Create a route (admin or operator-scoped)',
+    operationId: 'createVehicle',
+    summary: 'Create a vehicle (admin or operator-scoped)',
   })
-  @ApiResponse({ status: 201, type: RouteDto })
+  @ApiResponse({ status: 201, type: VehicleDto })
   async create(
-    @Body() body: CreateRouteBodyDto,
+    @Body() body: CreateVehicleBodyDto,
     @CurrentUser() user: JwtPayload,
-  ): Promise<RouteDto> {
+  ): Promise<VehicleDto> {
     try {
-      return await this.routes.create(body, toActor(user));
+      return await this.vehicles.create(body, toActor(user));
     } catch (err) {
-      throw mapRoutesDomainError(err);
+      throw mapVehiclesDomainError(err);
     }
   }
 
@@ -91,19 +89,19 @@ export class RoutesController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(['admin', 'operator'])
   @ApiOperation({
-    operationId: 'updateRoute',
-    summary: 'Update a route (admin or owning operator)',
+    operationId: 'updateVehicle',
+    summary: 'Update a vehicle (admin or owning operator)',
   })
-  @ApiResponse({ status: 200, type: RouteDto })
+  @ApiResponse({ status: 200, type: VehicleDto })
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() body: UpdateRouteBodyDto,
+    @Body() body: UpdateVehicleBodyDto,
     @CurrentUser() user: JwtPayload,
-  ): Promise<RouteDto> {
+  ): Promise<VehicleDto> {
     try {
-      return await this.routes.update(id, body, toActor(user));
+      return await this.vehicles.update(id, body, toActor(user));
     } catch (err) {
-      throw mapRoutesDomainError(err);
+      throw mapVehiclesDomainError(err);
     }
   }
 
@@ -113,8 +111,8 @@ export class RoutesController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(['admin', 'operator'])
   @ApiOperation({
-    operationId: 'deleteRoute',
-    summary: 'Delete a route (admin or owning operator)',
+    operationId: 'deleteVehicle',
+    summary: 'Delete a vehicle (admin or owning operator) — 409 if active trips exist',
   })
   @ApiResponse({ status: 204 })
   async delete(
@@ -122,9 +120,9 @@ export class RoutesController {
     @CurrentUser() user: JwtPayload,
   ): Promise<void> {
     try {
-      await this.routes.delete(id, toActor(user));
+      await this.vehicles.delete(id, toActor(user));
     } catch (err) {
-      throw mapRoutesDomainError(err);
+      throw mapVehiclesDomainError(err);
     }
   }
 }

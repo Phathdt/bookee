@@ -5,7 +5,14 @@ export default async () => {
       await import('./controllers/health/dto/health-response.dto'),
     ['./controllers/operators/dto/operators.dto']:
       await import('./controllers/operators/dto/operators.dto'),
+    ['./controllers/routes/dto/routes.dto']: await import('./controllers/routes/dto/routes.dto'),
+    ['./controllers/seat-layouts/dto/seat-layouts.dto']:
+      await import('./controllers/seat-layouts/dto/seat-layouts.dto'),
+    ['./controllers/stations/dto/stations.dto']:
+      await import('./controllers/stations/dto/stations.dto'),
     ['./controllers/users/dto/users.dto']: await import('./controllers/users/dto/users.dto'),
+    ['./controllers/vehicles/dto/vehicles.dto']:
+      await import('./controllers/vehicles/dto/vehicles.dto'),
   };
   return {
     '@nestjs/swagger': {
@@ -34,8 +41,39 @@ export default async () => {
           },
         ],
         [
+          import('./controllers/routes/dto/routes.dto'),
+          { RouteDto: {}, CreateRouteBodyDto: {}, UpdateRouteBodyDto: {}, RouteSearchQueryDto: {} },
+        ],
+        [
+          import('./controllers/seat-layouts/dto/seat-layouts.dto'),
+          {
+            SeatDto: {},
+            SeatLayoutDto: {},
+            CreateSeatLayoutBodyDto: {},
+            UpdateSeatLayoutBodyDto: {},
+          },
+        ],
+        [
+          import('./controllers/stations/dto/stations.dto'),
+          {
+            StationDto: {},
+            CreateStationBodyDto: {},
+            UpdateStationBodyDto: {},
+            StationSearchQueryDto: {},
+          },
+        ],
+        [
           import('./controllers/users/dto/users.dto'),
           { UpdateProfileBodyDto: {}, PublicUserDto: {} },
+        ],
+        [
+          import('./controllers/vehicles/dto/vehicles.dto'),
+          {
+            VehicleDto: {},
+            CreateVehicleBodyDto: {},
+            UpdateVehicleBodyDto: {},
+            VehicleSearchQueryDto: {},
+          },
         ],
       ],
       controllers: [
@@ -75,11 +113,59 @@ export default async () => {
           },
         ],
         [
+          import('./controllers/routes/routes.controller'),
+          {
+            RoutesController: {
+              list: { type: [t['./controllers/routes/dto/routes.dto'].RouteDto] },
+              getOne: { type: t['./controllers/routes/dto/routes.dto'].RouteDto },
+              create: { type: t['./controllers/routes/dto/routes.dto'].RouteDto },
+              update: { type: t['./controllers/routes/dto/routes.dto'].RouteDto },
+              delete: {},
+            },
+          },
+        ],
+        [
+          import('./controllers/seat-layouts/seat-layouts.controller'),
+          {
+            SeatLayoutsController: {
+              list: { type: [t['./controllers/seat-layouts/dto/seat-layouts.dto'].SeatLayoutDto] },
+              getOne: { type: t['./controllers/seat-layouts/dto/seat-layouts.dto'].SeatLayoutDto },
+              create: { type: t['./controllers/seat-layouts/dto/seat-layouts.dto'].SeatLayoutDto },
+              update: { type: t['./controllers/seat-layouts/dto/seat-layouts.dto'].SeatLayoutDto },
+              delete: {},
+            },
+          },
+        ],
+        [
+          import('./controllers/stations/stations.controller'),
+          {
+            StationsController: {
+              list: { type: [t['./controllers/stations/dto/stations.dto'].StationDto] },
+              getOne: { type: t['./controllers/stations/dto/stations.dto'].StationDto },
+              create: { type: t['./controllers/stations/dto/stations.dto'].StationDto },
+              update: { type: t['./controllers/stations/dto/stations.dto'].StationDto },
+              delete: {},
+            },
+          },
+        ],
+        [
           import('./controllers/users/users.controller'),
           {
             UsersController: {
               getMe: { type: t['./controllers/users/dto/users.dto'].PublicUserDto },
               updateMe: { type: t['./controllers/users/dto/users.dto'].PublicUserDto },
+            },
+          },
+        ],
+        [
+          import('./controllers/vehicles/vehicles.controller'),
+          {
+            VehiclesController: {
+              list: { type: [t['./controllers/vehicles/dto/vehicles.dto'].VehicleDto] },
+              getOne: { type: t['./controllers/vehicles/dto/vehicles.dto'].VehicleDto },
+              create: { type: t['./controllers/vehicles/dto/vehicles.dto'].VehicleDto },
+              update: { type: t['./controllers/vehicles/dto/vehicles.dto'].VehicleDto },
+              delete: {},
             },
           },
         ],

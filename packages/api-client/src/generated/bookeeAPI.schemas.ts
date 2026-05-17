@@ -270,3 +270,366 @@ export interface PublicStaffUserDto {
   createdAt: string;
   updatedAt: string;
 }
+
+export type SeatLayoutDtoSeatsItem = {
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  id: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  layoutId: number;
+  code: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  floor: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  row: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  col: number;
+};
+
+export interface SeatLayoutDto {
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  id: number;
+  name: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  rows: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  cols: number;
+  seats?: SeatLayoutDtoSeatsItem[];
+}
+
+export type CreateSeatLayoutBodyDtoSeatsItem = {
+  /**
+   * @minLength 1
+   * @maxLength 20
+   */
+  code: string;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  floor?: number;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  row: number;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  col: number;
+};
+
+export interface CreateSeatLayoutBodyDto {
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  name: string;
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
+  rows: number;
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
+  cols: number;
+  /** @minItems 1 */
+  seats: CreateSeatLayoutBodyDtoSeatsItem[];
+}
+
+export interface UpdateSeatLayoutBodyDto {
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  name?: string;
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
+  rows?: number;
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
+  cols?: number;
+}
+
+export interface StationDto {
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  id: number;
+  name: string;
+  address: string;
+  lat: number;
+  lng: number;
+  city: string;
+}
+
+export interface CreateStationBodyDto {
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  name: string;
+  /**
+   * @minLength 1
+   * @maxLength 500
+   */
+  address: string;
+  /**
+   * @minimum -90
+   * @maximum 90
+   */
+  lat: number;
+  /**
+   * @minimum -180
+   * @maximum 180
+   */
+  lng: number;
+  /**
+   * @minLength 1
+   * @maxLength 120
+   */
+  city: string;
+}
+
+export interface UpdateStationBodyDto {
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  name?: string;
+  /**
+   * @minLength 1
+   * @maxLength 500
+   */
+  address?: string;
+  /**
+   * @minimum -90
+   * @maximum 90
+   */
+  lat?: number;
+  /**
+   * @minimum -180
+   * @maximum 180
+   */
+  lng?: number;
+  /**
+   * @minLength 1
+   * @maxLength 120
+   */
+  city?: string;
+}
+
+export interface RouteDto {
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  id: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  companyId: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  fromStationId: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  toStationId: number;
+  distanceKm: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  durationMinutes: number;
+}
+
+export interface CreateRouteBodyDto {
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
+  companyId: number;
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
+  fromStationId: number;
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
+  toStationId: number;
+  /** @exclusiveMinimum 0 */
+  distanceKm: number;
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
+  durationMinutes: number;
+}
+
+export interface UpdateRouteBodyDto {
+  /** @exclusiveMinimum 0 */
+  distanceKm?: number;
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
+  durationMinutes?: number;
+}
+
+export interface VehicleDto {
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  id: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  companyId: number;
+  plateNumber: string;
+  type: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  seatLayoutId: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  totalSeats: number;
+}
+
+export interface CreateVehicleBodyDto {
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
+  companyId: number;
+  /**
+   * @minLength 1
+   * @maxLength 20
+   */
+  plateNumber: string;
+  /**
+   * @minLength 1
+   * @maxLength 50
+   */
+  type: string;
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
+  seatLayoutId: number;
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
+  totalSeats: number;
+}
+
+export interface UpdateVehicleBodyDto {
+  /**
+   * @minLength 1
+   * @maxLength 20
+   */
+  plateNumber?: string;
+  /**
+   * @minLength 1
+   * @maxLength 50
+   */
+  type?: string;
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
+  seatLayoutId?: number;
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
+  totalSeats?: number;
+}
+
+export type ListStationsParams = {
+  /**
+   * @minLength 1
+   * @maxLength 120
+   */
+  city?: string;
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  q?: string;
+};
+
+export type ListRoutesParams = {
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
+  companyId?: number;
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
+  fromStationId?: number;
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
+  toStationId?: number;
+};
+
+export type ListVehiclesParams = {
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
+  companyId?: number;
+  /**
+   * @minLength 1
+   * @maxLength 50
+   */
+  type?: string;
+};
