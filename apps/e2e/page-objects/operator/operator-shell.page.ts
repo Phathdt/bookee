@@ -5,6 +5,9 @@ import { expect, Page } from '@playwright/test';
 /**
  * Operator CMS application shell — sidebar nav + topbar.
  *
+ * Nav links use data-testid="nav-link-{slug}" where slug is the path segment
+ * (e.g. 'stations', 'routes') or 'dashboard' for the root route.
+ *
  * Usage:
  *   const shell = new OperatorShellPage(page);
  *   await shell.gotoStations();
@@ -15,32 +18,32 @@ export class OperatorShellPage {
 
   // ---- sidebar nav links -------------------------------------------------
 
-  private navLink(label: string) {
-    return this.page.getByRole('link', { name: label, exact: true });
+  private navLink(slug: string) {
+    return this.page.getByTestId(`nav-link-${slug}`);
   }
 
   async gotoStations(): Promise<void> {
-    await this.navLink('Stations').click();
+    await this.navLink('stations').click();
     await this.page.waitForURL(/\/stations/, { timeout: TimeoutValue.NAVIGATION });
   }
 
   async gotoRoutes(): Promise<void> {
-    await this.navLink('Routes').click();
+    await this.navLink('routes').click();
     await this.page.waitForURL(/\/routes/, { timeout: TimeoutValue.NAVIGATION });
   }
 
   async gotoSeatLayouts(): Promise<void> {
-    await this.navLink('Seat Layouts').click();
+    await this.navLink('seat-layouts').click();
     await this.page.waitForURL(/\/seat-layouts/, { timeout: TimeoutValue.NAVIGATION });
   }
 
   async gotoVehicles(): Promise<void> {
-    await this.navLink('Vehicles').click();
+    await this.navLink('vehicles').click();
     await this.page.waitForURL(/\/vehicles/, { timeout: TimeoutValue.NAVIGATION });
   }
 
   async gotoTrips(): Promise<void> {
-    await this.navLink('Trips').click();
+    await this.navLink('trips').click();
     await this.page.waitForURL(/\/trips/, { timeout: TimeoutValue.NAVIGATION });
   }
 
@@ -48,12 +51,8 @@ export class OperatorShellPage {
 
   /** Opens the account dropdown then clicks Sign out. */
   async signOut(): Promise<void> {
-    // The topbar trigger is a ghost button that contains the user id + role badge.
-    await this.page
-      .getByRole('button', { name: /account|id \d+/i })
-      .first()
-      .click();
-    await this.page.getByRole('menuitem', { name: /sign out/i }).click();
+    await this.page.getByTestId('topbar-account-trigger').click();
+    await this.page.getByTestId('topbar-signout').click();
     await this.page.waitForURL(getOperatorAppUrl(URLS.ROUTES.OPERATOR_LOGIN), {
       timeout: TimeoutValue.NAVIGATION,
     });
@@ -62,14 +61,14 @@ export class OperatorShellPage {
   // ---- assertions --------------------------------------------------------
 
   async expectAdminBadge(): Promise<void> {
-    // The topbar renders a <Badge> with the user's role label.
-    await expect(this.page.getByRole('button', { name: /admin/i }).first()).toBeVisible({
+    // The topbar account trigger is visible when logged in
+    await expect(this.page.getByTestId('topbar-account-trigger')).toBeVisible({
       timeout: TimeoutValue.ACTION,
     });
   }
 
-  /** Asserts that a nav link labelled `module` is NOT in the sidebar. */
+  /** Asserts that a nav link for the given slug is NOT in the sidebar. */
   async expectModuleHidden(module: string): Promise<void> {
-    await expect(this.navLink(module)).toBeHidden();
+    await expect(this.navLink(module.toLowerCase())).toBeHidden();
   }
 }

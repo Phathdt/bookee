@@ -29,7 +29,7 @@ export class RoutesPage {
   // ---- locators ----------------------------------------------------------
 
   private get addButton() {
-    return this.page.getByRole('button', { name: /add route/i });
+    return this.page.getByTestId('routes-add-button');
   }
 
   private get dialog() {
@@ -37,23 +37,31 @@ export class RoutesPage {
   }
 
   private get companyIdInput() {
-    return this.dialog.getByLabel(/company id/i);
+    return this.page.getByTestId('route-form-company-id-input');
+  }
+
+  private get fromStationSelect() {
+    return this.page.getByTestId('route-form-from-station-id-select');
+  }
+
+  private get toStationSelect() {
+    return this.page.getByTestId('route-form-to-station-id-select');
   }
 
   private get distanceInput() {
-    return this.dialog.getByLabel(/distance/i);
+    return this.page.getByTestId('route-form-distance-km-input');
   }
 
   private get durationInput() {
-    return this.dialog.getByLabel(/duration/i);
+    return this.page.getByTestId('route-form-duration-minutes-input');
   }
 
   private get submitCreateButton() {
-    return this.dialog.getByRole('button', { name: /create route/i });
+    return this.page.getByTestId('route-form-submit');
   }
 
   private get confirmDeleteButton() {
-    return this.page.getByRole('alertdialog').getByRole('button', { name: /^delete$/i });
+    return this.page.getByTestId('route-delete-confirm');
   }
 
   // ---- actions -----------------------------------------------------------
@@ -77,17 +85,15 @@ export class RoutesPage {
     // Company ID — plain number input (disabled for non-admin)
     await this.companyIdInput.fill(String(input.companyId));
 
-    // From Station select — click trigger, then pick option by text
-    const fromTrigger = this.dialog.getByRole('combobox').first();
-    await fromTrigger.click();
+    // From Station select — shadcn Select: click trigger, then pick option by text
+    await this.fromStationSelect.click();
     await this.page
       .getByRole('option', { name: new RegExp(input.fromStationName, 'i') })
       .first()
       .click();
 
     // To Station select
-    const toTrigger = this.dialog.getByRole('combobox').nth(1);
-    await toTrigger.click();
+    await this.toStationSelect.click();
     await this.page
       .getByRole('option', { name: new RegExp(input.toStationName, 'i') })
       .first()

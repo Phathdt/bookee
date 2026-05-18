@@ -20,11 +20,15 @@ export class SeatLayoutsPage {
   // ---- locators ----------------------------------------------------------
 
   private get addButton() {
-    return this.page.getByRole('button', { name: /add layout/i });
+    return this.page.getByTestId('seat-layouts-add-button');
   }
 
   private get dialog() {
     return this.page.getByRole('dialog');
+  }
+
+  private get cancelButton() {
+    return this.page.getByTestId('seat-layout-form-cancel');
   }
 
   // ---- actions -----------------------------------------------------------
@@ -45,7 +49,7 @@ export class SeatLayoutsPage {
   }
 
   async closeDialog(): Promise<void> {
-    await this.dialog.getByRole('button', { name: /cancel/i }).click();
+    await this.cancelButton.click();
     await expect(this.dialog).toBeHidden({ timeout: TimeoutValue.ACTION });
   }
 

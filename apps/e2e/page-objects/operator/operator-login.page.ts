@@ -19,15 +19,15 @@ export class OperatorLoginPage {
   // ---- locators ----------------------------------------------------------
 
   private get identifierInput() {
-    return this.page.getByLabel(/phone or email/i);
+    return this.page.getByTestId('login-identifier-input');
   }
 
   private get passwordInput() {
-    return this.page.getByLabel(/^password$/i);
+    return this.page.getByTestId('login-password-input');
   }
 
   private get submitButton() {
-    return this.page.getByRole('button', { name: /^sign in$/i });
+    return this.page.getByTestId('login-submit');
   }
 
   // ---- actions -----------------------------------------------------------

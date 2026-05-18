@@ -27,7 +27,7 @@ export class StationsPage {
   // ---- locators ----------------------------------------------------------
 
   private get addButton() {
-    return this.page.getByRole('button', { name: /add station/i });
+    return this.page.getByTestId('stations-add-button');
   }
 
   private get dialog() {
@@ -35,32 +35,31 @@ export class StationsPage {
   }
 
   private get nameInput() {
-    return this.dialog.getByLabel(/^name$/i);
+    return this.page.getByTestId('station-form-name-input');
   }
 
   private get addressInput() {
-    return this.dialog.getByLabel(/^address$/i);
+    return this.page.getByTestId('station-form-address-input');
   }
 
   private get cityInput() {
-    return this.dialog.getByLabel(/^city$/i);
+    return this.page.getByTestId('station-form-city-input');
   }
 
   private get latInput() {
-    return this.dialog.getByLabel(/latitude/i);
+    return this.page.getByTestId('station-form-lat-input');
   }
 
   private get lngInput() {
-    return this.dialog.getByLabel(/longitude/i);
+    return this.page.getByTestId('station-form-lng-input');
   }
 
   private get submitCreateButton() {
-    return this.dialog.getByRole('button', { name: /create station/i });
+    return this.page.getByTestId('station-form-submit');
   }
 
   private get confirmDeleteButton() {
-    // AlertDialog uses role="alertdialog"; the confirm action button reads "Delete"
-    return this.page.getByRole('alertdialog').getByRole('button', { name: /^delete$/i });
+    return this.page.getByTestId('station-delete-confirm');
   }
 
   // ---- actions -----------------------------------------------------------

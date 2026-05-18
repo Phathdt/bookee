@@ -6,7 +6,7 @@ import { expect, Page } from '@playwright/test';
  * Bookee user-web landing page. Hosts the inline AuthDemo (register/login
  * forms + protected profile panel) — there is no separate /login route yet.
  *
- * Locators are placeholder-based to survive copy tweaks without breaking.
+ * Locators use data-testid attributes for stability.
  */
 export class LandingPage {
   constructor(private readonly page: Page) {}
@@ -14,31 +14,37 @@ export class LandingPage {
   // ---- locators ----------------------------------------------------------
 
   private get registerTab() {
-    return this.page.getByRole('button', { name: /^register$/i });
+    return this.page.getByTestId('auth-demo-mode-register');
   }
   private get loginTab() {
-    return this.page.getByRole('button', { name: /^sign in$/i });
+    return this.page.getByTestId('auth-demo-mode-login');
   }
   private get nameInput() {
-    return this.page.getByPlaceholder(/họ và tên|name/i);
+    return this.page.getByTestId('register-name-input');
   }
   private get phoneInput() {
-    return this.page.getByPlaceholder(/số điện thoại|phone/i);
+    return this.page.getByTestId('register-phone-input');
   }
-  private get emailInput() {
-    return this.page.getByPlaceholder(/^email$/i);
+  private get registerEmailInput() {
+    return this.page.getByTestId('register-email-input');
   }
-  private get passwordInput() {
-    return this.page.getByPlaceholder(/password/i);
+  private get registerPasswordInput() {
+    return this.page.getByTestId('register-password-input');
   }
-  private get submitButton() {
-    return this.page.getByRole('button', { name: /^(tạo tài khoản|đăng nhập)$/i });
+  private get registerSubmitButton() {
+    return this.page.getByTestId('register-submit');
   }
-  private get profileHeading() {
-    return this.page.getByText(/authenticated profile/i);
+  private get loginIdentifierInput() {
+    return this.page.getByTestId('login-identifier-input');
   }
-  private get logoutButton() {
-    return this.page.getByRole('button', { name: /sign out/i });
+  private get loginPasswordInput() {
+    return this.page.getByTestId('login-password-input');
+  }
+  private get loginSubmitButton() {
+    return this.page.getByTestId('login-submit');
+  }
+  private get profileSignoutButton() {
+    return this.page.getByTestId('profile-signout');
   }
 
   // ---- actions -----------------------------------------------------------
@@ -61,21 +67,27 @@ export class LandingPage {
   async fillRegister(name: string, phone: string, email: string, password: string): Promise<void> {
     await this.nameInput.fill(name);
     await this.phoneInput.fill(phone);
-    await this.emailInput.fill(email);
-    await this.passwordInput.fill(password);
+    await this.registerEmailInput.fill(email);
+    await this.registerPasswordInput.fill(password);
   }
 
   async fillLogin(identifier: string, password: string): Promise<void> {
-    await this.emailInput.fill(identifier);
-    await this.passwordInput.fill(password);
+    await this.loginIdentifierInput.fill(identifier);
+    await this.loginPasswordInput.fill(password);
   }
 
   async submit(): Promise<void> {
-    await this.submitButton.click();
+    // Determine which form is active and click its submit button
+    const registerSubmitVisible = await this.registerSubmitButton.isVisible().catch(() => false);
+    if (registerSubmitVisible) {
+      await this.registerSubmitButton.click();
+    } else {
+      await this.loginSubmitButton.click();
+    }
   }
 
   async logout(): Promise<void> {
-    await this.logoutButton.click();
+    await this.profileSignoutButton.click();
   }
 
   // ---- assertions --------------------------------------------------------
@@ -86,11 +98,13 @@ export class LandingPage {
   }
 
   async expectAuthenticated(): Promise<void> {
-    await expect(this.profileHeading).toBeVisible({ timeout: TimeoutValue.ACTION });
+    await expect(this.profileSignoutButton).toBeVisible({ timeout: TimeoutValue.ACTION });
   }
 
   async expectNotAuthenticated(): Promise<void> {
-    await expect(this.submitButton).toBeVisible({ timeout: TimeoutValue.ACTION });
+    // Either the login or register submit button should be visible
+    const loginVisible = this.loginSubmitButton;
+    await expect(loginVisible).toBeVisible({ timeout: TimeoutValue.ACTION });
   }
 
   async expectEmailDisplayed(email: string): Promise<void> {

@@ -31,31 +31,39 @@ export class TripsPage {
   // ---- locators ----------------------------------------------------------
 
   private get addButton() {
-    return this.page.getByRole('button', { name: /^add trip$/i });
+    return this.page.getByTestId('trips-add-button');
   }
 
   private get bulkCreateButton() {
-    return this.page.getByRole('button', { name: /bulk create/i });
+    return this.page.getByTestId('trips-bulk-create-button');
   }
 
   private get dialog() {
     return this.page.getByRole('dialog');
   }
 
+  private get routeSelect() {
+    return this.page.getByTestId('trip-form-route-id-select');
+  }
+
+  private get vehicleSelect() {
+    return this.page.getByTestId('trip-form-vehicle-id-select');
+  }
+
   private get departureInput() {
-    return this.dialog.getByLabel(/departure/i);
+    return this.page.getByTestId('trip-form-departure-time-input');
   }
 
   private get arrivalInput() {
-    return this.dialog.getByLabel(/arrival/i);
+    return this.page.getByTestId('trip-form-arrival-time-input');
   }
 
   private get basePriceInput() {
-    return this.dialog.getByLabel(/base price/i);
+    return this.page.getByTestId('trip-form-base-price-input');
   }
 
   private get submitCreateButton() {
-    return this.dialog.getByRole('button', { name: /create trip/i });
+    return this.page.getByTestId('trip-form-submit');
   }
 
   // ---- actions -----------------------------------------------------------
@@ -76,17 +84,15 @@ export class TripsPage {
   }
 
   async fillCreate(input: TripCreateInput): Promise<void> {
-    // Route select — combobox index 0
-    const routeTrigger = this.dialog.getByRole('combobox').nth(0);
-    await routeTrigger.click();
+    // Route select — shadcn Select: click trigger by test-id, then pick option by text
+    await this.routeSelect.click();
     await this.page
       .getByRole('option', { name: new RegExp(`route #${input.routeId}`, 'i') })
       .first()
       .click();
 
-    // Vehicle select — combobox index 1
-    const vehicleTrigger = this.dialog.getByRole('combobox').nth(1);
-    await vehicleTrigger.click();
+    // Vehicle select
+    await this.vehicleSelect.click();
     await this.page
       .getByRole('option', { name: new RegExp(input.vehiclePlate, 'i') })
       .first()
@@ -105,12 +111,13 @@ export class TripsPage {
   }
 
   /**
-   * Clicks the status-transition button labelled `label` on the row that
-   * contains `rowIdentifier` text (e.g. a trip ID like "#42").
+   * Clicks the status-transition button for `nextStatus` on the row identified
+   * by `rowIdentifier` (e.g. a trip ID like "#42").
+   * Uses data-testid="trip-status-action-{nextStatus}" — stable regardless of button label text.
    */
-  async clickStatusTransition(rowIdentifier: string, label: string): Promise<void> {
+  async clickStatusTransition(rowIdentifier: string, nextStatus: string): Promise<void> {
     const row = this.page.getByRole('row', { name: new RegExp(rowIdentifier, 'i') });
-    await row.getByRole('button', { name: new RegExp(label, 'i') }).click();
+    await row.getByTestId(`trip-status-action-${nextStatus.toLowerCase()}`).click();
   }
 
   // ---- assertions --------------------------------------------------------

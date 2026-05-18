@@ -29,7 +29,7 @@ export class VehiclesPage {
   // ---- locators ----------------------------------------------------------
 
   private get addButton() {
-    return this.page.getByRole('button', { name: /add vehicle/i });
+    return this.page.getByTestId('vehicles-add-button');
   }
 
   private get dialog() {
@@ -37,27 +37,31 @@ export class VehiclesPage {
   }
 
   private get companyIdInput() {
-    return this.dialog.getByLabel(/company id/i);
+    return this.page.getByTestId('vehicle-form-company-id-input');
   }
 
   private get plateNumberInput() {
-    return this.dialog.getByLabel(/plate number/i);
+    return this.page.getByTestId('vehicle-form-plate-number-input');
   }
 
   private get typeInput() {
-    return this.dialog.getByLabel(/^type$/i);
+    return this.page.getByTestId('vehicle-form-type-input');
+  }
+
+  private get seatLayoutSelect() {
+    return this.page.getByTestId('vehicle-form-seat-layout-id-select');
   }
 
   private get totalSeatsInput() {
-    return this.dialog.getByLabel(/total seats/i);
+    return this.page.getByTestId('vehicle-form-total-seats-input');
   }
 
   private get submitCreateButton() {
-    return this.dialog.getByRole('button', { name: /create vehicle/i });
+    return this.page.getByTestId('vehicle-form-submit');
   }
 
   private get confirmDeleteButton() {
-    return this.page.getByRole('alertdialog').getByRole('button', { name: /^delete$/i });
+    return this.page.getByTestId('vehicle-delete-confirm');
   }
 
   // ---- actions -----------------------------------------------------------
@@ -82,9 +86,8 @@ export class VehiclesPage {
     await this.plateNumberInput.fill(input.plateNumber);
     await this.typeInput.fill(input.type);
 
-    // Seat layout select — click trigger then pick option by name fragment
-    const layoutTrigger = this.dialog.getByRole('combobox');
-    await layoutTrigger.click();
+    // Seat layout select — shadcn Select: click trigger then pick option by name fragment
+    await this.seatLayoutSelect.click();
     await this.page
       .getByRole('option', { name: new RegExp(input.seatLayoutName, 'i') })
       .first()
