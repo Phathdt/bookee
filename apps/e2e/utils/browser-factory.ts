@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import preset, { BrowserType, TraceMode } from '@config/test.config';
-import { chromium, firefox, webkit, Browser, BrowserContext, Page } from '@playwright/test';
+import { Browser, BrowserContext, chromium, firefox, Page, webkit } from '@playwright/test';
 
 export interface BrowserBundle {
   browser: Browser;

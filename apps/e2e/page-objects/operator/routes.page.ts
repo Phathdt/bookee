@@ -2,6 +2,11 @@ import { TimeoutValue } from '@config/test.config';
 import { getOperatorAppUrl, URLS } from '@config/urls.config';
 import { expect, Page } from '@playwright/test';
 
+export interface RouteEditInput {
+  distanceKm?: number;
+  durationMinutes?: number;
+}
+
 export interface RouteCreateInput {
   /** Numeric company / operator ID (seeded: 1=Phương Trang, 2=Thành Bưởi, 3=Sao Việt) */
   companyId: number;
@@ -108,6 +113,39 @@ export class RoutesPage {
     await expect(this.dialog).toBeHidden({ timeout: TimeoutValue.ACTION });
   }
 
+  /**
+   * Clicks submit without waiting for the dialog to close.
+   * Use when testing validation errors — dialog should remain open.
+   */
+  async submitCreateExpectError(): Promise<void> {
+    await this.submitCreateButton.click();
+  }
+
+  /**
+   * Opens edit dialog for the route with `id` and updates numeric fields only.
+   */
+  async editRow(id: string, fields: RouteEditInput): Promise<void> {
+    await this.page.getByTestId(`route-edit-button-${id}`).click();
+    await expect(this.dialog).toBeVisible({ timeout: TimeoutValue.ACTION });
+    if (fields.distanceKm !== undefined) await this.distanceInput.fill(String(fields.distanceKm));
+    if (fields.durationMinutes !== undefined)
+      await this.durationInput.fill(String(fields.durationMinutes));
+    await this.submitCreateButton.click();
+    await expect(this.dialog).toBeHidden({ timeout: TimeoutValue.ACTION });
+  }
+
+  /**
+   * Asserts a validation error is visible inside the open dialog.
+   */
+  async expectFormError(): Promise<void> {
+    await expect(
+      this.page
+        .getByRole('dialog')
+        .locator('[class*="text-destructive"], [aria-live="polite"]')
+        .first(),
+    ).toBeVisible({ timeout: TimeoutValue.ACTION });
+  }
+
   /** Deletes the first route row whose text matches `identifier` (e.g. route ID). */
   async deleteRow(identifier: string): Promise<void> {
     const row = this.page.getByRole('row', { name: new RegExp(identifier, 'i') });
@@ -130,5 +168,12 @@ export class RoutesPage {
     await expect(this.page.getByRole('cell', { name: `#${id}`, exact: true })).toBeHidden({
       timeout: TimeoutValue.ACTION,
     });
+  }
+
+  /** Returns the numeric ID text from the last route row (after creation). */
+  async getLastRowId(): Promise<string> {
+    const idCell = this.page.getByRole('cell', { name: /^#\d+$/ }).last();
+    const text = await idCell.innerText();
+    return text.replace('#', '').trim();
   }
 }

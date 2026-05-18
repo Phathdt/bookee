@@ -21,24 +21,27 @@ apps/e2e/
 │   ├── test.config.ts                   # presets (local/ci), timeouts, browser
 │   └── urls.config.ts                   # multi-app URLs + route constants
 ├── page-objects/
-│   ├── landing.page.ts                  # user-web AuthDemo page object
+│   ├── landing.page.ts                  # user-web AuthDemo + profile + health
 │   └── operator/
 │       ├── operator-login.page.ts       # /login
-│       ├── operator-shell.page.ts       # sidebar nav + topbar
-│       ├── stations.page.ts             # /stations CRUD
-│       ├── routes.page.ts               # /routes CRUD
-│       ├── seat-layouts.page.ts         # /seat-layouts
-│       ├── vehicles.page.ts             # /vehicles CRUD
-│       └── trips.page.ts               # /trips CRUD + status transitions
+│       ├── operator-shell.page.ts       # sidebar nav + topbar (sign-out, nav-active)
+│       ├── dashboard.page.ts            # / dashboard cards
+│       ├── stations.page.ts             # /stations CRUD + search + edit
+│       ├── routes.page.ts               # /routes CRUD + edit
+│       ├── seat-layouts.page.ts         # /seat-layouts CRUD
+│       ├── vehicles.page.ts             # /vehicles CRUD + edit
+│       └── trips.page.ts               # /trips CRUD + bulk-create + view + status transitions
 ├── utils/
 │   ├── browser-factory.ts               # createBrowserContextPage / close
 │   └── logger.ts                        # pino logger
 └── tests/
     ├── features/
-    │   ├── auth/                        # user-web register + login
+    │   ├── auth/                        # user-web: register, login, profile, health
     │   └── operator/                    # operator-CMS scenarios
     │       ├── operator-shared.steps.ts # shared "I am logged in as operator admin"
     │       ├── login.{feature,steps.ts}
+    │       ├── dashboard.{feature,steps.ts}
+    │       ├── shell.{feature,steps.ts}
     │       ├── stations-crud.{feature,steps.ts}
     │       ├── routes-crud.{feature,steps.ts}
     │       ├── seat-layouts-crud.{feature,steps.ts}
@@ -90,12 +93,15 @@ This creates:
 
 ```bash
 # All tests (parallel, headless)
-bun run --filter @bookee/e2e e2e
+bun run --filter @bookee/e2e e2e:all
 
 # Smoke only (@smoke)
 bun run --filter @bookee/e2e e2e:smoke
 
-# Auth scenarios only (@auth) — user-web
+# All user-web scenarios (@auth + @health)
+bun run --filter @bookee/e2e e2e:user
+
+# Auth scenarios only (@auth) — subset of e2e:user
 bun run --filter @bookee/e2e e2e:auth
 
 # All operator-CMS scenarios
@@ -114,16 +120,22 @@ bunx cucumber-js --config .cucumber.cjs tests/features/operator/login.feature
 
 ## Tags
 
-| Tag                      | Scope                                      |
-| ------------------------ | ------------------------------------------ |
-| `@smoke`                 | Critical happy-paths (login for both apps) |
-| `@auth`                  | user-web register + login                  |
-| `@operator-auth`         | Operator CMS login scenarios               |
-| `@operator-stations`     | Stations CRUD                              |
-| `@operator-routes`       | Routes CRUD                                |
-| `@operator-seat-layouts` | Seat layout list + dialog                  |
-| `@operator-vehicles`     | Vehicles CRUD                              |
-| `@operator-trips`        | Trips CRUD + status transitions            |
+| Tag                      | Scope                                                         |
+| ------------------------ | ------------------------------------------------------------- |
+| `@smoke`                 | Critical happy-paths (login for both apps)                    |
+| `@auth`                  | user-web: register + login (parent tag)                       |
+| `@auth-register`         | Registration scenarios                                        |
+| `@auth-login`            | Login scenarios including empty-identifier validation         |
+| `@auth-profile`          | Profile rename + sign-out                                     |
+| `@health`                | Landing page health card refresh                              |
+| `@operator-auth`         | Operator CMS login scenarios                                  |
+| `@operator-dashboard`    | Dashboard cards + navigation                                  |
+| `@operator-shell`        | Topbar sign-out + sidebar nav active state                    |
+| `@operator-stations`     | Stations CRUD + search + edit + validation                    |
+| `@operator-routes`       | Routes CRUD + edit + same-station validation                  |
+| `@operator-seat-layouts` | Seat layouts CRUD (create with JSON, delete)                  |
+| `@operator-vehicles`     | Vehicles CRUD + edit                                          |
+| `@operator-trips`        | Trips CRUD + bulk-create + view readonly + status transitions |
 
 ## Tracing
 

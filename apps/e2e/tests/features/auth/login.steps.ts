@@ -26,6 +26,13 @@ When('I submit invalid credentials', async function (this: BrowserWorld) {
   await page.submit();
 });
 
+When('I submit login with empty identifier', async function (this: BrowserWorld) {
+  // Leave identifier blank, fill only password, then submit
+  const page = new LandingPage(this.page);
+  await page.fillLogin('', 'anypassword');
+  await page.submit();
+});
+
 When('I sign out', async function (this: BrowserWorld) {
   await new LandingPage(this.page).logout();
 });

@@ -22,3 +22,10 @@ Feature: User Authentication - Login
     When I open the login form
     And I submit invalid credentials
     Then I should see a registration error
+
+  @priority_medium
+  Scenario: Login fails when identifier is empty
+    Given I navigate to the landing page
+    When I open the login form
+    And I submit login with empty identifier
+    Then I should see a registration error

@@ -49,9 +49,14 @@ export class OperatorShellPage {
 
   // ---- topbar ------------------------------------------------------------
 
+  /** Opens the account dropdown (topbar-account-trigger). */
+  async openAccountMenu(): Promise<void> {
+    await this.page.getByTestId('topbar-account-trigger').click();
+  }
+
   /** Opens the account dropdown then clicks Sign out. */
   async signOut(): Promise<void> {
-    await this.page.getByTestId('topbar-account-trigger').click();
+    await this.openAccountMenu();
     await this.page.getByTestId('topbar-signout').click();
     await this.page.waitForURL(getOperatorAppUrl(URLS.ROUTES.OPERATOR_LOGIN), {
       timeout: TimeoutValue.NAVIGATION,
@@ -70,5 +75,20 @@ export class OperatorShellPage {
   /** Asserts that a nav link for the given slug is NOT in the sidebar. */
   async expectModuleHidden(module: string): Promise<void> {
     await expect(this.navLink(module.toLowerCase())).toBeHidden();
+  }
+
+  /**
+   * Asserts the nav link for `slug` is active — either via aria-current="page"
+   * or a CSS class that indicates selection.
+   */
+  async expectNavLinkActive(slug: string): Promise<void> {
+    const link = this.navLink(slug);
+    // Accept either aria-current="page" attribute or an active class convention
+    const ariaCurrent = await link.getAttribute('aria-current');
+    if (ariaCurrent === 'page') return;
+    // Fallback: assert the link has an active-indicating class
+    await expect(link).toHaveClass(/active|bg-|font-bold|text-primary/i, {
+      timeout: TimeoutValue.ACTION,
+    });
   }
 }

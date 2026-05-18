@@ -46,6 +46,15 @@ export class LandingPage {
   private get profileSignoutButton() {
     return this.page.getByTestId('profile-signout');
   }
+  private get profileRenameInput() {
+    return this.page.getByTestId('profile-rename-input');
+  }
+  private get profileRenameSubmit() {
+    return this.page.getByTestId('profile-rename-submit');
+  }
+  private get healthRefreshButton() {
+    return this.page.getByTestId('health-refresh');
+  }
 
   // ---- actions -----------------------------------------------------------
 
@@ -90,6 +99,19 @@ export class LandingPage {
     await this.profileSignoutButton.click();
   }
 
+  async renameProfile(newName: string): Promise<void> {
+    await this.profileRenameInput.fill(newName);
+    await this.profileRenameSubmit.click();
+  }
+
+  async clickProfileSignout(): Promise<void> {
+    await this.profileSignoutButton.click();
+  }
+
+  async refreshHealth(): Promise<void> {
+    await this.healthRefreshButton.click();
+  }
+
   // ---- assertions --------------------------------------------------------
 
   async expectLoaded(): Promise<void> {
@@ -105,6 +127,20 @@ export class LandingPage {
     // Either the login or register submit button should be visible
     const loginVisible = this.loginSubmitButton;
     await expect(loginVisible).toBeVisible({ timeout: TimeoutValue.ACTION });
+  }
+
+  async expectProfileNameVisible(name: string): Promise<void> {
+    await expect(this.page.getByText(name, { exact: false })).toBeVisible({
+      timeout: TimeoutValue.ACTION,
+    });
+  }
+
+  async expectAuthFormVisible(): Promise<void> {
+    await expect(this.loginSubmitButton).toBeVisible({ timeout: TimeoutValue.ACTION });
+  }
+
+  async expectHealthCardVisible(): Promise<void> {
+    await expect(this.healthRefreshButton).toBeVisible({ timeout: TimeoutValue.ACTION });
   }
 
   async expectEmailDisplayed(email: string): Promise<void> {

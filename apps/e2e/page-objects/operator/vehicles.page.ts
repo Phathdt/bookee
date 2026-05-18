@@ -2,6 +2,12 @@ import { TimeoutValue } from '@config/test.config';
 import { getOperatorAppUrl, URLS } from '@config/urls.config';
 import { expect, Page } from '@playwright/test';
 
+export interface VehicleEditInput {
+  plateNumber?: string;
+  totalSeats?: number;
+  type?: string;
+}
+
 export interface VehicleCreateInput {
   /** Numeric operator/company ID */
   companyId: number;
@@ -99,6 +105,39 @@ export class VehiclesPage {
   async submitCreate(): Promise<void> {
     await this.submitCreateButton.click();
     await expect(this.dialog).toBeHidden({ timeout: TimeoutValue.ACTION });
+  }
+
+  /**
+   * Opens edit dialog for the row with `id` (data-testid="vehicle-edit-button-{id}")
+   * and updates provided fields.
+   */
+  async editRow(id: string, fields: VehicleEditInput): Promise<void> {
+    await this.page.getByTestId(`vehicle-edit-button-${id}`).click();
+    await expect(this.dialog).toBeVisible({ timeout: TimeoutValue.ACTION });
+    if (fields.plateNumber !== undefined) await this.plateNumberInput.fill(fields.plateNumber);
+    if (fields.type !== undefined) await this.typeInput.fill(fields.type);
+    if (fields.totalSeats !== undefined) await this.totalSeatsInput.fill(String(fields.totalSeats));
+    await this.submitCreateButton.click();
+    await expect(this.dialog).toBeHidden({ timeout: TimeoutValue.ACTION });
+  }
+
+  /**
+   * Asserts a validation error is visible inside the open dialog.
+   */
+  async expectFormError(): Promise<void> {
+    await expect(
+      this.page
+        .getByRole('dialog')
+        .locator('[class*="text-destructive"], [aria-live="polite"]')
+        .first(),
+    ).toBeVisible({ timeout: TimeoutValue.ACTION });
+  }
+
+  /** Returns the numeric ID text from the last vehicle row (after creation). */
+  async getLastRowId(): Promise<string> {
+    const idCell = this.page.getByRole('cell', { name: /^#\d+$/ }).last();
+    const text = await idCell.innerText();
+    return text.replace('#', '').trim();
   }
 
   /** Deletes the row whose plate number matches `plateNumber`. */

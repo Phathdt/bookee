@@ -7,7 +7,9 @@
     "e2e:headed": "HEADLESS=false cucumber-js --config .cucumber.cjs",
     "e2e:smoke": "cucumber-js --config .cucumber.cjs --tags @smoke",
     "e2e:auth": "cucumber-js --config .cucumber.cjs --tags @auth",
-    "e2e:operator": "cucumber-js --config .cucumber.cjs --tags \"@operator-auth or @operator-stations or @operator-routes or @operator-seat-layouts or @operator-vehicles or @operator-trips\"",
+    "e2e:user": "cucumber-js --config .cucumber.cjs --tags \"@auth or @auth-register or @auth-login or @auth-profile or @health\"",
+    "e2e:operator": "cucumber-js --config .cucumber.cjs --tags \"@operator-auth or @operator-stations or @operator-routes or @operator-seat-layouts or @operator-vehicles or @operator-trips or @operator-dashboard or @operator-shell\"",
+    "e2e:all": "cucumber-js --config .cucumber.cjs",
     "typecheck": "tsc --noEmit",
     "install:browsers": "playwright install chromium",
     "clean": "rm -rf test-results"

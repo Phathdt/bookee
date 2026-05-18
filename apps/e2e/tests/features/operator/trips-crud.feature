@@ -26,3 +26,31 @@ Feature: Operator CMS - Trips CRUD
     Then the new trip should appear with status "scheduled"
     When I cancel the new trip
     Then the new trip should show status "cancelled"
+
+  @priority_medium
+  Scenario: Status filter narrows table to scheduled trips only
+    When I navigate to the trips module
+    And I filter trips by status "scheduled"
+    Then only trips with status "scheduled" should be visible
+
+  @priority_medium
+  Scenario: Admin can bulk create trips for a date range
+    When I navigate to the trips module
+    And I bulk create trips for route 1 over 2 days
+    Then at least one trip row should be visible with status "scheduled"
+
+  @priority_medium
+  Scenario: Admin can view a trip in readonly mode
+    When I navigate to the trips module
+    And I create a new trip with a seeded route and vehicle
+    Then the new trip should appear with status "scheduled"
+    When I open the view dialog for the new trip
+    Then the trip form fields should be disabled
+
+  @priority_medium
+  Scenario: Admin can transition a trip from scheduled to in_progress
+    When I navigate to the trips module
+    And I create a new trip with a seeded route and vehicle
+    Then the new trip should appear with status "scheduled"
+    When I transition the new trip to "in_progress"
+    Then the new trip should show status "in_progress"

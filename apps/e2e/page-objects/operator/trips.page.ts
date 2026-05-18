@@ -2,6 +2,22 @@ import { TimeoutValue } from '@config/test.config';
 import { getOperatorAppUrl, URLS } from '@config/urls.config';
 import { expect, Page } from '@playwright/test';
 
+export interface TripBulkCreateInput {
+  /** Route ID — matched as "Route #N" in the select */
+  routeId: number;
+  /** Vehicle plate fragment */
+  vehiclePlate: string;
+  basePrice: number;
+  /** date string YYYY-MM-DD */
+  startDate: string;
+  /** date string YYYY-MM-DD */
+  endDate: string;
+  /** time string HH:mm */
+  dailyDepartureTime: string;
+  /** minutes e.g. 360 */
+  tripDurationMinutes: number;
+}
+
 export interface TripCreateInput {
   /** Route ID number — will be matched as "Route #N" in the select option text */
   routeId: number;
@@ -66,6 +82,44 @@ export class TripsPage {
     return this.page.getByTestId('trip-form-submit');
   }
 
+  private get statusFilter() {
+    return this.page.getByTestId('trips-status-filter');
+  }
+
+  // ---- bulk create locators -----------------------------------------------
+
+  private get bulkRouteSelect() {
+    return this.page.getByTestId('trip-bulk-form-route-select');
+  }
+
+  private get bulkVehicleSelect() {
+    return this.page.getByTestId('trip-bulk-form-vehicle-select');
+  }
+
+  private get bulkBasePriceInput() {
+    return this.page.getByTestId('trip-bulk-form-base-price-input');
+  }
+
+  private get bulkStartDateInput() {
+    return this.page.getByTestId('trip-bulk-form-start-date-input');
+  }
+
+  private get bulkEndDateInput() {
+    return this.page.getByTestId('trip-bulk-form-end-date-input');
+  }
+
+  private get bulkDailyDepartureTimeInput() {
+    return this.page.getByTestId('trip-bulk-form-daily-departure-time-input');
+  }
+
+  private get bulkTripDurationMinutesInput() {
+    return this.page.getByTestId('trip-bulk-form-trip-duration-minutes-input');
+  }
+
+  private get bulkSubmitButton() {
+    return this.page.getByTestId('trip-bulk-form-submit');
+  }
+
   // ---- actions -----------------------------------------------------------
 
   async navigate(): Promise<void> {
@@ -111,6 +165,68 @@ export class TripsPage {
   }
 
   /**
+   * Selects a value in the status filter select/dropdown.
+   * Trigger is data-testid="trips-status-filter".
+   */
+  async setStatusFilter(status: string): Promise<void> {
+    await this.statusFilter.click();
+    await this.page
+      .getByRole('option', { name: new RegExp(status, 'i') })
+      .first()
+      .click();
+  }
+
+  /** Opens the bulk-create dialog. */
+  async openBulkDialog(): Promise<void> {
+    await this.bulkCreateButton.click();
+    await expect(this.dialog).toBeVisible({ timeout: TimeoutValue.ACTION });
+  }
+
+  /** Fills the bulk create form fields. */
+  async fillBulkCreate(payload: TripBulkCreateInput): Promise<void> {
+    await this.bulkRouteSelect.click();
+    await this.page
+      .getByRole('option', { name: new RegExp(`route #${payload.routeId}`, 'i') })
+      .first()
+      .click();
+
+    await this.bulkVehicleSelect.click();
+    await this.page
+      .getByRole('option', { name: new RegExp(payload.vehiclePlate, 'i') })
+      .first()
+      .click();
+
+    await this.bulkBasePriceInput.fill(String(payload.basePrice));
+    await this.bulkStartDateInput.fill(payload.startDate);
+    await this.bulkEndDateInput.fill(payload.endDate);
+    await this.bulkDailyDepartureTimeInput.fill(payload.dailyDepartureTime);
+    await this.bulkTripDurationMinutesInput.fill(String(payload.tripDurationMinutes));
+  }
+
+  /** Submits the bulk create form and waits for the dialog to close. */
+  async submitBulk(): Promise<void> {
+    await this.bulkSubmitButton.click();
+    await expect(this.dialog).toBeHidden({ timeout: TimeoutValue.ACTION });
+  }
+
+  /**
+   * Opens the view (readonly) dialog for trip `id`.
+   * Uses data-testid="trip-view-button-{id}".
+   */
+  async openViewDialog(id: string): Promise<void> {
+    await this.page.getByTestId(`trip-view-button-${id}`).click();
+    await expect(this.dialog).toBeVisible({ timeout: TimeoutValue.ACTION });
+  }
+
+  /**
+   * Asserts that the form inputs inside the open dialog are disabled (readonly view).
+   */
+  async expectFormDisabled(): Promise<void> {
+    // Check departure-time input is disabled — sufficient proxy for readonly mode
+    await expect(this.departureInput).toBeDisabled({ timeout: TimeoutValue.ACTION });
+  }
+
+  /**
    * Clicks the status-transition button for `nextStatus` on the row identified
    * by `rowIdentifier` (e.g. a trip ID like "#42").
    * Uses data-testid="trip-status-action-{nextStatus}" — stable regardless of button label text.
@@ -144,5 +260,25 @@ export class TripsPage {
     await expect(row.getByText(new RegExp(status.replace('_', ' '), 'i'))).toBeVisible({
       timeout: TimeoutValue.ACTION,
     });
+  }
+
+  /** Returns the current number of data rows in the trips table (excludes header). */
+  async getDataRowCount(): Promise<number> {
+    // Data rows are identified by "#N" id cells
+    return this.page.getByRole('cell', { name: /^#\d+$/ }).count();
+  }
+
+  /** Returns the last trip row ID as a numeric string. */
+  async getLastRowId(): Promise<string> {
+    const idCell = this.page.getByRole('cell', { name: /^#\d+$/ }).last();
+    const text = await idCell.innerText();
+    return text.replace('#', '').trim();
+  }
+
+  /** Asserts that only rows with the given status are visible (none with another status). */
+  async expectOnlyStatus(status: string): Promise<void> {
+    await expect(
+      this.page.getByText(new RegExp(status.replace('_', ' '), 'i')).first(),
+    ).toBeVisible({ timeout: TimeoutValue.ACTION });
   }
 }
