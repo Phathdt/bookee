@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 
-import { AuthGuard } from '@/components/auth-guard';
+import { AuthGuard } from '@/features/auth/auth-guard';
 import { SidebarNav } from './sidebar-nav';
 import { Topbar } from './topbar';
 

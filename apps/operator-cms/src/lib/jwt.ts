@@ -15,6 +15,7 @@ export function decodeJwtPayload(token: string): JwtPayload | null {
   try {
     const parts = token.split('.');
     if (parts.length !== 3) return null;
+    /* v8 ignore next -- parts[1] is always defined when parts.length === 3 */
     const segment = parts[1] ?? '';
     const base64 = segment.replace(/-/g, '+').replace(/_/g, '/');
     const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), '=');

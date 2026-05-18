@@ -2,7 +2,7 @@ import { Bus, LayoutGrid, Map, MapPin, Sofa, Truck } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
 import { cn } from '@/lib/utils';
-import { useAuthContext } from '@/lib/auth-context';
+import { useAuthContext } from '@/features/auth/auth-context';
 
 interface NavItem {
   to: string;
@@ -40,6 +40,7 @@ export function SidebarNav() {
           key={item.to}
           to={item.to}
           end={item.to === '/'}
+          data-testid={`nav-link-${item.to === '/' ? 'dashboard' : item.to.replace(/^\//, '')}`}
           className={({ isActive }) =>
             cn(
               'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',

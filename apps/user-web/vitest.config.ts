@@ -18,9 +18,26 @@ export default defineConfig({
     css: false,
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'lcov'],
-      include: ['src/**/*.{ts,tsx}'],
-      exclude: ['src/**/*.{test,spec}.{ts,tsx}', 'src/test/**', 'src/main.tsx'],
+      reporter: ['text', 'text-summary', 'html', 'json-summary', 'lcov'],
+      reportsDirectory: './coverage',
+      include: [
+        'src/lib/**/*.{ts,tsx}',
+        'src/components/ui/**/*.{ts,tsx}',
+        'src/features/**/*.{ts,tsx}',
+      ],
+      exclude: [
+        'src/**/*.{test,spec}.{ts,tsx}',
+        'src/test/**',
+        'src/main.tsx',
+        'src/router.tsx',
+        'src/vite-env.d.ts',
+      ],
+      thresholds: {
+        statements: 99,
+        branches: 99,
+        functions: 99,
+        lines: 99,
+      },
     },
   },
 });

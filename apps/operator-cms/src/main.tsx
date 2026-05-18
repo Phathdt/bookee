@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 import { Toaster } from 'sonner';
 
-import { AuthProvider } from './components/auth-provider';
+import { AuthProvider } from '@/features/auth/auth-provider';
 import { queryClient } from './lib/query-client';
 import { router } from './router';
 import './styles/globals.css';

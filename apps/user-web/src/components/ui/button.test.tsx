@@ -21,4 +21,15 @@ describe('Button', () => {
     render(<Button variant="destructive">Delete</Button>);
     expect(screen.getByRole('button')).toHaveClass('bg-destructive');
   });
+
+  it('renders as child element when asChild is true', () => {
+    render(
+      <Button asChild>
+        <a href="/x">Go</a>
+      </Button>,
+    );
+    const link = screen.getByRole('link', { name: 'Go' });
+    expect(link).toHaveAttribute('href', '/x');
+    expect(link).toHaveClass('inline-flex');
+  });
 });

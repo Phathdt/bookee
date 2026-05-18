@@ -1,13 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import { ProtectedLayout } from './components/shell/protected-layout';
-import { DashboardPage } from './pages/dashboard';
-import { LoginPage } from './pages/login';
-import { RoutesPage } from './pages/routes-page';
-import { SeatLayoutsPage } from './pages/seat-layouts-page';
-import { StationsPage } from './pages/stations-page';
-import { TripsPage } from './pages/trips-page';
-import { VehiclesPage } from './pages/vehicles-page';
+import { ProtectedLayout } from '@/components/shell/protected-layout';
+import { LoginPage } from '@/features/auth/login-page';
+import { DashboardPage } from '@/features/dashboard/dashboard-page';
+import { RoutesPage } from '@/features/routes/routes-page';
+import { SeatLayoutsPage } from '@/features/seat-layouts/seat-layouts-page';
+import { StationsPage } from '@/features/stations/stations-page';
+import { TripsPage } from '@/features/trips/trips-page';
+import { VehiclesPage } from '@/features/vehicles/vehicles-page';
 
 export const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
   {

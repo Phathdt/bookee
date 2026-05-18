@@ -16,3 +16,9 @@ pre-commit:
             stage_fixed: true
     - name: backend-tests
       run: bun run --filter @bookee/backend test
+    - name: user-web-tests
+      glob: 'apps/user-web/**/*.{ts,tsx}'
+      run: bun run --filter @bookee/user-web test
+    - name: operator-cms-tests
+      glob: 'apps/operator-cms/**/*.{ts,tsx}'
+      run: bun run --filter @bookee/operator-cms test
