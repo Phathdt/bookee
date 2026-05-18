@@ -5,8 +5,11 @@ import { BookingsModule } from '@/modules/bookings/bookings.module';
 import { IBookingsRepository } from '@/modules/bookings/domain/interfaces/bookings.repository';
 import { ISeatLockService } from '@/modules/seat-lock/domain/interfaces/seat-lock.service';
 import { SeatLockModule } from '@/modules/seat-lock/seat-lock.module';
+import { PaymentsModule } from '@/modules/payments/payments.module';
+import { IPaymentsRepository } from '@/modules/payments/domain/interfaces/payments.repository';
 
 import { ExpirePendingBookingsScheduler } from './expire-pending-bookings.scheduler';
+import { TimeoutPendingPaymentsScheduler } from './timeout-pending-payments.scheduler';
 
 /**
  * Top-level home for cross-cutting cron jobs / processors. Schedulers depend
@@ -17,7 +20,7 @@ import { ExpirePendingBookingsScheduler } from './expire-pending-bookings.schedu
  * provider. ScheduleModule.forRoot() is registered once at this level.
  */
 @Module({
-  imports: [ScheduleModule.forRoot(), BookingsModule, SeatLockModule],
+  imports: [ScheduleModule.forRoot(), BookingsModule, SeatLockModule, PaymentsModule],
   providers: [
     {
       provide: ExpirePendingBookingsScheduler,
@@ -27,6 +30,12 @@ import { ExpirePendingBookingsScheduler } from './expire-pending-bookings.schedu
         seatLock: ISeatLockService,
       ) => new ExpirePendingBookingsScheduler(scheduler, bookings, seatLock),
       inject: [SchedulerRegistry, IBookingsRepository, ISeatLockService],
+    },
+    {
+      provide: TimeoutPendingPaymentsScheduler,
+      useFactory: (scheduler: SchedulerRegistry, payments: IPaymentsRepository) =>
+        new TimeoutPendingPaymentsScheduler(scheduler, payments),
+      inject: [SchedulerRegistry, IPaymentsRepository],
     },
   ],
 })

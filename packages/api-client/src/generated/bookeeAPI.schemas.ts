@@ -824,6 +824,7 @@ export type BookingWithDetailsDtoStatus = typeof BookingWithDetailsDtoStatus[key
 
 export const BookingWithDetailsDtoStatus = {
   pending: 'pending',
+  paid: 'paid',
   confirmed: 'confirmed',
   cancelled: 'cancelled',
   expired: 'expired',
@@ -865,6 +866,7 @@ export type BookingDtoStatus = typeof BookingDtoStatus[keyof typeof BookingDtoSt
 
 export const BookingDtoStatus = {
   pending: 'pending',
+  paid: 'paid',
   confirmed: 'confirmed',
   cancelled: 'cancelled',
   expired: 'expired',
@@ -880,6 +882,74 @@ export interface BookingDto {
   status: BookingDtoStatus;
   /** @nullable */
   couponId: number | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type CreatePaymentBodyDtoProvider = typeof CreatePaymentBodyDtoProvider[keyof typeof CreatePaymentBodyDtoProvider];
+
+
+export const CreatePaymentBodyDtoProvider = {
+  momo: 'momo',
+  stripe: 'stripe',
+} as const;
+
+export interface CreatePaymentBodyDto {
+  /**
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
+  bookingId: number;
+  provider: CreatePaymentBodyDtoProvider;
+  returnUrl: string;
+}
+
+export type CreatePaymentResponseDtoStatus = typeof CreatePaymentResponseDtoStatus[keyof typeof CreatePaymentResponseDtoStatus];
+
+
+export const CreatePaymentResponseDtoStatus = {
+  pending: 'pending',
+  succeeded: 'succeeded',
+  failed: 'failed',
+  timeout: 'timeout',
+} as const;
+
+export interface CreatePaymentResponseDto {
+  id: number;
+  bookingId: number;
+  provider: string;
+  amount: number;
+  status: CreatePaymentResponseDtoStatus;
+  /** @nullable */
+  transactionId: string | null;
+  createdAt: string;
+  updatedAt: string;
+  paymentUrl: string;
+}
+
+export interface PaymentManualConfirmBodyDto {
+  /** @minLength 1 */
+  transactionId: string;
+}
+
+export type PaymentDtoStatus = typeof PaymentDtoStatus[keyof typeof PaymentDtoStatus];
+
+
+export const PaymentDtoStatus = {
+  pending: 'pending',
+  succeeded: 'succeeded',
+  failed: 'failed',
+  timeout: 'timeout',
+} as const;
+
+export interface PaymentDto {
+  id: number;
+  bookingId: number;
+  provider: string;
+  amount: number;
+  status: PaymentDtoStatus;
+  /** @nullable */
+  transactionId: string | null;
   createdAt: string;
   updatedAt: string;
 }

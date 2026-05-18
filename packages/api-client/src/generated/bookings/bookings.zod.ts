@@ -44,7 +44,7 @@ export const ListMyBookingsResponseItem = zod.object({
   "userId": zod.number().nullable(),
   "tripId": zod.number(),
   "totalAmount": zod.number(),
-  "status": zod.enum(['pending', 'confirmed', 'cancelled', 'expired']),
+  "status": zod.enum(['pending', 'paid', 'confirmed', 'cancelled', 'expired']),
   "couponId": zod.number().nullable(),
   "createdAt": zod.string(),
   "updatedAt": zod.string()
@@ -69,7 +69,7 @@ export const LookupBookingResponse = zod.object({
   "userId": zod.number().nullable(),
   "tripId": zod.number(),
   "totalAmount": zod.number(),
-  "status": zod.enum(['pending', 'confirmed', 'cancelled', 'expired']),
+  "status": zod.enum(['pending', 'paid', 'confirmed', 'cancelled', 'expired']),
   "couponId": zod.number().nullable(),
   "createdAt": zod.string(),
   "updatedAt": zod.string(),

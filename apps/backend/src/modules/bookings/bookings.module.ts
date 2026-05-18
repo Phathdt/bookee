@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 
 import { CryptoModule } from '@/modules/crypto/crypto.module';
 import { EncryptionService } from '@/modules/crypto/encryption.service';
@@ -16,7 +16,7 @@ import { BookingsRepositoryPrisma } from './infrastructure/repositories/bookings
 // Scheduled jobs (expire pending bookings) live in src/schedulers — this
 // module exports its repository + service so SchedulersModule can wire them.
 @Module({
-  imports: [SeatLockModule, CryptoModule, TripsModule],
+  imports: [SeatLockModule, CryptoModule, forwardRef(() => TripsModule)],
   providers: [
     {
       provide: IBookingsRepository,

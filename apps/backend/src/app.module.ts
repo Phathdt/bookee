@@ -4,6 +4,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 import { AuthController } from './controllers/auth/auth.controller';
 import { BookingsController } from './controllers/bookings/bookings.controller';
+import { PaymentsController } from './controllers/payments/payments.controller';
 import { HealthController } from './controllers/health/health.controller';
 import { OperatorsController } from './controllers/operators/operators.controller';
 import { RoutesController } from './controllers/routes/routes.controller';
@@ -14,6 +15,8 @@ import { TripsController } from './controllers/trips/trips.controller';
 import { VehiclesController } from './controllers/vehicles/vehicles.controller';
 import { AuthModule } from './modules/auth/auth.module';
 import { BookingsModule } from './modules/bookings/bookings.module';
+import { PaymentsModule } from './modules/payments/payments.module';
+import { TicketsModule } from './modules/tickets/tickets.module';
 import { DatabaseModule } from './modules/database/database.module';
 import { LoggerModule } from './modules/logger/logger.module';
 import { OperatorsModule } from './modules/operators/operators.module';
@@ -48,6 +51,8 @@ import { SchedulersModule } from './schedulers/schedulers.module';
     TripsModule,
     VehiclesModule,
     BookingsModule,
+    TicketsModule,
+    PaymentsModule,
     SchedulersModule,
     // Global throttler defaults; per-route overrides via @Throttle().
     ThrottlerModule.forRoot({
@@ -65,6 +70,7 @@ import { SchedulersModule } from './schedulers/schedulers.module';
     TripsController,
     VehiclesController,
     BookingsController,
+    PaymentsController,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

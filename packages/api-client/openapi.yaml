@@ -1051,6 +1051,90 @@ paths:
       summary: Cancel a pending booking
       tags:
         - bookings
+  /api/v1/payments:
+    post:
+      operationId: createPayment
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePaymentBodyDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatePaymentResponseDto'
+      summary: Initiate payment for a booking
+      tags:
+        - payments
+  /api/v1/payments/webhooks/momo:
+    post:
+      operationId: momoWebhook
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      summary: Momo payment webhook (public)
+      tags:
+        - payments
+  /api/v1/payments/webhooks/stripe:
+    post:
+      operationId: stripeWebhook
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      summary: Stripe payment webhook (public)
+      tags:
+        - payments
+  /api/v1/payments/{id}/confirm:
+    post:
+      operationId: manualConfirmPayment
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentManualConfirmBodyDto'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: 'Admin: force-confirm a payment (bypass webhook)'
+      tags:
+        - payments
+  /api/v1/payments/{id}:
+    get:
+      operationId: getPayment
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentDto'
+      security:
+        - bearer: []
+      summary: Get payment status
+      tags:
+        - payments
 info:
   title: Bookee API
   description: Multi-operator trip booking platform API
@@ -2059,6 +2143,7 @@ components:
           type: string
           enum:
             - pending
+            - paid
             - confirmed
             - cancelled
             - expired
@@ -2138,6 +2223,7 @@ components:
           type: string
           enum:
             - pending
+            - paid
             - confirmed
             - cancelled
             - expired
@@ -2156,5 +2242,104 @@ components:
         - totalAmount
         - status
         - couponId
+        - createdAt
+        - updatedAt
+    CreatePaymentBodyDto:
+      type: object
+      properties:
+        bookingId:
+          type: integer
+          exclusiveMinimum: true
+          maximum: 9007199254740991
+          minimum: 0
+        provider:
+          type: string
+          enum:
+            - momo
+            - stripe
+        returnUrl:
+          type: string
+          format: uri
+      required:
+        - bookingId
+        - provider
+        - returnUrl
+    CreatePaymentResponseDto:
+      type: object
+      properties:
+        id:
+          type: number
+        bookingId:
+          type: number
+        provider:
+          type: string
+        amount:
+          type: number
+        status:
+          type: string
+          enum:
+            - pending
+            - succeeded
+            - failed
+            - timeout
+        transactionId:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+        paymentUrl:
+          type: string
+      required:
+        - id
+        - bookingId
+        - provider
+        - amount
+        - status
+        - transactionId
+        - createdAt
+        - updatedAt
+        - paymentUrl
+    PaymentManualConfirmBodyDto:
+      type: object
+      properties:
+        transactionId:
+          type: string
+          minLength: 1
+      required:
+        - transactionId
+    PaymentDto:
+      type: object
+      properties:
+        id:
+          type: number
+        bookingId:
+          type: number
+        provider:
+          type: string
+        amount:
+          type: number
+        status:
+          type: string
+          enum:
+            - pending
+            - succeeded
+            - failed
+            - timeout
+        transactionId:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+        - id
+        - bookingId
+        - provider
+        - amount
+        - status
+        - transactionId
         - createdAt
         - updatedAt

@@ -41,6 +41,10 @@ export async function setup(): Promise<void> {
   process.env.ENCRYPTION_KEY =
     process.env.ENCRYPTION_KEY ??
     '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+  // Deterministic payment provider secrets for integration tests.
+  process.env.MOMO_SECRET_KEY = process.env.MOMO_SECRET_KEY ?? 'test-momo-secret-32-chars-padded!!';
+  process.env.STRIPE_WEBHOOK_SECRET =
+    process.env.STRIPE_WEBHOOK_SECRET ?? 'whsec_test_integration_secret';
 
   execSync('bunx prisma migrate deploy', {
     cwd: path.resolve(__dirname, '..'),

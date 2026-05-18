@@ -4,6 +4,8 @@ export default async () => {
     ['./controllers/auth/dto/auth.dto']: await import('./controllers/auth/dto/auth.dto'),
     ['./controllers/bookings/dto/bookings.dto']:
       await import('./controllers/bookings/dto/bookings.dto'),
+    ['./controllers/payments/dto/payments.dto']:
+      await import('./controllers/payments/dto/payments.dto'),
     ['./controllers/health/dto/health-response.dto']:
       await import('./controllers/health/dto/health-response.dto'),
     ['./controllers/operators/dto/operators.dto']:
@@ -43,6 +45,15 @@ export default async () => {
             BookingSeatDto: {},
             BookingDto: {},
             BookingWithDetailsDto: {},
+          },
+        ],
+        [
+          import('./controllers/payments/dto/payments.dto'),
+          {
+            CreatePaymentBodyDto: {},
+            PaymentManualConfirmBodyDto: {},
+            PaymentDto: {},
+            CreatePaymentResponseDto: {},
           },
         ],
         [import('./controllers/health/dto/health-response.dto'), { HealthResponseDto: {} }],
@@ -126,6 +137,20 @@ export default async () => {
               listMine: { type: [t['./controllers/bookings/dto/bookings.dto'].BookingDto] },
               lookup: { type: t['./controllers/bookings/dto/bookings.dto'].BookingWithDetailsDto },
               cancel: {},
+            },
+          },
+        ],
+        [
+          import('./controllers/payments/payments.controller'),
+          {
+            PaymentsController: {
+              create: {
+                type: t['./controllers/payments/dto/payments.dto'].CreatePaymentResponseDto,
+              },
+              momoWebhook: {},
+              stripeWebhook: {},
+              manualConfirm: {},
+              findOne: { type: t['./controllers/payments/dto/payments.dto'].PaymentDto },
             },
           },
         ],

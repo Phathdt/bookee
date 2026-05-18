@@ -285,10 +285,6 @@ export class TripsService implements ITripsService {
 
   private async countConfirmedSeats(tripId: number): Promise<number> {
     if (!this.bookingsRepo) return 0;
-    // Count BookingSeat rows whose booking.status = 'confirmed'
-    // We approximate by loading confirmed bookings for the trip.
-    // The IBookingsRepository does not expose a direct count query,
-    // so we keep it simple: this path is only hit if bookingsRepo is wired.
-    return 0; // Placeholder — full DB count deferred to Section 10 migration
+    return this.bookingsRepo.countPaidSeatsForTrip(tripId);
   }
 }

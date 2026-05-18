@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
+import { json, raw } from 'express';
 import { Logger } from 'nestjs-pino';
 import { cleanupOpenApiDoc, ZodValidationPipe } from 'nestjs-zod';
 
@@ -9,7 +10,16 @@ import { FilteredLogger } from './modules/logger/filtered-logger';
 import { swaggerConfig } from './swagger';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  // Disable built-in body parser so we can register per-route parsers.
+  // This lets the Stripe webhook route receive the raw Buffer that its
+  // signature verification requires, while all other routes get normal JSON.
+  const app = await NestFactory.create(AppModule, { bufferLogs: true, bodyParser: false });
+
+  // Stripe webhook — must receive raw body for HMAC verification.
+  app.use('/api/v1/payments/webhooks/stripe', raw({ type: '*/*' }));
+
+  // All other routes get standard JSON parsing.
+  app.use(json());
 
   // Swap default Nest logger for pino (via FilteredLogger which suppresses
   // known-noisy internal contexts like LegacyRouteConverter).

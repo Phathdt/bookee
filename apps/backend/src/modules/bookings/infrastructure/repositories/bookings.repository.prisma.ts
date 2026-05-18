@@ -178,4 +178,17 @@ export class BookingsRepositoryPrisma extends IBookingsRepository {
     });
     return Promise.all(rows.map((r) => this.loadDetails(this.toBookingEntity(r))));
   }
+
+  async countPaidSeatsForTrip(tripId: number): Promise<number> {
+    // Find all paid booking IDs for the trip, then count their seats.
+    const paidBookings = await this.db.booking.findMany({
+      where: { tripId, status: 'paid' },
+      select: { id: true },
+    });
+    if (paidBookings.length === 0) return 0;
+    const bookingIds = paidBookings.map((b) => b.id);
+    return this.db.bookingSeat.count({
+      where: { bookingId: { in: bookingIds } },
+    });
+  }
 }

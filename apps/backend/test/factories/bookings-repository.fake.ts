@@ -87,6 +87,16 @@ export function makeBookingsRepositoryFake(): FakeBookingsRepository {
       return [...store.values()].filter((b) => b.status === 'pending' && b.createdAt < date);
     },
 
+    async countPaidSeatsForTrip(tripId: number): Promise<number> {
+      let count = 0;
+      for (const b of store.values()) {
+        if (b.tripId === tripId && b.status === 'paid') {
+          count += b.seats.length;
+        }
+      }
+      return count;
+    },
+
     _backdateAll(date: Date): void {
       for (const [id, booking] of store.entries()) {
         store.set(id, { ...booking, createdAt: date });

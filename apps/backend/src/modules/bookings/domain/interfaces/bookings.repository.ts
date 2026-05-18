@@ -19,4 +19,6 @@ export abstract class IBookingsRepository {
   abstract create(input: CreateBookingInput): Promise<BookingWithDetails>;
   abstract setStatus(id: number, status: BookingStatus): Promise<void>;
   abstract findPendingOlderThan(date: Date): Promise<BookingWithDetails[]>;
+  /** Count BookingSeat rows where booking.status = 'paid' for the given trip. */
+  abstract countPaidSeatsForTrip(tripId: number): Promise<number>;
 }
